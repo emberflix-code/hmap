@@ -1,0 +1,68 @@
+# ─── OS / editors ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.iml
+
+# ─── Secrets — NEVER commit ────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ─── Laravel (laravel/) ────────────────────────────────────
+laravel/vendor/
+laravel/node_modules/
+laravel/public/hot
+laravel/public/storage
+laravel/storage/*.key
+laravel/storage/app/public/*
+!laravel/storage/app/public/.gitkeep
+laravel/storage/framework/cache/data/*
+!laravel/storage/framework/cache/data/.gitkeep
+laravel/storage/framework/sessions/*
+!laravel/storage/framework/sessions/.gitkeep
+laravel/storage/framework/views/*
+!laravel/storage/framework/views/.gitkeep
+laravel/storage/logs/*.log
+laravel/.phpunit.result.cache
+laravel/Homestead.json
+laravel/Homestead.yaml
+laravel/auth.json
+
+# ─── Frontend (frontend/) ──────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+frontend/coverage/
+frontend/*.local
+frontend/.eslintcache
+
+# ─── Python ML service (ml/) ───────────────────────────────
+ml/__pycache__/
+ml/*.py[cod]
+ml/*$py.class
+ml/.venv/
+ml/venv/
+ml/env/
+ml/*.egg-info/
+ml/.pytest_cache/
+ml/.mypy_cache/
+ml/.ruff_cache/
+ml/models/*.pkl
+ml/models/*.joblib
+ml/data/raw/
+ml/data/processed/
+
+# ─── Docker ────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ─── Logs / temp ───────────────────────────────────────────
+*.log
+tmp/
+temp/
