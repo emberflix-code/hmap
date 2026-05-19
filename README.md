@@ -55,8 +55,7 @@ H-MAP is hosted *inside* the existing HRIS Portal infrastructure and reuses the 
 - **PHP 8.3+** (Composer 2.x) — for Laravel
 - **Node 20+** (npm 10+) — for the React frontend
 - **Python 3.12+** — for the ML service
-- **MySQL 8.0+** (XAMPP is fine) — for development data
-- **Docker Desktop** (optional) — if you want one-command bring-up
+- **MySQL 8.0+** (XAMPP works fine on Windows) — for development data
 
 ### Initial setup
 
@@ -89,11 +88,11 @@ cd laravel && php artisan serve --port=8000
 # Terminal 2 — React frontend (dev server with HMR)
 cd frontend && npm run dev
 
-# Terminal 3 — Python ML service
-cd ml && uvicorn main:app --reload --port 5000
+# Terminal 3 — Python ML service (activate venv first)
+cd ml && .venv\Scripts\activate && uvicorn main:app --reload --port 5000
 ```
 
-Or use `docker-compose up` to bring all three up at once.
+MySQL runs out of your XAMPP install — start MySQL from the XAMPP control panel.
 
 ### URLs (local dev)
 
