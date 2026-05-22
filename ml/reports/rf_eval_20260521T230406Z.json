@@ -1,0 +1,680 @@
+{
+  "generated_at_utc": "20260521T230406Z",
+  "training_window": [
+    2010,
+    2023
+  ],
+  "validation_holdout": [
+    2024,
+    2025
+  ],
+  "n_estimators": 200,
+  "class_weight": "balanced",
+  "baseline_strategy": "most_frequent",
+  "models": [
+    {
+      "disease_code": "DENGUE",
+      "n_train": 7632,
+      "n_test": 1696,
+      "accuracy": 0.9734669811320755,
+      "macro_f1": 0.9565768263013569,
+      "baseline_accuracy": 0.5695754716981132,
+      "baseline_macro_f1": 0.24192336589030805,
+      "lift_accuracy_pp": 40.38915094339623,
+      "lift_macro_f1": 0.7146534604110488,
+      "label_distribution_train": {
+        "Low": 5325,
+        "Moderate": 1420,
+        "High": 887
+      },
+      "label_distribution_test": {
+        "Low": 966,
+        "Moderate": 460,
+        "High": 270
+      },
+      "classification_report": {
+        "High": {
+          "precision": 0.8865979381443299,
+          "recall": 0.9555555555555556,
+          "f1-score": 0.9197860962566845,
+          "support": 270.0
+        },
+        "Low": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 966.0
+        },
+        "Moderate": {
+          "precision": 0.9726651480637813,
+          "recall": 0.9282608695652174,
+          "f1-score": 0.949944382647386,
+          "support": 460.0
+        },
+        "accuracy": 0.9734669811320755,
+        "macro avg": {
+          "precision": 0.9530876954027038,
+          "recall": 0.9612721417069244,
+          "f1-score": 0.9565768263013569,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 0.9745326718209366,
+          "recall": 0.9734669811320755,
+          "f1-score": 0.9736536922211689,
+          "support": 1696.0
+        }
+      },
+      "baseline_classification_report": {
+        "High": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 270.0
+        },
+        "Low": {
+          "precision": 0.5695754716981132,
+          "recall": 1.0,
+          "f1-score": 0.7257700976709242,
+          "support": 966.0
+        },
+        "Moderate": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 460.0
+        },
+        "accuracy": 0.5695754716981132,
+        "macro avg": {
+          "precision": 0.18985849056603774,
+          "recall": 0.3333333333333333,
+          "f1-score": 0.24192336589030805,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 0.32441621796012815,
+          "recall": 0.5695754716981132,
+          "f1-score": 0.4133808457253023,
+          "support": 1696.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          258,
+          0,
+          12
+        ],
+        [
+          0,
+          966,
+          0
+        ],
+        [
+          33,
+          0,
+          427
+        ]
+      ],
+      "feature_importance": {
+        "barangay_id": 0.01786411115477794,
+        "morbidity_week": 0.02370315636652724,
+        "calendar_month": 0.01339066634190618,
+        "current_cases": 0.26200700330630866,
+        "prior_year_cases": 0.022458507929844804,
+        "mean_5yr": 0.11032469446348521,
+        "ratio_to_mean": 0.5068406689824155,
+        "ytd_cases": 0.043411191454734474
+      }
+    },
+    {
+      "disease_code": "ILI",
+      "n_train": 7632,
+      "n_test": 1696,
+      "accuracy": 0.9923349056603774,
+      "macro_f1": 0.9400670120765421,
+      "baseline_accuracy": 0.8938679245283019,
+      "baseline_macro_f1": 0.31465338314653385,
+      "lift_accuracy_pp": 9.846698113207552,
+      "lift_macro_f1": 0.6254136289300083,
+      "label_distribution_train": {
+        "Low": 7531,
+        "High": 94,
+        "Moderate": 7
+      },
+      "label_distribution_test": {
+        "Low": 1516,
+        "High": 137,
+        "Moderate": 43
+      },
+      "classification_report": {
+        "High": {
+          "precision": 1.0,
+          "recall": 0.9854014598540146,
+          "f1-score": 0.9926470588235294,
+          "support": 137.0
+        },
+        "Low": {
+          "precision": 0.9927963326784545,
+          "recall": 1.0,
+          "f1-score": 0.9963851462372658,
+          "support": 1516.0
+        },
+        "Moderate": {
+          "precision": 0.9411764705882353,
+          "recall": 0.7441860465116279,
+          "f1-score": 0.8311688311688312,
+          "support": 43.0
+        },
+        "accuracy": 0.9923349056603774,
+        "macro avg": {
+          "precision": 0.9779909344222298,
+          "recall": 0.9098625021218808,
+          "f1-score": 0.9400670120765421,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 0.9920694743961268,
+          "recall": 0.9923349056603774,
+          "f1-score": 0.9918943328389022,
+          "support": 1696.0
+        }
+      },
+      "baseline_classification_report": {
+        "High": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 137.0
+        },
+        "Low": {
+          "precision": 0.8938679245283019,
+          "recall": 1.0,
+          "f1-score": 0.9439601494396015,
+          "support": 1516.0
+        },
+        "Moderate": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 43.0
+        },
+        "accuracy": 0.8938679245283019,
+        "macro avg": {
+          "precision": 0.2979559748427673,
+          "recall": 0.3333333333333333,
+          "f1-score": 0.31465338314653385,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 0.798999866500534,
+          "recall": 0.8938679245283019,
+          "f1-score": 0.8437756996170024,
+          "support": 1696.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          135,
+          0,
+          2
+        ],
+        [
+          0,
+          1516,
+          0
+        ],
+        [
+          0,
+          11,
+          32
+        ]
+      ],
+      "feature_importance": {
+        "barangay_id": 0.0159709060374789,
+        "morbidity_week": 0.054744907046227434,
+        "calendar_month": 0.023594759967536235,
+        "current_cases": 0.19231327272289708,
+        "prior_year_cases": 0.014728928878110078,
+        "mean_5yr": 0.2322137853785976,
+        "ratio_to_mean": 0.32892562002051123,
+        "ytd_cases": 0.1375078199486413
+      }
+    },
+    {
+      "disease_code": "MEA",
+      "n_train": 7632,
+      "n_test": 1696,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "baseline_accuracy": 0.9946933962264151,
+      "baseline_macro_f1": 0.3324465464577791,
+      "lift_accuracy_pp": 0.5306603773584939,
+      "lift_macro_f1": 0.667553453542221,
+      "label_distribution_train": {
+        "Low": 7436,
+        "High": 127,
+        "Moderate": 69
+      },
+      "label_distribution_test": {
+        "Low": 1687,
+        "High": 8,
+        "Moderate": 1
+      },
+      "classification_report": {
+        "High": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 8.0
+        },
+        "Low": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1687.0
+        },
+        "Moderate": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1696.0
+        }
+      },
+      "baseline_classification_report": {
+        "High": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 8.0
+        },
+        "Low": {
+          "precision": 0.9946933962264151,
+          "recall": 1.0,
+          "f1-score": 0.9973396393733373,
+          "support": 1687.0
+        },
+        "Moderate": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 1.0
+        },
+        "accuracy": 0.9946933962264151,
+        "macro avg": {
+          "precision": 0.331564465408805,
+          "recall": 0.3333333333333333,
+          "f1-score": 0.3324465464577791,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 0.98941495249644,
+          "recall": 0.9946933962264151,
+          "f1-score": 0.9920471530794929,
+          "support": 1696.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          1687,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "feature_importance": {
+        "barangay_id": 0.01228032507487161,
+        "morbidity_week": 0.03745482249226724,
+        "calendar_month": 0.01952467794928652,
+        "current_cases": 0.2102146684567483,
+        "prior_year_cases": 0.005429787242651921,
+        "mean_5yr": 0.1620259149106904,
+        "ratio_to_mean": 0.39624317743284676,
+        "ytd_cases": 0.1568266264406373
+      }
+    },
+    {
+      "disease_code": "TYP",
+      "n_train": 7632,
+      "n_test": 1696,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "baseline_accuracy": 0.9516509433962265,
+      "baseline_macro_f1": 0.32507552870090634,
+      "lift_accuracy_pp": 4.834905660377354,
+      "lift_macro_f1": 0.6749244712990936,
+      "label_distribution_train": {
+        "Low": 7483,
+        "High": 114,
+        "Moderate": 35
+      },
+      "label_distribution_test": {
+        "Low": 1614,
+        "High": 73,
+        "Moderate": 9
+      },
+      "classification_report": {
+        "High": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 73.0
+        },
+        "Low": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1614.0
+        },
+        "Moderate": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 9.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1696.0
+        }
+      },
+      "baseline_classification_report": {
+        "High": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 73.0
+        },
+        "Low": {
+          "precision": 0.9516509433962265,
+          "recall": 1.0,
+          "f1-score": 0.9752265861027191,
+          "support": 1614.0
+        },
+        "Moderate": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 9.0
+        },
+        "accuracy": 0.9516509433962265,
+        "macro avg": {
+          "precision": 0.31721698113207547,
+          "recall": 0.3333333333333333,
+          "f1-score": 0.32507552870090634,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 0.9056395180669278,
+          "recall": 0.9516509433962265,
+          "f1-score": 0.9280753006897338,
+          "support": 1696.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          73,
+          0,
+          0
+        ],
+        [
+          0,
+          1614,
+          0
+        ],
+        [
+          0,
+          0,
+          9
+        ]
+      ],
+      "feature_importance": {
+        "barangay_id": 0.018673008504416423,
+        "morbidity_week": 0.022537374349503047,
+        "calendar_month": 0.014070236901901581,
+        "current_cases": 0.23681407968568335,
+        "prior_year_cases": 0.0013646662345118878,
+        "mean_5yr": 0.24782417237875298,
+        "ratio_to_mean": 0.35492779454245654,
+        "ytd_cases": 0.10378866740277407
+      }
+    },
+    {
+      "disease_code": "LEP",
+      "n_train": 7632,
+      "n_test": 1696,
+      "accuracy": 0.9976415094339622,
+      "macro_f1": 0.9267190785550637,
+      "baseline_accuracy": 0.9628537735849056,
+      "baseline_macro_f1": 0.3270251326724742,
+      "lift_accuracy_pp": 3.478773584905659,
+      "lift_macro_f1": 0.5996939458825896,
+      "label_distribution_train": {
+        "Low": 7567,
+        "High": 59,
+        "Moderate": 6
+      },
+      "label_distribution_test": {
+        "Low": 1633,
+        "High": 53,
+        "Moderate": 10
+      },
+      "classification_report": {
+        "High": {
+          "precision": 1.0,
+          "recall": 0.9622641509433962,
+          "f1-score": 0.9807692307692307,
+          "support": 53.0
+        },
+        "Low": {
+          "precision": 0.998776758409786,
+          "recall": 1.0,
+          "f1-score": 0.9993880048959608,
+          "support": 1633.0
+        },
+        "Moderate": {
+          "precision": 0.8,
+          "recall": 0.8,
+          "f1-score": 0.8,
+          "support": 10.0
+        },
+        "accuracy": 0.9976415094339622,
+        "macro avg": {
+          "precision": 0.9329255861365953,
+          "recall": 0.9207547169811322,
+          "f1-score": 0.9267190785550637,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 0.9976429519358375,
+          "recall": 0.9976415094339622,
+          "f1-score": 0.99763053138318,
+          "support": 1696.0
+        }
+      },
+      "baseline_classification_report": {
+        "High": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 53.0
+        },
+        "Low": {
+          "precision": 0.9628537735849056,
+          "recall": 1.0,
+          "f1-score": 0.9810753980174226,
+          "support": 1633.0
+        },
+        "Moderate": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 10.0
+        },
+        "accuracy": 0.9628537735849056,
+        "macro avg": {
+          "precision": 0.3209512578616352,
+          "recall": 0.3333333333333333,
+          "f1-score": 0.3270251326724742,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 0.9270873893066928,
+          "recall": 0.9628537735849056,
+          "f1-score": 0.9446321491523886,
+          "support": 1696.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          51,
+          0,
+          2
+        ],
+        [
+          0,
+          1633,
+          0
+        ],
+        [
+          0,
+          2,
+          8
+        ]
+      ],
+      "feature_importance": {
+        "barangay_id": 0.04651824732629688,
+        "morbidity_week": 0.043645170159044906,
+        "calendar_month": 0.017520113820890502,
+        "current_cases": 0.21232097398661554,
+        "prior_year_cases": 0.015532040909608635,
+        "mean_5yr": 0.22554686841976332,
+        "ratio_to_mean": 0.29664810187143364,
+        "ytd_cases": 0.14226848350634663
+      }
+    },
+    {
+      "disease_code": "HFMD",
+      "n_train": 7632,
+      "n_test": 1696,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "baseline_accuracy": 0.995872641509434,
+      "baseline_macro_f1": 0.49896602658788775,
+      "lift_accuracy_pp": 0.4127358490566002,
+      "lift_macro_f1": 0.5010339734121123,
+      "label_distribution_train": {
+        "Low": 7590,
+        "High": 41,
+        "Moderate": 1
+      },
+      "label_distribution_test": {
+        "Low": 1689,
+        "High": 7
+      },
+      "classification_report": {
+        "High": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 7.0
+        },
+        "Low": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1689.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1696.0
+        }
+      },
+      "baseline_classification_report": {
+        "High": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 7.0
+        },
+        "Low": {
+          "precision": 0.995872641509434,
+          "recall": 1.0,
+          "f1-score": 0.9979320531757755,
+          "support": 1689.0
+        },
+        "accuracy": 0.995872641509434,
+        "macro avg": {
+          "precision": 0.497936320754717,
+          "recall": 0.5,
+          "f1-score": 0.49896602658788775,
+          "support": 1696.0
+        },
+        "weighted avg": {
+          "precision": 0.9917623181069777,
+          "recall": 0.995872641509434,
+          "f1-score": 0.9938132298430924,
+          "support": 1696.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          7,
+          0
+        ],
+        [
+          0,
+          1689
+        ]
+      ],
+      "feature_importance": {
+        "barangay_id": 0.03811280710373185,
+        "morbidity_week": 0.07800235543851744,
+        "calendar_month": 0.03931050570151353,
+        "current_cases": 0.19952703811170394,
+        "prior_year_cases": 0.11247857174685194,
+        "mean_5yr": 0.09793764185611434,
+        "ratio_to_mean": 0.24817372390965492,
+        "ytd_cases": 0.186457356131912
+      }
+    }
+  ]
+}

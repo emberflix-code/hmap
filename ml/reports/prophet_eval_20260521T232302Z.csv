@@ -1,0 +1,2 @@
+disease,barangay_id,barangay_name,n_weeks_total,n_weeks_train,n_weeks_holdout,mape_prophet,rmse_prophet,mape_baseline,rmse_baseline,mape_lift
+MEA,,city-wide,834,730,104,25.1227,0.5743,5.5288,0.4160,-19.5939

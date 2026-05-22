@@ -1,0 +1,136 @@
+{
+  "runs": [
+    {
+      "rid": 2,
+      "eps": 200.0,
+      "min": 3,
+      "weeks": 4,
+      "clusters": 2234,
+      "cross": 288,
+      "cross_pct": 12.9,
+      "avg_size": 5.1,
+      "avg_r": 106.0,
+      "max_size": 37
+    },
+    {
+      "rid": 3,
+      "eps": 150.0,
+      "min": 3,
+      "weeks": 4,
+      "clusters": 1851,
+      "cross": 127,
+      "cross_pct": 6.9,
+      "avg_size": 4.8,
+      "avg_r": 63.0,
+      "max_size": 32
+    },
+    {
+      "rid": 4,
+      "eps": 250.0,
+      "min": 3,
+      "weeks": 4,
+      "clusters": 2562,
+      "cross": 451,
+      "cross_pct": 17.6,
+      "avg_size": 5.5,
+      "avg_r": 155.0,
+      "max_size": 45
+    },
+    {
+      "rid": 5,
+      "eps": 300.0,
+      "min": 3,
+      "weeks": 4,
+      "clusters": 2772,
+      "cross": 651,
+      "cross_pct": 23.5,
+      "avg_size": 6.0,
+      "avg_r": 209.0,
+      "max_size": 82
+    },
+    {
+      "rid": 6,
+      "eps": 200.0,
+      "min": 2,
+      "weeks": 4,
+      "clusters": 4288,
+      "cross": 362,
+      "cross_pct": 8.4,
+      "avg_size": 3.6,
+      "avg_r": 71.0,
+      "max_size": 37
+    },
+    {
+      "rid": 7,
+      "eps": 200.0,
+      "min": 4,
+      "weeks": 4,
+      "clusters": 1281,
+      "cross": 203,
+      "cross_pct": 15.8,
+      "avg_size": 6.6,
+      "avg_r": 127.0,
+      "max_size": 37
+    },
+    {
+      "rid": 8,
+      "eps": 200.0,
+      "min": 5,
+      "weeks": 4,
+      "clusters": 752,
+      "cross": 134,
+      "cross_pct": 17.8,
+      "avg_size": 8.3,
+      "avg_r": 145.0,
+      "max_size": 37
+    },
+    {
+      "rid": 9,
+      "eps": 200.0,
+      "min": 3,
+      "weeks": 2,
+      "clusters": 957,
+      "cross": 112,
+      "cross_pct": 11.7,
+      "avg_size": 4.2,
+      "avg_r": 89.0,
+      "max_size": 20
+    },
+    {
+      "rid": 10,
+      "eps": 200.0,
+      "min": 3,
+      "weeks": 3,
+      "clusters": 1620,
+      "cross": 201,
+      "cross_pct": 12.4,
+      "avg_size": 4.7,
+      "avg_r": 99.0,
+      "max_size": 30
+    },
+    {
+      "rid": 11,
+      "eps": 200.0,
+      "min": 3,
+      "weeks": 6,
+      "clusters": 3256,
+      "cross": 455,
+      "cross_pct": 14.0,
+      "avg_size": 6.0,
+      "avg_r": 121.0,
+      "max_size": 58
+    },
+    {
+      "rid": 12,
+      "eps": 200.0,
+      "min": 3,
+      "weeks": 4,
+      "clusters": 2234,
+      "cross": 288,
+      "cross_pct": 12.9,
+      "avg_size": 5.1,
+      "avg_r": 106.0,
+      "max_size": 37
+    }
+  ]
+}

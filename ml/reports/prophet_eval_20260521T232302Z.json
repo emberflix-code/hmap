@@ -1,0 +1,27 @@
+{
+  "generated_at_utc": "20260521T232302Z",
+  "training_window": [
+    2010,
+    2025
+  ],
+  "validation_holdout": [
+    2024,
+    2025
+  ],
+  "baseline_strategy": "seasonal_naive_lag52",
+  "models": [
+    {
+      "disease_code": "MEA",
+      "barangay_id": null,
+      "barangay_name": null,
+      "n_weeks_total": 834,
+      "n_weeks_train": 730,
+      "n_weeks_holdout": 104,
+      "mape_prophet": 25.122735673528293,
+      "rmse_prophet": 0.5743135186628786,
+      "mape_baseline": 5.528846153846154,
+      "rmse_baseline": 0.41602514716892186,
+      "mape_lift_vs_baseline": -19.59388951968214
+    }
+  ]
+}
