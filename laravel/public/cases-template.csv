@@ -1,0 +1,4 @@
+disease_code,case_classification,date_onset,date_admitted,barangay_name,age,sex,outcome,morbidity_week,morbidity_year
+DENGUE,Suspect,2026-05-15,2026-05-16,San Dionisio,12,Female,Alive,20,2026
+DENGUE,Probable,2026-05-14,,Baclaran,28,Male,Alive,20,2026
+MEA,Suspect,2026-05-10,2026-05-11,Moonwalk,3,Male,Alive,19,2026
