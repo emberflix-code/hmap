@@ -66,3 +66,10 @@ docker-compose.override.yml
 *.log
 tmp/
 temp/
+
+# ─── Thesis / docs binaries ────────────────────────────────
+# PIDSR registry files contain operational case data — keep out of git.
+# Slide decks change too often for binary diffs to be useful.
+docs/*.xlsx
+docs/*.pptx
+docs/_template_extracted.txt

@@ -1,0 +1,1394 @@
+===== PAGE 1 =====
+1 
+ 
+Chapter 1 
+THE PROBLEM AND ITS BACKGROUND 
+Introduction 
+Disease surveillance is defined as the systematic and continuous collection, analysis, 
+interpretation, and dissemination of health data essential for planning, implementing, and 
+evaluating public health practice (World Health Organization [WHO], 2018). Eff ective 
+surveillance systems enable health authorities to detect outbreaks early, guide targeted 
+interventions, and allocate resources based on spatial and temporal patterns of disease 
+occurrence. Globally, the integration of artificial intelligence (AI) an d machine learning into 
+public health surveillance has significantly expanded the analytical capabilities available to 
+health agencies, enabling automated outbreak detection, predictive forecasting, and data -
+driven decision support that traditional manual methods cannot provide (Srivastava et al., 
+2024). 
+In the Philippines, the Department of Health (DOH) implements the Philippine 
+Integrated Disease Surveillance and Response (PIDSR) system as the national framework for 
+monitoring notifiable diseases (DOH, 2014). While PIDSR provides a standardized reporting  
+structure through line listings and tabular aggregation, its implementation at the city 
+epidemiology level remains largely spreadsheet-based and limited in spatial visualization and 
+automated outbreak detection capability. The Centers for Disease Control and Prevention 
+(CDC, 2019) has emphasized that electronic and digital surveillance systems significantly 
+improve timeliness, completeness, and response efficiency, highlighting the operational gap 
+that persists in many local government health offices. 
+===== PAGE 2 =====
+2 
+ 
+Parañaque City, as one of the highly urbanized cities in Metro Manila, Philippines, 
+generates substantial weekly disease data through its network of health centers, hospitals, and 
+sentinel sites. The City Epidemiology Section Unit (CESU) is responsible for  monitoring 
+disease trends and recommending public health responses. Despite maintaining disease records 
+traceable to 2007 under the PIDSR framework, the CESU currently processes surveillance data 
+using manual spreadsheet tools that offer no geospatial vis ualization, no automated threshold 
+alerting, and no AI-assisted forecasting capability. This limitation reduces the spatial precision 
+and forward-looking orientation of disease monitoring within the city, reflecting the broader 
+challenge identified by Sriv astava et al. (2024) that traditional surveillance methods are 
+constrained by manual data collection and slow reporting. 
+Existing machine learning studies on dengue forecasting in the Philippine context, 
+including Carvajal et al. (2018) in Metropolitan Manila and Olana et al. (2025) at the national 
+level, have demonstrated that AI models such as Random Forest and Prophet can  achieve 
+reliable predictive accuracy for disease trend forecasting. However, these studies produced 
+standalone forecasting models without embedding their outputs into operational, web -based 
+surveillance dashboards accessible to city -level government healt h personnel. This gap 
+between demonstrated AI capability and operational deployment at the local health unit level 
+provides the direct motivation for H-MAP. 
+The City Government of Parañaque maintains an Employee Portal at 
+hrmo.paranaque.gov.ph, provisioned by the Department of Information and Communications 
+Technology (DICT) and managed by the Human Resource Management Office (HRMO). This 
+existing infrastructure provides a cost -effective foundation for deploying H -MAP as a path -
+based web application at hrmo.paranaque.gov.ph/hmap. By leveraging the HRMO portal's 
+===== PAGE 3 =====
+3 
+ 
+existing authentication system, access to sensitive disease surveillance data will be restricted 
+exclusively to active government employees whose employment status is maintained in real 
+time by the Human Resource Management Office, directly addressing the access control 
+requirements of Republic Act No. 10173, the Data Privacy Act of 2012 (Republic Act No. 
+10173, 2012). 
+This study proposes the development of H -MAP: A Heat Map Disease Surveillance 
+and Outbreak Prediction System for the City Epidemiology Section Unit of Parañaque City. 
+The proposed system will be implemented as a PHP-based web application integrated with an 
+AI-powered Python machine learning microservice, a MySQL database, Leaflet.js interactive 
+maps, and Chart.js data visualizations, all deployed within the existing DICT -provisioned 
+government server infrastructure of Parañaque City. 
+Background of the Study 
+In today's rapidly evolving landscape of public health challenges, the City Government 
+of Parañaque recognizes the critical role of technological advancements in effectively 
+addressing disease outbreaks and safeguarding the health of its residents. The implementation 
+of a comprehensive web-based disease surveillance platform presents a promising solution to 
+enhance disease monitoring and outbreak prediction capabilities. This research project seeks 
+to explore the development of H -MAP, specifically tailored to meet the unique surveillance 
+needs of Parañaque City and deployable within its existing government IT infrastructure 
+without additional licensing costs. 
+The City Epidemiology Section Unit currently maintains disease records dating back 
+to 2007 in the PIDSR format, covering 28 notifiable diseases across Parañaque City's 16 
+barangays. This dataset, encompassing over 30,000 patient-level records as of 2023, represents 
+===== PAGE 4 =====
+4 
+ 
+a significant untapped resource for spatial and temporal disease analysis. Despite its depth, this 
+historical record has not been leveraged for AI -assisted outbreak forecasting or spatial risk 
+visualization. Without a dedicated analytical platform, health officials are unable to generate 
+heat maps, compute epidemic thresholds automatically, or access machine learning -based 
+forecasts from this data. Disease monitoring remains reactive and dependent on manually 
+prepared spreadsheet summaries that do not commu nicate spatial distribution or trend 
+trajectories. 
+The main problem identified in this research is the absence of a web -based, AI -
+integrated disease surveillance system for the City Epidemiology Section Unit of Parañaque 
+City. Without such a system, health officials face constraints in visualizing where diseases are 
+concentrated geographically, identifying barangays at elevated risk, detecting anomalous 
+weekly case spikes in real time, and forecasting near -term disease trajectories based on 
+historical seasonal patterns. These limitations reduce the timeline ss and spatial precision of 
+public health interventions, which is a recognized challenge in surveillance systems that rely 
+on passive reporting mechanisms (WHO, 2018; CDC, 2019). 
+The causes of this gap are multi -layered. Proprietary GIS platforms carry licensing 
+costs that are prohibitive for city -level local government unit health offices operating under 
+fixed annual budgets. The nationally maintained PIDSR electronic reporting sy stem provides 
+case intake and national -level aggregation but does not include city -specific spatial 
+visualization, threshold alerting, or AI-assisted predictive analytics (DOH, 2014). Meanwhile, 
+local studies by Carvajal et al. (2018) and Olana et al. (202 5) confirm that machine learning 
+models can reliably forecast dengue trends in the Philippine context but were not integrated 
+into operational platforms accessible to non-technical health personnel at the city level. 
+===== PAGE 5 =====
+5 
+ 
+In response to the identified problem, H-MAP is proposed as a web-based AI-assisted 
+disease surveillance system built entirely on open -source and government -owned 
+infrastructure. The proposed system will be developed using PHP, consistent with the existing 
+HRMO portal, and will integrate a Python -based machine learning microservice for AI -
+powered forecasting and barangay risk classification. By deploying H -MAP at 
+hrmo.paranaque.gov.ph/hmap, the study avoids additional server procurement, domain 
+registration, and SSL certificate costs. Authentication will be handled through the HRMO 
+portal's existing session management system, ensuring that only active, HR -verified city 
+employees can access disease surveillance data. 
+Objectives of the Study 
+ To develop a Web -Based HMAP: A Heat Map Disease Surveillance and Outbreak 
+Prediction System for the City Epidemiology Section Unit of Parañaque City. 
+General Objective 
+To develop H -MAP: A Heat Map Disease Surveillance and Outbreak Prediction 
+System for the City Epidemiology Section Unit of Parañaque City, implemented as a web -
+based application integrated with AI -assisted machine learning capabilities and deployed 
+within the existing DICT-provisioned government server infrastructure. 
+Specific Objectives 
+1. To design a comprehensive web-based AI-assisted disease surveillance system with the 
+following features: 
+a. An interactive heat map visualization module using Leaflet.js and OpenStreetMap 
+that will display disease case density across Parañaque City's 16 barangays. 
+===== PAGE 6 =====
+6 
+ 
+b. A data digitization and records management module for encoding disease case 
+records consistent with PIDSR reporting standards (DOH, 2014). 
+c. A real-time disease trend monitoring module with automated epidemic threshold 
+alerts based on the WHO Early Warning and Response Network (EWARN) 
+methodology (WHO, 2018). 
+2.  To develop the H-MAP system using the following technology stack: 
+a. PHP as the primary server -side scripting language, consistent with the existing 
+HRMO portal. 
+b. MySQL as the relational database management system hosted on the DICT -
+provisioned server. 
+c. Leaflet.js with OpenStreetMap tiles for interactive, license-free web mapping. 
+d. Chart.js for trend visualization and epidemiological dashboard charts. 
+e. Python with Flask as an internal AI machine learning microservice implementing 
+Prophet time -series forecasting and Random Forest barangay risk classification 
+(Olana et al., 2025; Carvajal et al., 2018). 
+f. HRMO portal session -based authentication to restrict access to active Parañaque 
+City government employees, consistent with Republic Act No. 10173 (2012). 
+3.  To test and improve the functionality of H-MAP in terms of: 
+a. Functionality to ensure all system modules operate as intended, including 
+authentication, heat map rendering, data encoding, threshold alerting, and AI 
+machine learning prediction outputs. 
+b. Reliability to ensure the system performs consistently under normal operational 
+conditions, including the AI machine learning microservice. 
+===== PAGE 7 =====
+7 
+ 
+c. Usability, following ISO 9241 principles, to ensure the system is accessible and 
+intuitive for health officials and data encoders with varying levels of technical 
+expertise. 
+4.  To evaluate the performance of H -MAP using the ISO/IEC 25010 software quality model 
+in terms of: 
+a. Functionality, Reliability, Usability, Performance Efficiency, and Maintainability 
+(International Organization for Standardization [ISO], 2011). 
+b. Collecting structured feedback from CESU health officials and IT professionals to 
+identify areas for improvement. 
+Significance of the Study 
+The development of H-MAP addresses a concrete and documented operational gap in 
+the disease surveillance capacity of the City Epidemiology Section Unit of Parañaque City. By 
+providing an integrated web -based platform for heat map visualization, automated e pidemic 
+threshold monitoring, and AI -assisted outbreak forecasting, this study aims to equip health 
+officials with analytical tools that directly improve the speed, spatial precision, and forward -
+looking orientation of disease surveillance. The significanc e of H -MAP is particularly 
+pronounced given that it is designed to be deployed on existing government infrastructure 
+without additional licensing costs, making it a sustainable and replicable model for other city 
+LGUs facing similar surveillance limitations. 
+The City Epidemiology Section Unit and its health officials are the primary direct 
+beneficiaries of H-MAP. The proposed system will streamline the translation of raw PIDSR 
+case records into actionable geospatial intelligence, reduce the manual workload ass ociated 
+with weekly data compilation and chart preparation, and introduce AI -generated outbreak 
+===== PAGE 8 =====
+8 
+ 
+alerts that enable earlier detection of anomalous disease trends. Health officers, barangay 
+health workers, and city health decision -makers who currently rely on manual spreadsheet 
+summaries will benefit from a consolidated, map -integrated dashboard that p resents disease 
+distribution, AI-assisted trend analysis, and risk classifications in a single interface accessible 
+through any web browser. 
+The residents of Parañaque City are the ultimate beneficiaries of improved disease 
+surveillance. Earlier outbreak detection, enabled by automated threshold alerts and AI-assisted 
+forecasts, translates into faster public health response, more targeted inter vention in high-risk 
+barangays, and more efficient allocation of limited public health resources. In a densely 
+populated urban setting such as Parañaque City, where diseases like Dengue, Measles, and 
+Leptospirosis present recurring seasonal threats, the ab ility to anticipate and respond to 
+outbreaks proactively rather than reactively has direct implications for reducing morbidity and 
+mortality. 
+Beyond its immediate operational impact, this study contributes to the applied 
+information technology research literature in Philippine public health. By demonstrating that 
+an open -source, PHP and Python -based architecture can deliver spatial visualization , 
+automated alerting, and AI machine learning forecasting on a government -owned server 
+without proprietary GIS licensing, H -MAP provides a technically documented and evaluated 
+precedent for cost-effective AI-assisted digital health surveillance at the city LGU level in the 
+Philippines. Critically, H-MAP addresses the specific gap identified in the Philippine machine 
+learning literature by Carvajal et al. (2018) and Olana et al. (2025): the absence of an 
+operational, web-based platform that makes AI-generated disease forecasts accessible to non-
+technical health personnel at the city epidemiology unit level. 
+===== PAGE 9 =====
+9 
+ 
+Scope and Limitations of the Study 
+The study covers the design, development, testing, and evaluation of H -MAP: A Heat 
+Map Disease Surveillance and Outbreak Prediction System for the City Epidemiology Section 
+Unit of Parañaque City. The proposed system will be deployed as a path-based web application 
+at hrmo.paranaque.gov.ph/hmap on the existing DICT -provisioned server used by the 
+Parañaque City HRMO portal. The study will make use of historical PIDSR disease case data 
+provided by the City Epidemiology Section Unit, covering the years 2010 to  2023 and 
+comprising over 30,000 patient -level records across 16 barangays and multiple notifiable 
+disease categories (DOH, 2014). 
+The scope of H -MAP includes five functional modules: an HRMO -integrated 
+authentication module; a data digitization and records management module for encoding 
+PIDSR-compliant case data; an interactive heat map visualization module built with Leaflet.js; 
+a disease trend monitoring module with automated WHO EWARN epidemic threshold alerting 
+(WHO, 2018); and an AI machine learning prediction module implemented as an internal 
+Python Flask microservice delivering Prophet-based weekly case forecasts and Random Forest 
+barangay risk classifications, consistent with methodologies validated in the Philippine context 
+by Carvajal et al. (2018) and Olana et al. (2025). 
+The study does not include actual public health intervention planning, clinical patient 
+management, or biometric data processing. The AI machine learning outputs of H -MAP are 
+intended as decision-support indicators and do not replace the professional judgment of trained 
+epidemiologists. The system is limited to the 16 barangays of Parañaque City and does not 
+include cases from adjacent cities recorded in the dataset. Evaluation will be conducted using 
+an ISO/IEC 25010-based questionnaire administered to purposively selected health official and 
+===== PAGE 10 =====
+10 
+ 
+IT professional respondents within a defined evaluation period (ISO, 2011). The study does 
+not include long -term system deployment monitoring, high -concurrency stress testing, or 
+integration with the national DOH PIDSR electronic reporting portal. 
+  
+===== PAGE 11 =====
+11 
+ 
+Chapter 2 
+CONCEPTUAL FRAMEWORK 
+Review of Related Literatures and Studies 
+This chapter presents a review of related literature and studies that provide the 
+theoretical and empirical foundations of the proposed H-MAP system. Conceptual literature is 
+organized around the key technical and public health domains that the system addr esses. 
+Related research studies and systems, both local and international, are reviewed and 
+synthesized to identify the research gap that the proposed development aims to address. The 
+chapter concludes with the Input -Process-Output (IPO) conceptual framewo rk and the 
+operational definition of terms. 
+Disease Surveillance and the PIDSR Framework 
+Disease surveillance is defined as the systematic and continuous collection, analysis, 
+interpretation, and dissemination of health data essential for planning, implementing, and 
+evaluating public health practice (WHO, 2018). Surveillance systems enable early detection of 
+outbreaks and guide public health interventions. The WHO (2018) identifies disease 
+surveillance as a core function of national health systems and emphasizes that strengthening 
+surveillance infrastructure requires both improved reporting acc uracy and enhanced analytic 
+capacity. 
+Surveillance systems are commonly classified into four types: passive, active, sentinel, 
+and syndromic. Passive surveillance depends on routine reporting from health facilities, while 
+active surveillance involves proactive case identification by health aut horities. Sentinel 
+surveillance monitors selected reporting sites that serve as representative indicators of disease 
+trends, and syndromic surveillance detects patterns based on symptoms before laboratory 
+===== PAGE 12 =====
+12 
+ 
+confirmation is obtained (WHO, 2018). Although passive surveillance remains widely used in 
+developing countries including the Philippines, limitations in timeliness and spatial 
+interpretation persist as recognized challenges. The CDC (2019) has emphasized that 
+enhancing passive systems with digital data management and geospatial visualization 
+improves detection of outbreak clusters and transmission patterns. 
+In the Philippines, the DOH implements the PIDSR system as the national disease 
+notification and reporting framework. Under PIDSR, health facilities are required to report 
+cases of 28 priority diseases using standardized case report forms that include dise ase 
+classification, case outcome, patient demographics, reporting facility, and barangay -level 
+geographic location (DOH, 2014). While PIDSR ensures uniform data collection, the system 
+does not inherently provide advanced geospatial analytics or automated s tatistical outbreak 
+detection at the city epidemiology level. H -MAP is designed as a supplementary analytical 
+layer on top of existing PIDSR data, enhancing the local surveillance capabilities of the CESU 
+without replacing or duplicating the national reporting workflow. 
+Geographic Information Systems in Public Health 
+Geographic Information Systems are computer -based platforms designed to capture, 
+store, analyze, and visualize geographically referenced data. In public health, GIS has become 
+a powerful tool for mapping disease distribution and identifying spatial relatio nships among 
+cases (Nykiforuk & Flaman, 2011). Nykiforuk and Flaman (2011) conducted a comprehensive 
+review of GIS applications in health promotion and found that GIS -based approaches 
+consistently provided superior capacity for spatial disease visualization compared to traditional 
+tabular analysis, enabling more targeted and efficient public health interventions. Lawson 
+(2018) similarly explains that spatial epidemiology uses GIS tools to detect clustering patterns 
+===== PAGE 13 =====
+13 
+ 
+and assess environmental risk factors, transforming raw epidemiological data into actionable 
+intelligence that enables faster and more informed decisions by health authorities. 
+The emergence of open -source and web -based GIS technologies has substantially 
+reduced the barrier to adoption for local health agencies. Boulos et al. (2011) reviewed web -
+based GIS technologies in public health and found that open -source web mapping platfo rms 
+provide sufficient functionality for disease mapping tasks previously requiring proprietary 
+desktop GIS software, with ease of deployment, cross -platform accessibility, and zero 
+licensing costs identified as key practical advantages for health agencies  in resource -
+constrained settings. Leaflet.js, the open-source JavaScript library for interactive web mapping 
+selected for H -MAP, renders maps directly in the browser without requiring client -side 
+software installation, which is a practical advantage in he alth office environments where 
+workstation configurations vary. 
+Geographic base map data for H -MAP will be sourced from OpenStreetMap, and 
+barangay boundary data will be derived from the Philippine GIS Data Exchange Center 
+(PhilGIS) under an open data license. This approach avoids proprietary licensing costs while 
+delivering the spatial reference framework needed for barangay -level disease case geocoding 
+and heat map generation, consistent with DICT's open-source government systems policy. 
+Heat Mapping and Spatial Cluster Detection 
+Heat maps represent disease case density using color gradients to visualize intensity 
+distribution across a geographic area. Areas with high concentrations of cases appear in 
+warmer colors, while lower concentrations appear cooler, enhancing situational awareness by 
+enabling immediate recognition of outbreak hotspots (Lawson, 2018). Spatial visualization of 
+===== PAGE 14 =====
+14 
+ 
+this type enhances public health planning while minimizing individual -level exposure of 
+patient information, particularly when aggregated to the barangay or district level. 
+Kernel Density Estimation (KDE) is the primary spatial statistical method underlying 
+heat map generation. KDE calculates a smoothed estimate of case density at each point in a 
+geographic space based on the distribution of reported cases, producing a continuous, visually 
+intuitive surface of disease concentration (Lawson, 2018). Spatial autocorrelation methods 
+complement KDE by identifying whether the clustering of cases is statistically significant 
+beyond what would be expected by chance. These cluster dete ction methods strengthen 
+outbreak detection by revealing patterns that may not be evident in tabular data, thereby 
+supporting earlier intervention strategies (Lawson, 2018). 
+Dong et al. (2020) demonstrated the wide -scale operational effectiveness of spatial 
+visualization during the COVID -19 pandemic. Their development of the Johns Hopkins 
+University COVID-19 Dashboard, which integrated real -time GIS mapping with case count 
+data, showed that geospatial visualization in a web-based format significantly improved global 
+situational awareness and informed public health decision -making. This system serves as an 
+internationally recognized benchmark for the dashboard design approach adopted in H-MAP, 
+particularly the integration of map -based visualization with tabular and chart -based data 
+summaries. 
+Epidemic Threshold Methods and Automated Outbreak Detection 
+Outbreak detection mechanisms in epidemiological surveillance commonly rely on 
+statistical aberration detection methods that compare current case counts against historical 
+baselines. The most widely used approach, consistent with the WHO Early Warning and 
+Response Network (EWARN) methodology, defines the epidemic threshold as the mean 
+===== PAGE 15 =====
+15 
+ 
+number of cases recorded during the same epidemiological week across the previous five years, 
+plus two standard deviations (WHO, 2018). When current case counts exceed this value, an 
+outbreak warning is generated. This can be expressed as: 
+                 Alert if: Current Cases > Baseline Mean + 2 (Standard Deviation) 
+This threshold model is epidemiologically principled because it accounts for both the 
+expected seasonal level of disease activity and the year-to-year variability in case counts. The 
+same mathematical basis is used in the Philippines' own national PIDSR five-year average alert 
+tables, prepared annually by the National Epidemiology Center (DOH, 2014). The CDC 
+developed the Early Aberration Reporting System (EARS), which utilizes moving averages 
+and standard deviation thresholds to identify abnormal disease a ctivity (CDC, 2019). Time -
+series moving averages smooth temporal fluctuations in case counts and detect aberrations, 
+expressed as: 
+                 MA(t) = [C(t-1) + C(t-2) + C(t-3)] / 3 
+Where C(t) represents case counts at time t. These threshold approaches are widely 
+accepted in surveillance systems because they balance simplicity, interpretability, and early 
+detection capability (CDC, 2019; WHO, 2018). H -MAP will automate this threshold  
+calculation for all monitored diseases using the 14 -year historical PIDSR dataset available 
+from the Parañaque City CESU. 
+Artificial Intelligence in Disease Surveillance 
+Artificial intelligence has emerged as a transformative capability in disease 
+surveillance, enabling health systems to move beyond passive data collection toward 
+automated detection, prediction, and decision support. Srivastava et al. (2024) documented the 
+expanding role of AI in early diagnosis and detection of infectious diseases, noting that AI -
+===== PAGE 16 =====
+16 
+ 
+assisted surveillance systems analyze historical data patterns, generate automated alerts, and 
+support clinical and public health decision -making in ways that manual surveillance cannot 
+match. Their review emphasized that AI's capacity to identify subtle p atterns across large 
+historical datasets makes it particularly valuable in settings where disease data has been 
+collected over many years but has not been systematically analyzed for predictive purposes. 
+The WHO (2018) and CDC (2019) similarly acknowledge that digital and AI -enabled 
+surveillance systems significantly improve timeliness and detection accuracy over traditional 
+methods. The WHO (2018) highlights that early warning systems incorporating automa ted 
+analytical models reduce the time between outbreak onset and health authority notification, 
+enabling earlier and more effective public health response. The CDC (2019) has actively 
+developed AI-assisted surveillance tools including the Early Aberration Reporting System, 
+which operationalizes statistical learning principles for automated anomaly detection in disease 
+incidence data, demonstrating the practical value of embedding AI within routine surveillance 
+workflows. 
+For H -MAP, AI is embedded in two specific components: the Prophet time -series 
+forecasting model, which applies additive regression and automatic seasonality detection to 
+generate four-week-ahead disease case predictions, and the Random Forest classifier, w hich 
+uses ensemble learning to classify each of Parañaque City's 16 barangays by disease risk level 
+for a given week. Together, these components constitute H -MAP's AI-assisted early warning 
+capability, providing health officials with forward -looking intelligence that complements the 
+automated epidemic threshold alerts. This design reflects the principle identified by Srivastava 
+et al. (2024) that AI in surveillance should serve as a decision -support layer rather than a 
+replacement for epidemiological expertise. 
+===== PAGE 17 =====
+17 
+ 
+Machine Learning for Disease Forecasting: Prophet Time-Series Models 
+Predictive modeling applies statistical and time -series techniques to forecast disease 
+trends using historical incidence data. Shaman and Karspeck (2012) demonstrated that 
+influenza outbreaks can be forecasted using time -series modeling and statistical inf erence 
+techniques, establishing the foundational evidence that machine learning-based forecasting can 
+provide operationally useful lead time for public health preparedness. Prophet, developed by 
+Meta's Core Data Science team and released as open-source software, decomposes time-series 
+data into trend, yearly seasonality, weekly seasonality, and holiday effect components, fitting 
+these through an additive regression model that is robust to missing data and irregular reporting 
+patterns (Taylor & Letham, 2018). 
+Olana et al. (2025) compared SARIMA, Neural Network Autoregression, Random 
+Forest, LSTM, TBATS, and Prophet for dengue forecasting at the national level in the 
+Philippines using monthly data from 2017 to 2024. Their study confirmed the strong 
+seasonality of Philippine dengue incidence and demonstrated that time-series models including 
+Prophet can produce reliable forecasts when trained on sufficiently long historical data, 
+providing the most current evidence in the Philippine literature for the forecasting approach 
+employed in H -MAP. Chakraborty et al. (2019) similarly applied Prophet to dengue 
+forecasting and reported that the model's automated seasonality handling produced forecasts 
+with substantially lower error rates than traditional ARIMA models, partic ularly for diseases 
+with strong and regular seasonal patterns. These findings directly validate the Prophet 
+forecasting component of H-MAP, which will target a four-week forecast horizon for Dengue 
+and other priority diseases exhibiting consistent seasonal  behavior in the Parañaque City 
+PIDSR dataset. 
+===== PAGE 18 =====
+18 
+ 
+It is important to note that both Olana et al. (2025) and Chakraborty et al. (2019) 
+produced standalone forecasting models without integration into operational dashboard 
+platforms. H-MAP addresses this limitation by embedding Prophet forecast outputs direc tly 
+within an authenticated, role -based web dashboard accessible to city epidemiology unit staff 
+without requiring them to operate machine learning tools directly. 
+Machine Learning for Barangay Risk Classification: Random Forest 
+Random Forest is an ensemble machine learning method that constructs multiple 
+decision trees during training and outputs the class predicted by the majority of trees (Breiman, 
+2001). It is valued in classification tasks for its robustness to overfitting, i ts ability to handle 
+mixed feature types, and its capacity to capture complex interactions between features. In the 
+Philippine context, Carvajal et al. (2018) applied Random Forest, alongside General Additive 
+Modeling, SARIMA, and Gradient Boosting, to for ecast dengue incidence in Metropolitan 
+Manila using meteorological and historical case data. Their study found that Random Forest 
+achieved competitive predictive accuracy and identified temporal patterns that single -
+technique models could not reliably capture, providing direct local evidence for the suitability 
+of Random Forest in Philippine dengue surveillance contexts. 
+Shi et al. (2016) demonstrated that ensemble learning methods outperformed logistic 
+regression and single decision tree approaches in classifying high-risk geographic units based 
+on historical case patterns and seasonal features in a dengue surveillance context. For H-MAP, 
+the Random Forest classifier will be trained on 14 years of Parañaque City PIDSR data to 
+predict Low, Moderate, or High disease risk for each of the city's 16 barangays for a given 
+week and disease, using features including barangay identity, morbidity week, calendar month, 
+recent case counts, prior-year case counts, and the five-year historical mean. The combination 
+===== PAGE 19 =====
+19 
+ 
+of epidemic threshold alerting at the city level with Random Forest risk classification at the 
+barangay level provides a layered analytical design that addresses both outbreak detection and 
+geographic targeting of public health resources. 
+As with the Prophet forecasting component, the Random Forest classifier in H -MAP 
+addresses the operational gap identified in the local literature: Carvajal et al. (2018) produced 
+a machine learning model for Metro Manila dengue forecasting but did not inte grate it into a 
+platform usable by health officers in routine surveillance operations. H -MAP converts the 
+classifier's outputs into a color-coded barangay risk overlay on the Leaflet.js map, making AI-
+generated risk assessments directly interpretable by health personnel without machine learning 
+expertise. 
+PHP-Based Web Systems and HRMO Portal Integration 
+PHP is a widely used server -side scripting language specifically designed for web 
+development, supporting dynamic content generation, session management, database 
+connectivity, and form handling. Its adoption in Philippine government web systems is well 
+established, with many LGU portals, eServices platforms, and information management 
+systems implemented in PHP due to its open-source licensing and broad server compatibility. 
+The Parañaque City HRMO portal at hrmo.paranaque.gov.ph is implemented in PHP, making 
+PHP the natural choice for H-MAP to ensure compatibility with the existing codebase, session 
+infrastructure, and database configuration of the host environment. 
+Session-based authentication in PHP provides a practical mechanism for integrating H-
+MAP with the HRMO portal's access control system. When an employee logs into the HRMO 
+portal, PHP creates a server -side session storing the employee's identifier, name, ro le, and 
+employment status. H-MAP will access this session data directly, verifying that the requesting 
+===== PAGE 20 =====
+20 
+ 
+user is both authenticated in the HRMO portal and recorded as an active employee in the 
+HRMO MySQL database before granting access to disease surveillance features. This 
+approach eliminates the need for a separate H -MAP user database, reduces administrativ e 
+overhead, and ensures that access control inherits the HRMO office's real-time employee status 
+records, including immediate revocation of access upon HR recording of an employee 
+separation. This design directly supports compliance with Republic Act No. 10173 (2012) and 
+the National Privacy Commission (n.d.) guidelines for access -controlled processing of 
+sensitive health information in government systems. 
+From a deployment perspective, implementing H -MAP as a path -based directory at 
+hrmo.paranaque.gov.ph/hmap avoids the need for new DNS configuration, additional SSL 
+certificate provisioning, or separate server allocation. The proposed system will share the 
+existing server resources, PHP runtime, and MySQL instance of the HRMO portal, minimizing 
+infrastructure requirements and simplifying both initial deployment and ongoing maintenance. 
+Dashboard and Data Visualization for Public Health 
+Data visualization dashboards are increasingly recognized as essential tools for 
+translating complex surveillance data into actionable public health intelligence. Dowding et al. 
+(2015) conducted a review of dashboard implementations for improving patient care and found 
+that effective dashboards must present the most important surveillance indicators in a single, 
+visually clear interface that enables immediate understanding and action. In public health 
+surveillance contexts, their review emphasized that tren d line charts and bar charts are most 
+effective for communicating epidemiological time-series data to health practitioners, as these 
+formats align with the temporal mental models that health personnel use when interpreting 
+surveillance outputs. 
+===== PAGE 21 =====
+21 
+ 
+Dong et al. (2020) demonstrated the operational effectiveness of a web -based 
+epidemiological dashboard that combined real-time GIS mapping with tabular and chart-based 
+case summaries during the COVID -19 pandemic. Their work illustrates that browser -based 
+dashboards can serve large user bases across diverse technical environments when built on 
+well-structured open -source technologies. Chart.js, an open -source JavaScript library for 
+interactive data visualizations, provides the charting foundation for H-MAP. Research on AI-
+assisted surveillance dashboards by Srivastava et al. (2024) further establishes that embedding 
+AI outputs within accessible visualization tools bridges the gap between machine learning 
+model accuracy and practical utility for health decisio n-makers, which is a core design 
+principle of H-MAP. 
+Role-Based Access Control and Data Privacy in Health Systems 
+Role-Based Access Control (RBAC) is a security model that restricts system access 
+based on the roles assigned to individual users, ensuring that each user can only access 
+functions and data appropriate to their responsibilities. In health information syste ms, RBAC 
+is a foundational security requirement because such systems process sensitive personal 
+information including patient identities, addresses, disease diagnoses, and outcome data. 
+Republic Act No. 10173, the Data Privacy Act of 2012, requires that he alth information 
+systems implement access controls that limit data exposure to personnel with a legitimate need 
+for the information (Republic Act No. 10173, 2012). The National Privacy Commission (n.d.) 
+has issued guidelines emphasizing that personal data collected for public health purposes must 
+be protected through technical and organizational measures appropriate to the risk. 
+H-MAP will implement RBAC through a two -layer access control architecture. The 
+first layer will be provided by the HRMO portal authentication, which verifies that the 
+===== PAGE 22 =====
+22 
+ 
+accessing user is a currently active employee of the City Government of Parañaque before 
+granting any access to H -MAP. The second layer will be implemented within H -MAP itself, 
+assigning one of three role levels to each authenticated user: Data Encoder, He alth Analyst, 
+and Administrator. Patient -level data will be accessible only to Administrators with 
+documented public health necessity, while dashboard visualizations and AI machine learning 
+outputs will operate on aggregated, anonymized case counts, consis tent with the data 
+minimization principle under Republic Act No. 10173 (2012). 
+Software Quality Models and Evaluation Frameworks 
+ISO/IEC 25010 defines an internationally recognized software product quality model 
+that specifies quality characteristics including functional suitability, reliability, usability, 
+performance efficiency, security, maintainability, and portability (ISO, 201 1). For applied 
+developmental research in the Philippines, ISO/IEC 25010 is widely adopted as the conceptual 
+basis for system evaluation because it provides a systematic and internationally validated 
+framework for assessing software quality across multiple dimensions. The ISO (2011) standard 
+is particularly important in public health systems, where reliability and accuracy are critical to 
+the integrity of health decision-making. For H-MAP, five quality characteristics will serve as 
+evaluation dimensions: Fu nctionality, Reliability, Usability, Performance Efficiency, and 
+Maintainability. 
+Foreign Studies 
+International research on web -based disease surveillance systems and AI -assisted 
+outbreak detection has consistently demonstrated the effectiveness of machine learning and 
+browser-rendered GIS tools in enhancing public health response. Boulos et al. (2011)  found 
+that open-source web mapping platforms provided sufficient functionality for disease mapping 
+===== PAGE 23 =====
+23 
+ 
+tasks previously requiring proprietary desktop GIS software, with zero licensing costs 
+identified as a key practical advantage for resource-constrained health agencies. Their review 
+directly supports the Leaflet.js and OpenStreetMap approach adopted in H-MAP. 
+Dong et al. (2020) developed the Johns Hopkins University COVID -19 Dashboard, 
+integrating real-time GIS mapping with case counts across multiple geographic scales. The 
+system demonstrated that web -based spatial surveillance dashboards are operationally 
+effective at scale and that open, browser-based architectures can serve diverse user bases across 
+institutional and geographic boundaries, supporting the dashboard design approach of H-MAP. 
+Shaman and Karspeck (2012) demonstrated successful influenza forecasting using time-series 
+modeling, establishing that machine learning methods can generate reliable short -term 
+outbreak predictions from historical surveillance data. 
+Chakraborty et al. (2019) applied Prophet to dengue forecasting in tropical urban 
+settings and reported mean absolute percentage errors substantially lower than those achieved 
+by traditional ARIMA models, validating Prophet's suitability for disease foreca sting in 
+contexts directly comparable to Parañaque City. Shi et al. (2016) validated ensemble machine 
+learning for sub -city disease risk classification in Singapore, finding that Random Forest 
+classifiers outperformed single decision tree and logistic regr ession approaches in predicting 
+geographic units at high outbreak risk. Srivastava et al. (2024) provided a comprehensive 
+review of AI roles in early detection of infectious diseases, confirming that AI -assisted 
+surveillance systems improve detection speed  and decision-support quality across a range of 
+health system contexts. 
+ Local Studies and Contextual Research 
+===== PAGE 24 =====
+24 
+ 
+In the Philippine context, Carvajal et al. (2018) represents the most directly relevant 
+local machine learning study. Using dengue incidence and meteorological data from 
+Metropolitan Manila covering 2009 to 2013, they compared General Additive Modeling, 
+SARIMA, Random Forest, and Gradient Boosting for dengue forecasting accuracy. Their 
+study found that Random Forest achieved competitive predictive performance and revealed 
+temporal patterns associated with meteorological variables that single -technique model s 
+missed. Critically, however, their study produced standalone forecasting models and did not 
+integrate outputs into an operational surveillance platform accessible to city health office 
+personnel. This limitation is explicitly addressed by H-MAP. 
+Olana et al. (2025), in the most current Philippine-specific study, compared SARIMA, 
+Neural Network Autoregression, Random Forest, LSTM, TBATS, and Prophet for nationwide 
+dengue forecasting using monthly data from 2017 to 2024. Their study confirmed the st rong 
+seasonality of Philippine dengue incidence and the viability of multiple machine learning 
+approaches for time-series forecasting in the Philippine data environment. Like Carvajal et al. 
+(2018), however, the study focused on model accuracy rather than operational deployment, 
+leaving the gap of accessible, web -based AI surveillance platforms at the city level 
+unaddressed. H-MAP responds directly to this gap. 
+Studies evaluating the PIDSR system at the local level have consistently identified the 
+gap between national data collection and local analytical capability as a persistent limitation 
+of city-level public health management (DOH, 2014). Local health offices  possess years of 
+surveillance data but lack the technical platforms to exploit that data for spatial visualization 
+or AI-assisted forecasting. This finding directly motivates the development of H -MAP as a 
+locally deployed analytical layer on top of existing PIDSR data. 
+===== PAGE 25 =====
+25 
+ 
+Foreign Systems Related to H-MAP 
+Freifeld et al. (2008) developed HealthMap, a global disease outbreak monitoring 
+platform that processes internet-based data sources to detect emerging disease threats through 
+automated classification algorithms. While operating at a global scale fundamentally different 
+from H-MAP's city -level scope, HealthMap demonstrates the operational feasibility of AI -
+driven disease detection as a complement to traditional surveillance reporting. The CDC Early 
+Aberration Reporting System (EARS) provides a publicly docu mented model for threshold -
+based automated outbreak detection using moving averages and standard deviation methods 
+(CDC, 2019), the same mathematical foundations that H -MAP will implement for its 
+automated epidemic threshold alerting module. The Dong et al. (2020) COVID-19 Dashboard 
+further demonstrates scalable architecture combining GIS, relational databases, and web 
+technologies in a format that benchmarks H-MAP's integrated surveillance dashboard design. 
+Local Systems Related to H-MAP 
+The DOH PIDSR system and the Field Health Services and Information System 
+(FHSIS) provide the national framework for disease data collection and aggregation in the 
+Philippines (DOH, 2014). Both systems are oriented toward national -level reporting and 
+aggregation rather than city-level spatial analysis and real-time alerting. Submission of data to 
+these national systems does not automatically produce barangay -level heat maps, epidemic 
+threshold alerts, or AI-generated forecasts for the submitting city health office. This structural 
+limitation reinforces the need for supplementary, city -level analytical platforms such as H -
+MAP. 
+Several Metro Manila LGUs have developed or piloted internal disease monitoring 
+dashboards using general -purpose business intelligence tools connected to spreadsheet data 
+===== PAGE 26 =====
+26 
+ 
+sources. While these provide improved visualization over raw spreadsheets, they do not 
+include geospatial heat mapping, automated threshold alerting, or AI machine learning 
+forecasting. H -MAP offers a more complete analytical platform specifically designed  for 
+PIDSR-formatted surveillance data with AI -assisted prediction capabilities that general -
+purpose tools do not natively provide. 
+Mapping of Related Literature to H-MAP System Features 
+The reviewed literature provides direct conceptual and empirical support for each of 
+H-MAP's five functional modules. The HRMO Authentication Module is grounded in data 
+privacy literature establishing RBAC and employment-verified access control as requirements 
+for health information systems processing personal disease data under Republic Act No. 10173 
+(2012). The Data Digitization Module is supported by PIDSR framework documentation 
+establishing the appropriate data structure for city -level disease case man agement in the 
+Philippines (DOH, 2014). 
+The Heat Map Visualization Module is supported by Lawson (2018), Boulos et al. 
+(2011), and Nykiforuk and Flaman (2011), which collectively validate kernel density 
+estimation and open -source web mapping as effective tools for communicating disease 
+distribution to health practitioners. The Disease Monitoring and Alert Module is grounded in 
+WHO (2018) EWARN methodology and CDC (2019) EARS documentation, which establish 
+the two-standard-deviation epidemic threshold and moving average aberration detection as the 
+standard methods for automated outbreak detection in tropical communicable disease 
+surveillance. The AI Machine Learning Prediction Module draws on Taylor and Letham 
+(2018), Chakraborty et al. (2019), and Olana et al. (2025) for Prophet forecasting valida tion, 
+and on Breiman (2001), Carvajal et al. (2018), and Shi et al. (2016) for Random Forest 
+===== PAGE 27 =====
+27 
+ 
+classification validation, with Srivastava et al. (2024) providing the broader AI in disease 
+surveillance conceptual framework. 
+Synthesis of the Literature and Research Gap 
+The reviewed literature establishes several converging conclusions that collectively 
+support the design and development of H -MAP. First, disease surveillance systems require 
+both structured data collection and enhanced analytic capacity, and digital platfo rms 
+significantly improve both dimensions compared to manual, spreadsheet -based approaches 
+(WHO, 2018; CDC, 2019). Second, open-source web GIS technologies, particularly Leaflet.js 
+with OpenStreetMap, have reached functional maturity sufficient for profess ional-grade 
+disease surveillance mapping without proprietary licensing costs (Boulos et al., 2011; 
+Nykiforuk & Flaman, 2011). Third, the WHO EWARN epidemic threshold methodology and 
+CDC EARS provide statistically principled, operationally established standards for automated 
+outbreak detection that are directly compatible with PIDSR-formatted data (WHO, 2018; CDC, 
+2019; DOH, 2014). 
+Fourth, AI machine learning models including Prophet and Random Forest have 
+demonstrated reliable performance in communicable disease forecasting and spatial risk 
+classification in the Philippine context specifically. Carvajal et al. (2018) demonstrated th at 
+Random Forest achieves competitive accuracy for dengue forecasting in Metropolitan Manila. 
+Olana et al. (2025), in the most current Philippine study, confirmed that Prophet and Random 
+Forest are among the viable models for national -scale dengue forecast ing using PIDSR -
+formatted data spanning 2017 to 2024. These two studies provide the strongest available local 
+validation for the AI components of H -MAP. Fifth, Srivastava et al. (2024) established the 
+broader conceptual basis for AI -assisted disease surveillance, confirming that embedding AI 
+===== PAGE 28 =====
+28 
+ 
+within operational health information systems improves detection speed and decision-support 
+quality across diverse health contexts. Sixth, Republic Act No. 10173 (2012) and National 
+Privacy Commission guidelines establish data privacy and RBAC as non -negotiable 
+requirements for health information systems processing personal disease data. 
+Despite these converging foundations, the reviewed literature reveals a specific and 
+addressable research gap. Carvajal et al. (2018) and Olana et al. (2025), the two most relevant 
+Philippine machine learning studies, both produced standalone forecasting models focused on 
+predictive accuracy without embedding their outputs into operational web -based surveillance 
+platforms. Neither study addressed the practical challenge of making AI -generated disease 
+forecasts accessible to non -technical health personnel at  the city epidemiology unit level. 
+Existing LGU dashboards in Metro Manila use general-purpose tools without GIS or machine 
+learning capability, and national DOH systems do not provide city -level spatial visualization 
+or AI-assisted forecasting. H-MAP addresses this specific intersection of gaps by developing 
+an authenticated, role-based, web-based platform that embeds AI-generated Prophet forecasts 
+and Random Forest risk classifications within an accessible surveillance dashboard designed 
+specifically for CESU personnel using 14 years of Parañaque City PIDSR data. The system's 
+deployment within the HRMO portal infrastructure further addresses the practical access 
+control requirement absent from all reviewed systems. 
+Conceptual Framework of the Study 
+The present study adopts the Input -Process-Output (IPO) model as its conceptual 
+framework. This model is appropriate for development -oriented research because it presents 
+the logical relationship between the resources and requirements of the study, the development 
+and evaluation activities to be undertaken, and the expected project outputs. For H -MAP, the 
+===== PAGE 29 =====
+29 
+ 
+IPO model describes how disease surveillance data, government IT infrastructure, and open -
+source AI development technologies will be transformed through structured development 
+activities into a functional web -based AI -assisted disease surveillance system t hat will 
+subsequently be evaluated for software quality and operational acceptability. 
+Conceptual Model of the Study 
+ 
+Figure 1. Conceptual Framework of the study 
+Input 
+Knowledge Requirements will include the PIDSR disease surveillance data from 2010 
+to 2023 provided by the Parañaque City CESU (over 30,000 records, seven priority diseases, 
+16 barangays), the PIDSR disease classification and reporting standards of the DOH (2014), 
+the operational workflows and information needs of the City Epidemiology Section Unit, the 
+WHO EWARN epidemic threshold methodology (WHO, 2018), and AI machine learning 
+
+===== PAGE 30 =====
+30 
+ 
+methodologies validated in the Philippine context by Carvajal et al. (2018) and Olana et al. 
+(2025). 
+Software Requirements will include PHP for server-side web application development, 
+MySQL for relational data storage, Python 3 with Prophet, scikit -learn, and Flask for the AI 
+machine learning microservice, Leaflet.js and the Leaflet.heat plugin for inter active web 
+mapping, Chart.js for epidemiological data visualization, and the existing HRMO portal 
+codebase and database for authentication integration. 
+Infrastructure Requirements will comprise the existing DICT -provisioned web server 
+hosting hrmo.paranaque.gov.ph, the MySQL database instance already supporting the HRMO 
+portal, and the PHP and Python runtime environments on the server. 
+Process 
+The Process stage will encompass the complete development and evaluation lifecycle 
+of H-MAP: Requirements Analysis involving structured consultation with CESU staff and 
+review of PIDSR data and workflows; System Design including architecture planning, 
+database schema design, and AI machine learning model selection consistent with 
+methodologies validated by Carvajal et al. (2018), Olana et al. (2025), Taylor and Letham 
+(2018), and Breiman (2001); Development involving iterative construction of all five H-MAP 
+modules and AI model training; Testing through functional, reliability, performance, and 
+usability protocols; and Evaluation through ISO/IEC 25010 -based questionnaire 
+administration to CESU health officials and IT professionals (ISO, 2011). 
+Output 
+The primary output will be the H -MAP system, a PHP -based web application with five 
+integrated modules deployed at hrmo.paranaque.gov.ph/hmap on the DICT -provisioned 
+===== PAGE 31 =====
+31 
+ 
+government server. The secondary output will be the evaluation results documenting H-MAP's 
+software quality based on ISO/IEC 25010 criteria (ISO, 2011), providing a formal basis for 
+assessing the system's operational readiness and acceptability among its intended users. 
+Operational Definition of Terms 
+Artificial Intelligence (AI) Machine Learning Microservice. The Python Flask 
+application to be deployed internally on the DICT server that implements the Prophet 
+forecasting model and Random Forest risk classifier, serving AI -generated predictions to the 
+PHP web application through an internal HTTP API, consistent with methodologies validated 
+by Carvajal et al. (2018), Olana et al. (2025), and Taylor and Letham (2018). 
+Barangay Risk Classification. The output of the Random Forest machine learning 
+model in H-MAP, categorizing each of Parañaque City's 16 barangays as Low, Moderate, or 
+High disease risk for a selected week and disease, based on historical PIDSR case patterns and 
+current trend features (Breiman, 2001; Carvajal et al., 2018). 
+Chart.js. An open-source JavaScript library for rendering interactive, browser -based 
+data visualizations used in H -MAP to display epidemic curves, trend charts, and AI forecast 
+outputs on the surveillance dashboard. 
+Data Digitization. The process of encoding disease case records from PIDSR -
+formatted health facility reports into the H -MAP MySQL database through the system's 
+structured web-based data entry interface, consistent with DOH (2014) reporting standards. 
+Disease Surveillance. The systematic, ongoing collection, analysis, and 
+communication of disease incidence data for the purpose of detecting outbreaks, monitoring 
+trends, and supporting public health decision-making within Parañaque City (WHO, 2018). 
+===== PAGE 32 =====
+32 
+ 
+Epidemic Threshold. The statistical threshold defined as the mean weekly case count 
+plus two standard deviations based on five years of historical data for the same morbidity week, 
+consistent with WHO EWARN methodology (WHO, 2018). Exceedance of this threshold in 
+H-MAP will trigger an automated outbreak alert. 
+H-MAP. The Heat Map Disease Surveillance and Outbreak Prediction System 
+proposed in the present study for the City Epidemiology Section Unit of Parañaque City, to be 
+implemented as a PHP web application with AI machine learning capabilities deployed at 
+hrmo.paranaque.gov.ph/hmap. 
+Heat Map. A spatial visualization layer rendered by Leaflet.js using kernel density 
+estimation that represents the geographic density of disease cases as a color -coded intensity 
+surface overlaid on the Parañaque City base map (Lawson, 2018). 
+HRMO Authentication. The access control mechanism of H -MAP that will require 
+users to be authenticated through the Parañaque City HRMO portal and verified as currently 
+active employees in the HRMO database before accessing any disease surveillance features, 
+consistent with Republic Act No. 10173 (2012). 
+ISO/IEC 25010. An international standard defining a software product quality model 
+with characteristics including functional suitability, reliability, usability, performance 
+efficiency, and maintainability, used as the evaluation framework for H-MAP (ISO, 2011). 
+Leaflet.js. An open-source JavaScript library for interactive web mapping used in H -
+MAP to render the base map, heat map overlay, and barangay risk markers on the surveillance 
+dashboard (Boulos et al., 2011). 
+===== PAGE 33 =====
+33 
+ 
+PIDSR. The Philippine Integrated Disease Surveillance and Response system, the 
+national framework that defines the disease categories, case classifications, reporting timelines, 
+and data formats used in H-MAP's data management and alerting modules (DOH, 2014). 
+Prophet. An open-source time-series forecasting library developed by Meta, to be used 
+in H-MAP's AI component to generate four -week-ahead weekly case count predictions for 
+priority diseases based on 14 years of historical PIDSR data (Taylor & Letham, 2018), with 
+forecasting performance validated in the Philippine dengue context by Olana et al. (2025). 
+Random Forest. An ensemble machine learning algorithm to be used in H-MAP's AI 
+component for barangay risk classification, trained on historical PIDSR data to predict Low, 
+Moderate, or High disease risk for each Parañaque City barangay for a given week and disease 
+(Breiman, 2001), with performance validated in the Metro Manila dengue context by Carvajal 
+et al. (2018). 
+Role-Based Access Control. The security model to be implemented in H -MAP that 
+will assign one of three access levels, namely Data Encoder, Health Analyst, or Administrator, 
+to each authenticated user, consistent with Republic Act No. 10173 (2012). 
+WHO EWARN. The World Health Organization Early Warning and Response 
+Network methodology for epidemic threshold calculation, which defines the outbreak alert 
+threshold as the mean plus two standard deviations of historical weekly case counts (WHO, 
+2018), the same method to be adopted in H-MAP's automated alerting module.  
+===== PAGE 34 =====
+34 
+ 
+Chapter  3 
+METHODOLOGY 
+ 
+This chapter presents the research methodology to be employed in the design, 
+development, testing, and evaluation of H-MAP. It describes the research design, the complete 
+project development plan including system architecture, module specifications, AI mac hine 
+learning model design, and database management, the instruments and testing procedures to 
+be applied, the evaluation model and respondents, and the statistical treatment of evaluation 
+data. 
+Project Design 
+This study will employ an Applied Developmental Research Design, in which the 
+primary objective is the design, construction, testing, and formal evaluation of a functional 
+software system that addresses a documented operational need within a specific insti tutional 
+context. Applied developmental research is appropriate here because the contribution of the 
+study is the H -MAP system itself, together with evidence of its quality based on ISO/IEC 
+25010 evaluation criteria (ISO, 2011). The study does not aim prim arily to generate new 
+theoretical knowledge but to produce and formally evaluate a practical artifact of direct 
+operational value to the City Epidemiology Section Unit, specifically addressing the 
+operational gap identified in the Philippine machine learning literature by Carvajal et al. (2018) 
+and Olana et al. (2025). 
+Development will follow an Agile -Inspired Iterative Prototyping Model, with the 
+project progressing through repeated cycles of planning, development, testing, and feedback -
+driven refinement within a one-month development timeline. This focused scope is intentional: 
+===== PAGE 35 =====
+35 
+ 
+rather than pursuing feature breadth, H -MAP prioritizes the delivery of five well -tested 
+modules that collectively address the core surveillance needs of the CESU. The iterative 
+approach is appropriate because the HRMO authentication integration, AI machin e learning 
+microservice communication, and heat map parameter calibration each require short cycles of 
+testing and adjustment that benefit from incremental rather than linear development. 
+The complete development lifecycle will consist of the following five phases: 
+a. Requirements Analysis: structured consultation with CESU health officials to 
+identify surveillance workflows, information needs, priority diseases, and system 
+requirements; review of historical PIDSR data to confirm AI machine learning 
+model feasibility. 
+b. System Design: database schema design, system architecture planning, module 
+interface design, and AI machine learning model selection consistent with Carvajal 
+et al. (2018), Olana et al. (2025), Taylor and Letham (2018), and Breiman (2001). 
+c. Development: iterative construction of all five H -MAP modules and AI model 
+training within the one-month development window. 
+d. Testing: functional, reliability, performance, and usability testing using 
+documented test cases across all modules. 
+e. Evaluation: ISO/IEC 25010 -based questionnaire administration to CESU health 
+officials and IT professionals (ISO, 2011). 
+System Overview 
+H-MAP will be a PHP -based web application with an integrated AI Python machine 
+learning microservice, to be deployed at hrmo.paranaque.gov.ph/hmap on the DICT -
+===== PAGE 36 =====
+36 
+ 
+provisioned server that hosts the Parañaque City HRMO portal. The proposed system will 
+provide authorized city government employees with an integrated disease surveillance 
+dashboard featuring interactive heat maps, automated outbreak alerts, trend visualizations, and 
+AI machine learning -based forecasts derived from Parañaque City's 14 -year PIDSR disease 
+case dataset. The system is designed to be completable within a one-month development period 
+by focusing on five clearly scoped modules, each addressing a s pecific and documented 
+operational need of the CESU. 
+The proposed system will enable authorized health officials and data personnel to: 
+a. Log in using their existing HRMO portal credentials, with access granted only to 
+currently active employees, consistent with Republic Act No. 10173 (2012). 
+b. Encode new disease case records using a structured data entry form aligned with 
+PIDSR reporting standards (DOH, 2014). 
+c. View an interactive Leaflet.js heat map displaying current geographic distribution 
+of disease cases across Parañaque City's 16 barangays, with barangay-level AI risk 
+overlays derived from the Random Forest classifier (Breiman, 2001; Carvajal et al., 
+2018). 
+d. Monitor real -time disease trends through Chart.js epidemic curve charts with 
+automated color-coded epidemic threshold alerts consistent with WHO EWARN 
+methodology (WHO, 2018). 
+e. Access four-week-ahead AI forecasts for priority diseases using the Prophet model, 
+presented as predicted case counts with confidence intervals (Taylor & Letham, 
+2018; Olana et al., 2025). 
+===== PAGE 37 =====
+37 
+ 
+f. Export summary surveillance reports for administrative reporting and DOH 
+submission. 
+HRMO Portal Authentication Integration 
+H-MAP will use the HRMO portal's existing PHP session infrastructure for 
+authentication. When an employee accesses hrmo.paranaque.gov.ph/hmap, the H -MAP PHP 
+entry point will check for the presence of an active HRMO session. If no active session is 
+found, the user will be redirected to the HRMO portal login page with the H-MAP path set as 
+the post -login destination. If an active session is found, H -MAP will perform a secondary 
+verification query against the HRMO MySQL database to confirm that the employee's current 
+status is ACTIVE, ensuring that employees whose separation has been recorded by HR are 
+denied access without requiring manual deactivation in a separate user management system. 
+This design is consistent with access control principles required under Republic Act No. 10173 
+(2012) and the National Privacy Commission (n.d.) guidelines. 
+Following successful authentication and status verification, H -MAP will retrieve the 
+employee's role assignment from a dedicated role mapping table. The three role levels to be 
+implemented are: 
+a. Data Encoder: access to case data entry and personal data viewing only, with no 
+access to AI machine learning predictions, bulk exports, or system configuration. 
+b. Health Analyst: full access to heat map visualization, epidemic threshold alerts, 
+trend charts, AI Prophet forecasts, and Random Forest risk classifications, with no 
+access to system configuration or user role management. 
+c. Administrator: full access to all features including user role assignment, disease 
+threshold configuration, AI model retraining triggers, and complete data export. 
+===== PAGE 38 =====
+38 
+ 
+System Modules 
+H-MAP will be composed of five functional modules, scoped for completion within 
+the one-month development timeline: 
+Module 1: Data Digitization and Records Management. This module will provide a 
+structured web -based interface for encoding PIDSR disease case records into the H -MAP 
+MySQL database. Input fields will mirror the PIDSR case report form, consistent with DOH 
+(2014) reporting standards, including disease name, case classification, date of onset, date of 
+admission, patient barangay, reporting health facility, age, sex, vaccination history, and case 
+outcome. Input validation will check completeness and classification consistency before record 
+insertion. A batch import function will support CSV upload of multiple records using a PIDSR-
+compatible template, facilitating transfer of historical data from existing Excel -based 
+surveillance records. 
+Module 2: Heat Map Visualization. This module will render an interactive disease 
+surveillance map using Leaflet.js with OpenStreetMap tile layers. Upon selecting a disease and 
+date range, the module will retrieve geocoded case records from MySQL and pass them to the 
+Leaflet.heat plugin, which will compute and render the KDE heat map as a color gradient 
+overlay on the base map (Lawson, 2018). A GeoJSON barangay boundary layer will be 
+rendered as a semi -transparent polygon overlay, with each barangay polygon colored Low 
+(green), Moderate (yellow), or High (red) based on the current output of the AI Random Forest 
+risk classifier retrieved from the Python machine learning microservice (Breiman, 2001; 
+Carvajal et al., 2018). 
+Module 3: Disease Trend Monitoring and Epidemic Threshold Alert. This module will 
+provide the core epidemiological surveillance dashboard. For the selected disease, the module 
+===== PAGE 39 =====
+39 
+ 
+will query the H -MAP MySQL database to retrieve weekly case counts for the current year 
+and compare them against pre-computed threshold values. Threshold values will be computed 
+as the historical mean plus two standard deviations across the preceding five years, consistent 
+with WHO EWARN methodology (WHO, 2018) and CDC EARS (CDC, 2019). Results will 
+be displayed as a Chart.js line chart overlaying the current year epidemic curve against the 
+historical mean and threshold. A color -coded status indicator will update automatically each 
+week: green if current cases are below the historical mean, yellow if above the mean but below 
+the threshold, and red if the threshold is exceeded. 
+Module 4: AI Machine Learning Prediction. This module will provide H -MAP's 
+forward-looking AI-assisted analytical capabilities by communicating with the internal Python 
+Flask microservice. When a Health Analyst or Administrator opens the prediction panel, the 
+PHP application will send an HTTP request to the Flask service and await a JSON response 
+containing: the Prophet four-week forecast with predicted case counts and confidence intervals 
+(Taylor & Letham, 2018; Olana et al., 2025); the epidemic threshold status for each forecast 
+week (WHO, 2018); and the Random Forest risk classification for each of the 16 barangays 
+(Breiman, 2001; Carvajal et al., 2018), displayed as a colored polygon overlay on the Leaflet.js 
+map. A visible note on the prediction panel w ill state that AI machine learning outputs are 
+decision-support indicators and that epidemiological judgment of qualified health personnel is 
+required for public health action decisions, consistent with the decision -support principle 
+articulated by Srivastava et al. (2024). 
+Module 5: Reports and Data Export. This module will allow authorized users to 
+generate and download summary surveillance reports. Data Encoders may export a personal 
+data entry log. Health Analysts may generate disease summary reports including epidemic 
+===== PAGE 40 =====
+40 
+ 
+curve charts and barangay case count tables. Administrators may export the complete case 
+registry as a CSV file for DOH submission or archival purposes. All export actions will be 
+recorded in the system audit trail, consistent with Republic Act No. 10173 (2012). 
+AI Python Machine Learning Microservice 
+The AI machine learning component of H-MAP will run as a Flask application on the 
+same DICT server, listening on internal port 5001 and accessible only through localhost, not 
+exposed to the public internet. The microservice will provide two endpoints: /pre dict/forecast 
+for Prophet model execution, and /predict/risk for Random Forest classification. Both models 
+will be pre-trained and loaded at startup for fast response without retraining on each request. 
+Prophet Model. One Prophet model will be trained per priority disease using the 
+complete aggregated weekly case time -series from 2010 to 2023 (Taylor & Letham, 2018). 
+The training process follows the approach validated by Olana et al. (2025) for Philippine  
+dengue data, aggregating case records by disease and morbidity week into the two -column 
+dataframe format required by Prophet (ds for week start date, y for case count). Each trained 
+model will be serialized using Python's pickle module and stored on the server. Administrators 
+may trigger model retraining through the H-MAP Administrator panel as new surveillance data 
+is added. 
+Random Forest Model. The Random Forest classifier will be trained using labeled 
+historical observations derived from the PIDSR dataset at the disease -barangay-week level, 
+following the approach employed by Carvajal et al. (2018) for Metro Manila dengue dat a 
+(Breiman, 2001). Each observation will be labeled High risk if the barangay's case count 
+exceeded the epidemic threshold for that week, Moderate if between the historical mean and 
+threshold, and Low if at or below the mean. The feature vector will include barangay identifier, 
+===== PAGE 41 =====
+41 
+ 
+morbidity week number, calendar month, current week case count, same-week-prior-year case 
+count, five-year historical mean, ratio of current to historical mean, and cumulative year -to-
+date case count for the barangay. A scikit -learn RandomForestClassifier with 200 estimators 
+and class-weight balancing will be used. 
+Model Validation. Both models will be validated using a temporal hold -out approach 
+consistent with Olana et al. (2025): training on 2010 to 2020 data and evaluating against 2021 
+to 2023 data. For the Prophet model, Mean Absolute Percentage Error will be re ported for 
+forecast weeks. For the Random Forest classifier, accuracy, precision, recall, and F1 score will 
+be reported per risk class. Validation results will be documented in the system evaluation 
+findings. 
+Development Environment 
+Server-Side Technologies: 
+a. PHP 8.x: primary web application language, consistent with the existing HRMO 
+portal. 
+b. MySQL 8.x: relational database management system for case records, user roles, 
+threshold tables, and system logs. 
+c. Python 3.10 and higher: runtime environment for the AI Flask microservice, 
+Prophet models, and scikit-learn classifiers. 
+d. Flask 3.x: lightweight Python web framework serving the internal AI prediction 
+API. 
+e. Prophet: open -source time -series forecasting library validated for Philippine 
+dengue data by Olana et al. (2025) and Taylor and Letham (2018). 
+===== PAGE 42 =====
+42 
+ 
+f. scikit-learn: machine learning library providing the RandomForestClassifier 
+validated in the Metro Manila dengue context by Carvajal et al. (2018) and Breiman 
+(2001). 
+g. pandas and numpy: Python data processing libraries used in AI machine learning 
+data preparation and feature engineering. 
+Client-Side Technologies: 
+a. Leaflet.js: open-source JavaScript mapping library for interactive base map and 
+heat map rendering (Boulos et al., 2011). 
+b. Leaflet.heat plugin: Leaflet extension for kernel density estimation heat map 
+generation (Lawson, 2018). 
+c. Chart.js: open-source JavaScript charting library for epidemic curves, trend charts, 
+and AI forecast visualizations. 
+d. Bootstrap: responsive CSS framework for dashboard layout and interface 
+components. 
+Hardware Requirements (Minimum): 
+a. Server: Intel Core i5 or equivalent, 8 GB RAM, 50 GB available storage, Ubuntu 
+Server 20.04 LTS or equivalent. 
+b. Client: any device with a modern web browser; no additional software installation 
+required. 
+System Architecture 
+H-MAP will follow a three -layer web application architecture with an additional AI 
+machine learning service layer: 
+===== PAGE 43 =====
+43 
+ 
+ 
+Figure 2. System Architecture 
+Presentation Layer. The browser-rendered interface composed of Leaflet.js map panels, 
+Chart.js chart panels, Bootstrap-styled dashboard components, and PHP-generated HTML. All 
+user interactions are handled at this layer, communicating with the application layer through 
+HTTP form submissions and AJAX requests. 
+Application Logic Layer. The PHP codebase handling HRMO session and MySQL 
+authentication verification, data validation and sanitization, MySQL queries for surveillance 
+data retrieval and aggregation, epidemic threshold computation against stored threshold tables, 
+
+===== PAGE 44 =====
+44 
+ 
+report generation, and internal cURL calls to the AI Python Flask microservice on 
+localhost:5001. 
+Data Layer. The MySQL database containing the H-MAP case records table, barangay 
+reference table with centroid coordinates, PIDSR disease reference table consistent with DOH 
+(2014), pre-computed weekly epidemic threshold table based on WHO EWARN methodology 
+(WHO, 2018), user role assignment table, and system audit log table. The database will share 
+the same MySQL server instance as the HRMO portal but will use a separate schema to 
+maintain clear data separation. 
+AI Machine Learning Service Layer. The Python Flask microservice running internally on 
+localhost:5001, separate from the PHP application, maintaining pre -trained Prophet and 
+Random Forest model objects in memory for fast AI prediction response. Methodology follows 
+Carvajal et al. (2018), Olana et al. (2025), Taylor and Letham (2018), and Breiman (2001). 
+Operational Flow 
+a. Employee accesses hrmo.paranaque.gov.ph/hmap through a web browser. 
+b. PHP checks for active HRMO session; if absent, redirects to HRMO portal login. 
+c. Upon confirmed active session, PHP queries HRMO MySQL to verify ACTIVE 
+employment status, consistent with Republic Act No. 10173 (2012). 
+d. H-MAP dashboard loads with default view showing the current week's heat map and 
+epidemic curve. 
+e. For heat map: PHP retrieves geocoded case records from MySQL; Leaflet.heat renders 
+KDE overlay (Lawson, 2018); PHP sends cURL request to Flask /predict/risk; 
+barangay AI risk polygons update on map. 
+===== PAGE 45 =====
+45 
+ 
+f. For trend chart: PHP retrieves weekly case counts and pre -computed WHO EWARN 
+thresholds from MySQL (WHO, 2018); Chart.js renders epidemic curve with threshold 
+line; color-coded status indicator updates. 
+g. For AI forecast: PHP sends cURL request to Flask /predict/forecast; Prophet prediction 
+JSON returns (Taylor & Letham, 2018; Olana et al., 2025); Chart.js renders forecast 
+chart with confidence bands. 
+h. User may generate and download a summary report from the Reports module. 
+i. All actions are recorded in the system audit log, consistent with Republic Act No. 
+10173 (2012). 
+Database Design 
+The H-MAP MySQL database will use the following primary tables: 
+cases: individual PIDSR -aligned disease case records including case identifier, disease 
+reference, case classification, date of onset, date of admission, barangay identifier, facility 
+identifier, age, sex, outcome, morbidity week, morbidity month, year, en tered-by employee 
+identifier, and entry timestamp, consistent with DOH (2014) reporting fields. 
+ 
+Figure 3. Core Transaction Table: Cases 
+
+===== PAGE 46 =====
+46 
+ 
+diseases: controlled PIDSR disease reference list consistent with DOH (2014) classifications, 
+including disease identifier, disease name, disease category, alert -enabled flag, and forecast -
+enabled flag. 
+ 
+Figure 4. Reference Table: diseases 
+barangays: Parañaque City barangay reference including barangay identifier, barangay name, 
+population, centroid latitude, centroid longitude, and GeoJSON identifier for boundary layer 
+matching. 
+ 
+Figure 5. Reference Table: barangays 
+
+===== PAGE 47 =====
+47 
+ 
+thresholds: pre-computed weekly epidemic thresholds for all monitored diseases, including 
+disease identifier, morbidity week, five -year mean case count, standard deviation, and 
+threshold value computed as mean plus two standard deviations consistent with W HO 
+EWARN (WHO, 2018). 
+ 
+Figure 6. Reference Table: thresholds 
+facilities: stores the reference data for all health centers and sentinel sites within Parañaque 
+City that report disease cases to the CESU. Its fields include the facility identifier, official 
+facility name, facility type of either Health Center, Sentinel  Site, or Hospital, the barangay 
+identifier indicating the facility location, a sentinel flag indicating PIDSR sentinel reporting 
+status, and the facility GPS latitude and longitude for map pin display on the surveillance 
+dashboard. 
+ 
+Figure 7. Reference Table: facilities 
+
+===== PAGE 48 =====
+48 
+ 
+user_roles: H-MAP role assignments for authenticated HRMO employees including employee 
+identifier, role designation, assigning administrator, and assignment timestamp. 
+ 
+Figure 8. Access Control, AI Output Cache & Audit Tables: user_roles 
+audit_log: records all user actions including employee identifier, action type, target record, 
+timestamp, and IP address, consistent with accountability requirements under Republic Act 
+No. 10173 (2012). 
+ 
+Figure 9. Access Control, AI Output Cache & Audit Tables: audit_log 
+
+===== PAGE 49 =====
+49 
+ 
+ai_predictions: stores the output log of all AI machine learning predictions generated by the 
+Python Flask microservice. It records both Prophet time -series forecast results and Random 
+Forest barangay risk classification results in the same table, distingu ished by the 
+prediction_type field. For Prophet records, the table stores the predicted case count and 80 -
+percent confidence interval bounds. For Random Forest records, it stores the barangay 
+identifier and the risk level output of Low, Moderate, or High. The table maintains a complete 
+historical log of all AI predictions requested by authorized Health Analysts and Administrators, 
+supporting both trend review and accountability documentation. 
+ 
+Figure 10. Access Control, AI Output Cache & Audit Tables: ai_predictions 
+The relationships among the H -MAP database tables are governed by foreign key 
+constraints implemented at the MySQL InnoDB engine level. The cases table is the central 
+transaction table and holds foreign keys referencing the disease_id of the diseases table , the 
+barangay_id of the barangays table, and the facility_id of the facilities table, establishing one-
+to-many relationships in each instance. The facilities table additionally holds a foreign key 
+referencing the barangays table, reflecting that each faci lity is located within one barangay. 
+The thresholds table references the diseases table through a foreign key with a CASCADE 
+delete rule, ensuring threshold records are automatically removed when a disease record is 
+
+===== PAGE 50 =====
+50 
+ 
+deleted, and enforces a unique constraint on the combination of disease_id and 
+morbidity_week to guarantee one threshold value per disease per epidemiological week. The 
+ai_predictions table holds foreign keys to both the diseases table and the barangays table, with 
+the barangay reference accepting NULL values to accommodate Prophet forecast records that 
+are not barangay -specific. The user_roles table references the HRMO employee database 
+through a logical cross-schema reference rather than an enforced foreign key constraint, as the 
+two tables reside in separate database schemas — H-MAP's hmap_db and the HRMO portal's 
+own database. Similarly, the entered_by field in the cases table and the employee_id field in 
+the audit_log table reference the HRMO employee i dentifier through logical cross -schema 
+references, with employee identity verified through the HRMO session at the point of data 
+entry rather than through a database-level constraint. 
+Figure 11. Entity Relationship and Foreign Key Constraints 
+Software Testing Plan 
+A multi-level testing strategy will be applied across all H-MAP modules prior to formal 
+evaluation. Testing will be organized as follows: 
+
+===== PAGE 51 =====
+51 
+ 
+A. Functionality Testing. Functional test cases will be developed for each module and 
+major system operation, specifying the module, operational procedure, expected result, and 
+observed system response. Test cases will cover HRMO session detection and redi rect 
+behavior; employment status verification; role -based access control enforcement; data entry 
+validation and database insertion; heat map rendering for different disease and date range 
+inputs; epidemic curve chart accuracy against WHO EWARN thresholds (WHO, 2018); Flask 
+AI microservice communication from PHP; Prophet forecast JSON parsing and chart rendering 
+(Taylor & Letham, 2018; Olana et al., 2025); and Random Forest risk classification map 
+overlay accuracy (Breiman, 2001; Carvajal et al., 2018). 
+B. Reliability Testing. Reliability testing will evaluate H -MAP's consistent 
+performance under repeated use, including repeated execution of the full dashboard load 
+sequence across multiple sessions and user role levels, and testing of AI machine learning 
+prediction request handling under repeated calls. The system's behavior when the Flask 
+microservice is temporarily unavailable will be verified to ensure that the PHP dashboard 
+displays an informative message without failing. 
+C. Performance Testing. Performance testing will measure response times for key 
+operations: initial dashboard load time, heat map rendering time for datasets of varying case 
+volume, Chart.js chart rendering time, and Flask AI machine learning prediction response time 
+from PHP cURL call to JSON receipt. Target response times are set at under 3 seconds for 
+dashboard load and under 5 seconds for AI prediction response, consistent with web 
+application usability standards. 
+D. Usability Testing. Usability testing will be conducted with selected CESU health 
+official respondents who will perform standardized task sequences including logging in 
+===== PAGE 52 =====
+52 
+ 
+through the HRMO portal, encoding a disease case record, navigating the heat map, 
+interpreting the epidemic threshold alert, and accessing an AI disease forecast. Post -task 
+questionnaire items will assess ease of navigation, clarity of map and chart visual izations, 
+understandability of AI prediction outputs, and overall interface satisfaction, following ISO 
+9241 principles. 
+Evaluation Model 
+The formal evaluation of H -MAP will use selected characteristics of the ISO/IEC 
+25010 software product quality model (ISO, 2011) and an adopted software evaluation 
+instrument. The selected quality characteristics are: 
+a. Functionality: the degree to which H -MAP provides all intended disease 
+surveillance, heat mapping, epidemic threshold alerting, and AI machine learning 
+prediction features. 
+b. Reliability: the degree to which H -MAP, including the PHP web application and 
+the Python Flask AI microservice, performs its functions consistently under normal 
+operational conditions. 
+c. Usability: the degree to which CESU health officials and data encoders can use H-
+MAP effectively and with satisfaction to accomplish surveillance tasks, assessed 
+following ISO 9241 principles. 
+d. Performance Efficiency: the degree to which H-MAP renders maps, charts, and AI 
+machine learning predictions within acceptable response times under the DICT 
+server's resource constraints. 
+===== PAGE 53 =====
+53 
+ 
+e. Maintainability: the degree to which the PHP codebase and Python AI machine 
+learning models can be modified and updated to accommodate new diseases or 
+changed surveillance requirements (ISO, 2011). 
+Respondents will be purposively selected from: 
+a. 25 to 30 health officials, medical officers, epidemiologists, and data personnel from 
+the City Epidemiology Section Unit and affiliated health centers and sentinel sites 
+of Parañaque City. 
+b. Five Information Technology professionals with expertise in web systems, 
+government IT, or health informatics. 
+The evaluation instrument will be a structured 5 -point Likert -scale questionnaire 
+adapted from ISO/IEC 25010 criteria (ISO, 2011), rated as follows: 
+a. 5: Outstanding / Strongly Agree 
+b. 4: Very Acceptable / Agree 
+c. 3: Acceptable / Neutral 
+d. 2: Needs Improvement / Disagree 
+e. 1: Poor / Strongly Disagree 
+Data Processing and Statistical Treatment 
+The following descriptive statistical methods will be applied to evaluation response 
+data: 
+a. Frequency Distribution: summarizing the distribution of respondent ratings across 
+the five-point scale for each evaluation item. 
+===== PAGE 54 =====
+54 
+ 
+b. Weighted Mean: computed as the sum of (rating x frequency) divided by total 
+respondents for each item and each ISO/IEC 25010 quality characteristic, providing 
+a single numerical indicator of overall acceptability (ISO, 2011). 
+c. Standard Deviation: computed per item to measure variability in respondent ratings 
+and indicate consensus or divergence of assessment. 
+Weighted mean scores will be interpreted against the following acceptability scale: 
+a. 4.21 to 5.00: Outstanding / Very Acceptable 
+b. 3.41 to 4.20: Acceptable / Agreeable 
+c. 2.61 to 3.40: Moderately Acceptable 
+d. 1.81 to 2.60: Needs Improvement 
+e. 1.00 to 1.80: Poor / Unacceptable 
+Acceptance Criterion: H-MAP will be considered to have met the evaluation standard 
+if the overall weighted mean across all five ISO/IEC 25010 quality characteristics is at least 
+3.41. Inferential statistical analysis will not be conducted given the descrip tive intent of the 
+evaluation phase and the sample size consistent with purposive sampling in applied 
+developmental research. 
+Security Considerations 
+H-MAP's security architecture addresses the sensitivity of disease surveillance data 
+under Republic Act No. 10173, the Data Privacy Act of 2012 (Republic Act No. 10173, 2012), 
+and the applicable guidelines of the National Privacy Commission (n.d.). The primary security 
+mechanisms to be implemented are: 
+===== PAGE 55 =====
+55 
+ 
+a. HRMO-Based Access Control: access restricted to active Parañaque City 
+government employees through HRMO portal session verification and real -time 
+employment status checking, with no public access permitted. 
+b. Role-Based Feature Restriction: RBAC ensuring Data Encoders cannot access AI 
+predictions or bulk exports; Health Analysts  cannot access system configuration; 
+and all Administrator actions are logged, consistent with Republic Act No. 10173 
+(2012). 
+c. Internal AI Service Isolation: the Python Flask AI microservice bound to 
+localhost:5001, accessible only from the PHP application on the same server, not 
+exposed to any external network interface. 
+d. Input Sanitization and Injection Prevention: all user -submitted data validated and 
+sanitized using PHP prepared statements with parameterized queries via PDO. 
+e. Audit Logging: all data entry, modification, deletion, export, and AI prediction 
+access events recorded in the audit log with employee identifier, action type, 
+timestamp, and IP address, consistent with Republic Act No. 10173 (2012). 
+f. Data Minimization in Display: dashboard visualizations and AI machine learning 
+outputs will operate on aggregated, barangay -level case counts without exposing 
+individual patient identifiers, consistent with the data minimization principle under 
+Republic Ac t No. 10173 (2012) and National Privacy Commission (n.d.) 
+guidelines. 
+ 
+ 
+ 
+ 
+ 
+===== PAGE 56 =====
+56 
+ 
+REFERENCES 
+Boulos, M. N. K., Resch, B., Crowley, D. N., Breslin, J. G., Sohn, G., Burtner, R., Pike, W. 
+A., Jezierski, E., & Chuang, K. -Y. S. (2011). Crowdsourcing, citizen sensing and 
+sensor web technologies for public and environmental health surveillance and crisi s 
+management: Trends and OGC standards. International Journal of Health 
+Geographics, 10, Article 67. https://doi.org/10.1186/1476-072X-10-67 
+Breiman, L. (2001). Random forests. Machine Learning, 45 (1), 5 –32. 
+https://doi.org/10.1023/A:1010933404324 
+Carvajal, T. M., Viacrusis, K. M., Hernandez, L. F. T., Ho, H. T., Amalin, D. M., & Watanabe, 
+K. (2018). Machine learning methods reveal the temporal pattern of dengue incidence 
+using meteorological factors in metropolitan Manila, Philippines. BMC Infectious 
+Diseases, 18(1), Article 183. https://doi.org/10.1186/s12879-018-3066-0 
+Centers for Disease Control and Prevention. (2019). Introduction to public health surveillance. 
+U.S. Department of Health and Human Services. 
+https://www.cdc.gov/training/publichealth101/surveillance.html 
+Chakraborty, T., Chattopadhyay, S., & Ghosh, I. (2019). Forecasting dengue epidemics using 
+a hybrid methodology. Physica A: Statistical Mechanics and its Applications, 527,  
+Article 121266. https://doi.org/10.1016/j.physa.2019.121266 
+Department of Health. (2014). Philippine integrated disease surveillance and response 
+(PIDSR) manual of procedures.  Department of Health. 
+https://epidemiology.doh.gov.ph 
+===== PAGE 57 =====
+57 
+ 
+Dong, E., Du, H., & Gardner, L. (2020). An interactive web-based dashboard to track COVID-
+19 in real time. The Lancet Infectious Diseases, 20 (5), 533 –534. 
+https://doi.org/10.1016/S1473-3099(20)30120-1 
+Dowding, D., Randell, R., Gardner, P., Favela, J., Ballermann, M., Doster, L., Lima, O., Osta, 
+A., Dykes, P., Borycki, E., & Currie, L. (2015). Dashboards for improving patient care: 
+Review of the literature. International Journal of Medical Informatics, 84(2), 87–100. 
+https://doi.org/10.1016/j.ijmedinf.2014.10.001 
+Freifeld, C. C., Mandl, K. D., Reis, B. Y., & Brownstein, J. S. (2008). HealthMap: Global 
+infectious disease monitoring through automated classification and visualization of 
+internet media reports. Journal of the American Medical Informatics Association, 
+15(2), 150–157. https://doi.org/10.1197/jamia.M2544 
+International Organization for Standardization. (2011). ISO/IEC 25010:2011 — Systems and 
+software engineering: Systems and software quality requirements and evaluation 
+(SQuaRE) — System and software quality models.  ISO. 
+https://www.iso.org/standard/35733.html 
+Lawson, A. B. (2018). Bayesian disease mapping: Hierarchical modeling in spatial 
+epidemiology (3rd ed.). CRC Press. 
+National Privacy Commission. (n.d.). Data privacy act of 2012 primer.  
+https://www.privacy.gov.ph/data-privacy-act/ 
+Nykiforuk, C. I. J., & Flaman, L. M. (2011). Geographic information systems (GIS) for health 
+promotion and public health: A review. Health Promotion Practice, 12 (1), 63 –73. 
+https://doi.org/10.1177/1524839909334624 
+===== PAGE 58 =====
+58 
+ 
+Olana, K. O. A., Poprom, N., Siewchaisakul, P., Punyapornwithaya, V., & Thongprachum, A. 
+(2025). Spatial distribution analysis and comparative forecasting of dengue resurgence 
+in the Philippines (2025 –2027): A nationwide study. Transboundary and Emerging 
+Diseases, 2025, Article 7480710. https://doi.org/10.1155/tbed/7480710 
+Republic Act No. 10173, Data Privacy Act of 2012. (2012). 
+https://www.privacy.gov.ph/republic-act-no-10173/ 
+Shaman, J., & Karspeck, A. (2012). Forecasting seasonal outbreaks of influenza. Proceedings 
+of the National Academy of Sciences, 109 (50), 20425 –20430. 
+https://doi.org/10.1073/pnas.1208772109 
+Shi, Y., Liu, X., Kok, S. Y., Rajarethinam, J., Liang, S., Yap, G., & Pang, J. (2016). Three -
+month real-time dengue forecast models: An early warning system for outbreak alerts 
+and policy decision support in Singapore. Environmental Health Perspectives, 124(9), 
+1369–1375. https://doi.org/10.1289/ehp.1509981 
+Srivastava, V., Kumar, R., Wani, M. Y., Robinson, K., & Ahmad, A. (2024). Role of artificial 
+intelligence in early diagnosis and treatment of infectious diseases. Infectious Diseases, 
+57(1), 1–26. https://doi.org/10.1080/23744235.2024.2425712 
+Taylor, S. J., & Letham, B. (2018). Forecasting at scale. The American Statistician, 72(1), 37–
+45. https://doi.org/10.1080/00031305.2017.1380080 
+World Health Organization. (2018). Early detection, assessment and response to acute public 
+health events: Implementation of early warning and response with a focus on event -
+based surveillance.  WHO Press. 
+https://iris.who.int/bitstream/handle/10665/272462/WHO-WHE-CPI-2018.17-eng.pdf 
