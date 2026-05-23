@@ -125,7 +125,7 @@ CREATE TABLE cases (
 --   failed                 — no geocode at all; address stored without coords
 CREATE TABLE case_addresses (
     case_id           INT UNSIGNED NOT NULL,
-    raw_street_purok  VARCHAR(255) NOT NULL,
+    raw_street_purok  VARCHAR(255) NULL,
     case_lat          DECIMAL(9,6) NULL,
     case_lng          DECIMAL(9,6) NULL,
     geocode_source    ENUM(
@@ -231,18 +231,30 @@ CREATE TABLE IF NOT EXISTS geocode_cache (
     INDEX idx_cache_source (geocode_source)
 ) ENGINE=InnoDB;
 
--- ─── Reference: thresholds (WHO EWARN, pre-computed) ─────────────────────
+-- ─── Reference: thresholds (multi-method, pre-computed) ──────────────────
+-- Each (disease × morbidity_week) gets one row per `method`:
+--   ewarn_mu2sigma  — WHO EWARN: μ+2σ over 5 prior years' weekly counts,
+--                    counting only Confirmed+Probable classifications.
+--                    This is H-MAP's active alert threshold.
+--   cesu_mean       — Simple 5-year mean of weekly counts, counting ALL
+--                    classifications (matches CESU's 5YrAve sheet "Average"
+--                    column; this is what CESU's existing memo template uses).
+--   cesu_median     — Same as cesu_mean but median (matches 5YrAve "Median").
+-- Storing all three side-by-side lets the dashboard show H-MAP's μ+2σ alert
+-- next to CESU's existing reference values, and lets Ch.4 evaluate where
+-- the two methods disagree.
 CREATE TABLE thresholds (
     threshold_id     INT UNSIGNED NOT NULL AUTO_INCREMENT,
     disease_id       INT UNSIGNED NOT NULL,
     morbidity_week   TINYINT UNSIGNED NOT NULL,
+    method           ENUM('ewarn_mu2sigma','cesu_mean','cesu_median') NOT NULL,
     baseline_years   VARCHAR(30) NOT NULL,
     mean_cases       DECIMAL(8,4) NOT NULL,
     std_dev          DECIMAL(8,4) NOT NULL,
     threshold_value  DECIMAL(8,4) NOT NULL,
     last_updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (threshold_id),
-    UNIQUE KEY uq_disease_week (disease_id, morbidity_week),
+    UNIQUE KEY uq_disease_week_method (disease_id, morbidity_week, method),
     CONSTRAINT fk_thresholds_disease
         FOREIGN KEY (disease_id) REFERENCES diseases(disease_id)
         ON DELETE CASCADE ON UPDATE CASCADE
