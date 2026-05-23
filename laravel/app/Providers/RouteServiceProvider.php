@@ -30,8 +30,11 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function configureRateLimiting()
     {
+        // 600/min/IP — a single tab switch can fire 6+ endpoints (summary,
+        // weekly-series, thresholds, heatmap-week, ml/forecast, ml/risk).
+        // The default of 60 was tripping the dashboard's normal use.
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(120)->by($request->ip());
+            return Limit::perMinute(600)->by($request->ip());
         });
     }
 }
