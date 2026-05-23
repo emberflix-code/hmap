@@ -15,7 +15,10 @@
         $manifestPath = public_path('build/manifest.json');
         $manifest = file_exists($manifestPath) ? json_decode(file_get_contents($manifestPath), true) : null;
         $entry = $manifest['resources/js/app.jsx'] ?? null;
-        $assetBase = rtrim(config('app.asset_url') ?: url(''), '/') . '/build/';
+        // Asset base honors ASSET_URL (set in .env for subpath deploys
+        // like /hmap), falls back to APP_URL, then to the host root.
+        $base = env('ASSET_URL') ?: env('APP_URL') ?: url('');
+        $assetBase = rtrim($base, '/') . '/build/';
     @endphp
     @if ($entry)
         @foreach ($entry['css'] ?? [] as $css)
