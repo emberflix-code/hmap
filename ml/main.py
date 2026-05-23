@@ -21,7 +21,7 @@ import sys
 from contextlib import asynccontextmanager
 from datetime import date, timedelta
 from pathlib import Path
-from typing import Literal
+from typing import Dict, List, Literal, Optional, Tuple
 
 import mysql.connector
 import numpy as np
@@ -68,9 +68,9 @@ _ensure_tbb_on_path()
 # ─── Model registry ──────────────────────────────────────────────────────────
 
 # Prophet: key is (disease_code, barangay_id or None) → model bundle dict
-MODELS: dict[tuple[str, int | None], dict] = {}
+MODELS: Dict[Tuple[str, Optional[int]], dict] = {}
 # RandomForest: key is disease_code → bundle dict
-RF_MODELS: dict[str, dict] = {}
+RF_MODELS: Dict[str, dict] = {}
 
 
 def load_models() -> None:
@@ -118,7 +118,7 @@ def load_models() -> None:
     log.info("model registry: %d prophet + %d rf models loaded", len(MODELS), len(RF_MODELS))
 
 
-def _resolve_model(disease_code: str, barangay_id: int | None) -> tuple[dict, str]:
+def _resolve_model(disease_code: str, barangay_id: Optional[int]) -> Tuple[dict, str]:
     """Pick the best available model for the requested (disease, barangay).
 
     Falls back from per-barangay → city-wide if no per-barangay model exists.
@@ -169,7 +169,7 @@ def health() -> dict:
 
 
 @app.get("/models", tags=["ops"])
-def list_models() -> list[dict]:
+def list_models() -> List[dict]:
     """List every loaded model and its metadata. Useful for the admin panel."""
     out = []
     for (code, bid), bundle in sorted(MODELS.items(), key=lambda kv: (kv[0][0], kv[0][1] or 0)):
@@ -189,7 +189,7 @@ def list_models() -> list[dict]:
 
 class ForecastRequest(BaseModel):
     disease_code: str = Field(..., description="PIDSR disease code, e.g. 'DENGUE'")
-    barangay_id: int | None = Field(
+    barangay_id: Optional[int] = Field(
         None, ge=1, le=16,
         description="Parañaque barangay ID 1-16, or omit for city-wide forecast",
     )
@@ -205,11 +205,11 @@ class ForecastPoint(BaseModel):
 
 class ForecastResponse(BaseModel):
     disease_code: str
-    barangay_id: int | None
-    barangay_name: str | None
+    barangay_id: Optional[int]
+    barangay_name: Optional[str]
     model: Literal["prophet"] = "prophet"
     resolution: Literal["per_barangay", "city_wide", "city_wide_fallback"]
-    validation_mape: float | None
+    validation_mape: Optional[float]
     training_tail_week: date
     forecast_anchor_week: date
     weeks_bridged: int = Field(
@@ -217,7 +217,7 @@ class ForecastResponse(BaseModel):
                          "the forecast extrapolates past the end of training data; "
                          "panel/dashboard should treat large values as lower confidence."
     )
-    points: list[ForecastPoint]
+    points: List[ForecastPoint]
 
 
 def _this_week_monday() -> "pd.Timestamp":
@@ -300,7 +300,7 @@ class RiskScore(BaseModel):
     barangay_id: int
     barangay_name: str
     risk_class: Literal["Low", "Moderate", "High"]
-    probabilities: dict[str, float]
+    probabilities: Dict[str, float]
     current_cases: int
     mean_5yr: float
     threshold: float
@@ -311,8 +311,8 @@ class RiskResponse(BaseModel):
     morbidity_year: int
     morbidity_week: int
     model: Literal["random_forest"] = "random_forest"
-    accuracy: float | None
-    scores: list[RiskScore]
+    accuracy: Optional[float]
+    scores: List[RiskScore]
 
 
 def _db_connect():
@@ -328,7 +328,7 @@ def _db_connect():
     )
 
 
-def _build_risk_features(conn, disease_code: str, year: int, week: int) -> list[dict]:
+def _build_risk_features(conn, disease_code: str, year: int, week: int) -> List[dict]:
     """For each of the 16 barangays, build the 8-feature vector needed by the RF.
 
     Mirrors the feature engineering in ml/train_rf.py:build_features_and_labels,
@@ -353,7 +353,7 @@ def _build_risk_features(conn, disease_code: str, year: int, week: int) -> list[
             GROUP BY barangay_id, morbidity_year, morbidity_week""",
         (disease_id, year - 5, year),
     )
-    counts_by_key: dict[tuple[int, int, int], int] = {
+    counts_by_key: Dict[Tuple[int, int, int], int] = {
         (r["barangay_id"], r["morbidity_year"], r["morbidity_week"]): int(r["cases"])
         for r in cur.fetchall()
     }
@@ -362,7 +362,7 @@ def _build_risk_features(conn, disease_code: str, year: int, week: int) -> list[
     barangays = cur.fetchall()
     cur.close()
 
-    rows: list[dict] = []
+    rows: List[dict] = []
     baseline_years = list(range(year - 5, year))
     # Calendar month: real month of the ISO week's Monday. Must match the
     # feature engineering in train_rf.py — otherwise train/serve skew.
@@ -422,7 +422,7 @@ def predict_risk(req: RiskRequest) -> RiskResponse:
     preds = clf.predict(X)
     probs = clf.predict_proba(X)
 
-    scores: list[RiskScore] = []
+    scores: List[RiskScore] = []
     for r, pred, p in zip(feature_rows, preds, probs):
         scores.append(RiskScore(
             barangay_id=r["barangay_id"],
@@ -458,14 +458,14 @@ class GeocodeRequest(BaseModel):
 
 class GeocodeResponse(BaseModel):
     success: bool
-    lat: float | None
-    lng: float | None
+    lat: Optional[float]
+    lng: Optional[float]
     geocode_source: Literal[
         "nominatim_street", "nominatim_subd", "nominatim_bgy_centroid",
         "manual_pin", "failed",
     ]
-    geocode_query: str | None
-    formatted: str | None
+    geocode_query: Optional[str]
+    formatted: Optional[str]
     from_cache: bool
 
 
