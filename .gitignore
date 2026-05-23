@@ -58,6 +58,10 @@ ml/models/*.pkl
 ml/models/*.joblib
 ml/data/raw/
 ml/data/processed/
+# Generated artifacts: anonymized DB dumps, run logs, comparison CSVs.
+# These can contain case data or noisy noise; never commit.
+ml/_*.sql
+ml/_*.csv
 
 # ─── Docker ────────────────────────────────────────────────
 docker-compose.override.yml

@@ -5,8 +5,21 @@ import Dashboard from './Dashboard.jsx';
 import CaseEntry from './CaseEntry.jsx';
 import Reports from './Reports.jsx';
 import ClusterMapPanel from './ClusterMapPanel.jsx';
+import WeeklyReport from './WeeklyReport.jsx';
 
-const api = axios.create({ baseURL: '/api' });
+// Derive the API base from the page's mount path so we work whether the
+// app is served at "/" (local dev) or under a subpath like "/hmap" (LGU
+// portal deployment). Strip the trailing /entry, /reports, etc. so the
+// base is always the SPA root.
+function deriveApiBase() {
+    const path = window.location.pathname;
+    // Match the SPA root (/, /hmap, /hmap/) before any of the React-router segments
+    const match = path.match(/^(\/[^/]+)?(?:\/(?:entry|reports|clusters|weekly)?)?$/);
+    const root = match && match[1] ? match[1] : '';
+    return root + '/api';
+}
+
+const api = axios.create({ baseURL: deriveApiBase() });
 
 export default function App() {
     const [view, setView] = useState(() => initialViewFromUrl());
@@ -35,6 +48,7 @@ export default function App() {
             view === 'entry' ? '/hmap/entry' :
             view === 'reports' ? '/hmap/reports' :
             view === 'clusters' ? '/hmap/clusters' :
+            view === 'weekly' ? '/hmap/weekly' :
             '/hmap';
         if (window.location.pathname !== path) {
             window.history.replaceState({}, '', path);
@@ -63,6 +77,9 @@ export default function App() {
                         <NavLink active={view === 'dashboard'} onClick={() => setView('dashboard')}>
                             Dashboard
                         </NavLink>
+                        <NavLink active={view === 'weekly'} onClick={() => setView('weekly')}>
+                            Weekly Report
+                        </NavLink>
                         <NavLink active={view === 'clusters'} onClick={() => setView('clusters')}>
                             Clusters
                         </NavLink>
@@ -83,6 +100,9 @@ export default function App() {
             {view === 'dashboard' && (
                 <Dashboard api={api} diseases={diseases} barangays={barangays} whoami={whoami} />
             )}
+            {view === 'weekly' && (
+                <WeeklyReport api={api} diseases={diseases} />
+            )}
             {view === 'clusters' && (
                 <ClusterMapPanel api={api} />
             )}
@@ -101,6 +121,7 @@ function initialViewFromUrl() {
     if (p.includes('/entry')) return 'entry';
     if (p.includes('/reports')) return 'reports';
     if (p.includes('/clusters')) return 'clusters';
+    if (p.includes('/weekly')) return 'weekly';
     return 'dashboard';
 }
 

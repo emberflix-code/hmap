@@ -1,23 +1,21 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "hmap/app",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "H-MAP — Heat Map Disease Surveillance and Outbreak Prediction System",
+    "keywords": ["hmap", "pidsr", "cesu", "paranaque"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
-        "laravel/framework": "^11.31",
-        "laravel/tinker": "^2.9"
+        "php": "^7.4|^8.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "laravel/framework": "^8.83",
+        "laravel/tinker": "^2.7"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
-        "laravel/pail": "^1.1",
-        "laravel/pint": "^1.13",
-        "laravel/sail": "^1.26",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.1",
-        "phpunit/phpunit": "^11.0.1"
+        "fakerphp/faker": "^1.9.1",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^5.10",
+        "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {
@@ -43,13 +41,7 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "@php artisan key:generate --ansi",
-            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-            "@php artisan migrate --graceful --ansi"
-        ],
-        "dev": [
-            "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+            "@php artisan key:generate --ansi"
         ]
     },
     "extra": {
@@ -62,10 +54,14 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "audit": {
+            "abandoned": "ignore"
         }
     },
+    "_policy_note": "Laravel 8 is EOL. The advisory-block check is disabled below because the production server is Ubuntu 20.04 (focal) and cannot install PHP 8.x until the OS is upgraded to 22.04 (jammy). Plan: schedule OS upgrade with BPLO IT post-defense (2026-05-26), then re-base on Laravel 11 / PHP 8.3. See docs/DEPLOYMENT.md and HRMO memory project_php_upgrade_blocked_2026_05_20.md.",
+    "policy": false,
     "minimum-stability": "stable",
     "prefer-stable": true
 }

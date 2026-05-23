@@ -23,6 +23,12 @@ Route::middleware('hrmo')->group(function () {
     Route::get('/thresholds',    [DashboardController::class, 'thresholds']);
     Route::get('/heatmap-week',  [DashboardController::class, 'heatmapWeek']);
 
+    // CESU PIDSR workbook parity views (Summary Weekly Update, PIDSRMain, SBgy)
+    Route::get('/weekly-summary',  [DashboardController::class, 'weeklySummary']);
+    Route::get('/dengue-detail',   [DashboardController::class, 'dengueDetail']);
+    Route::get('/barangay-rates',  [DashboardController::class, 'barangayRates']);
+    Route::get('/dengue-memo',     [DashboardController::class, 'dengueMemo']);
+
     // Identity echo (useful for the frontend to confirm session + role)
     Route::get('/whoami', [DashboardController::class, 'whoami']);
 

@@ -24,11 +24,16 @@ class HrmoSessionAuth
     {
         $config = config('hmap.hrmo');
 
-        $user = match ($config['mode']) {
-            'stub'  => $this->resolveStub($config),
-            'php'   => $this->resolvePhpSession($request, $config),
-            default => null,
-        };
+        switch ($config['mode']) {
+            case 'stub':
+                $user = $this->resolveStub($config);
+                break;
+            case 'php':
+                $user = $this->resolvePhpSession($request, $config);
+                break;
+            default:
+                $user = null;
+        }
 
         if (!$user) {
             return $this->unauthorized($request);
