@@ -17,9 +17,13 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Fetch the boundary polygons once.
+    // Fetch the boundary polygons once. Derive the URL from the current
+    // page path so this works at both `/` (local dev) and `/hmap/` (LGU
+    // portal subpath deployment) — mirrors the axios baseURL trick in App.jsx.
     useEffect(() => {
-        fetch('/barangays.geojson')
+        const match = window.location.pathname.match(/^(\/[^/]+)?(?:\/(?:entry|reports|clusters|weekly)?)?$/);
+        const root = match && match[1] ? match[1] : '';
+        fetch(root + '/barangays.geojson')
             .then((r) => (r.ok ? r.json() : null))
             .then((gj) => setGeoJson(gj))
             .catch(() => setGeoJson(null));
