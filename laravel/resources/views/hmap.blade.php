@@ -14,17 +14,25 @@
         // the build hasn't been run.
         $manifestPath = public_path('build/manifest.json');
         $manifest = file_exists($manifestPath) ? json_decode(file_get_contents($manifestPath), true) : null;
-        $entry = $manifest['resources/js/app.jsx'] ?? null;
+        $jsEntry = $manifest['resources/js/app.jsx'] ?? null;
+        // Both resources/css/app.css (Tailwind) and any CSS chained from the
+        // JS entry must be loaded. The CSS-only entry is registered separately
+        // in vite.config.js so it has its own manifest entry.
+        $cssEntry = $manifest['resources/css/app.css'] ?? null;
         // Asset base honors ASSET_URL (set in .env for subpath deploys
         // like /hmap), falls back to APP_URL, then to the host root.
         $base = env('ASSET_URL') ?: env('APP_URL') ?: url('');
         $assetBase = rtrim($base, '/') . '/build/';
     @endphp
-    @if ($entry)
-        @foreach ($entry['css'] ?? [] as $css)
+    @if ($jsEntry)
+        {{-- Tailwind / app.css first so chained component-scoped CSS can override --}}
+        @if ($cssEntry)
+            <link rel="stylesheet" href="{{ $assetBase . $cssEntry['file'] }}">
+        @endif
+        @foreach ($jsEntry['css'] ?? [] as $css)
             <link rel="stylesheet" href="{{ $assetBase . $css }}">
         @endforeach
-        <script type="module" src="{{ $assetBase . $entry['file'] }}"></script>
+        <script type="module" src="{{ $assetBase . $jsEntry['file'] }}"></script>
     @else
         <pre style="color:red">
 H-MAP assets not built. Run `npm ci && npm run build` in laravel/.
