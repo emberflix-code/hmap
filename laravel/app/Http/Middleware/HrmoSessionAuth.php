@@ -4,7 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -30,6 +33,9 @@ class HrmoSessionAuth
                 break;
             case 'php':
                 $user = $this->resolvePhpSession($request, $config);
+                break;
+            case 'jwt':
+                $user = $this->resolveJwt($request, $config);
                 break;
             default:
                 $user = null;
@@ -108,6 +114,83 @@ class HrmoSessionAuth
             'name' => $row->full_name,
             'role' => $role,
         ];
+    }
+
+    /**
+     * Bearer-token auth via HRMO's JWT API. The token is read from
+     * (in priority order):
+     *   1. The `hmap_jwt` HttpOnly cookie that AuthController issues on login
+     *   2. The Authorization: Bearer header (for direct API clients/tests)
+     *
+     * Each token's user payload is cached for `me_cache_ttl` seconds so we
+     * don't hammer HRMO on every dashboard XHR.
+     */
+    private function resolveJwt(Request $request, array $config): ?array
+    {
+        $token = $request->cookie($config['jwt_cookie'])
+            ?: $this->bearerFromHeader($request);
+        if (!$token) {
+            return null;
+        }
+
+        // Cache key uses a short hash of the token so we never log the
+        // raw JWT (it would be a credential leak).
+        $cacheKey = 'hmap:hrmo_me:' . hash('sha256', $token);
+        $cached = Cache::get($cacheKey);
+        if ($cached) {
+            return $cached;
+        }
+
+        try {
+            $resp = Http::timeout(5)
+                ->withToken($token)
+                ->acceptJson()
+                ->get($config['api_base'] . '/auth/me');
+        } catch (\Throwable $e) {
+            Log::warning('HRMO /auth/me unreachable: ' . $e->getMessage());
+            return null;
+        }
+
+        if (!$resp->successful()) {
+            // 401/403 = stale token; anything else = upstream problem worth logging
+            if ($resp->status() >= 500) {
+                Log::warning('HRMO /auth/me returned ' . $resp->status());
+            }
+            return null;
+        }
+
+        $body = $resp->json();
+        $payload = $body['user'] ?? null;
+        if (!$payload || empty($payload['id'])) {
+            return null;
+        }
+
+        $hmapUser = [
+            'employee_id' => (int) $payload['id'],
+            'name'        => $payload['full_name'] ?? $payload['username'] ?? 'HRMO user',
+            'role'        => $this->mapHrmoRole($payload['role'] ?? null, $config),
+        ];
+
+        Cache::put($cacheKey, $hmapUser, $config['me_cache_ttl']);
+        return $hmapUser;
+    }
+
+    private function bearerFromHeader(Request $request): ?string
+    {
+        $h = $request->header('Authorization', '');
+        if (preg_match('/^Bearer\s+(.+)$/i', $h, $m)) {
+            return trim($m[1]);
+        }
+        return null;
+    }
+
+    private function mapHrmoRole(?string $hrmoRole, array $config): string
+    {
+        if ($hrmoRole === null || $hrmoRole === '') {
+            return $config['default_role'];
+        }
+        $map = $config['role_map'] ?? [];
+        return $map[strtolower($hrmoRole)] ?? $config['default_role'];
     }
 
     private function roleMeets(string $actual, string $required): bool

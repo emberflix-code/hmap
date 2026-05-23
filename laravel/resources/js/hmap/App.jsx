@@ -6,6 +6,7 @@ import CaseEntry from './CaseEntry.jsx';
 import Reports from './Reports.jsx';
 import ClusterMapPanel from './ClusterMapPanel.jsx';
 import WeeklyReport from './WeeklyReport.jsx';
+import Login from './Login.jsx';
 
 // Derive the API base from the page's mount path so we work whether the
 // app is served at "/" (local dev) or under a subpath like "/hmap" (LGU
@@ -13,37 +14,60 @@ import WeeklyReport from './WeeklyReport.jsx';
 // base is always the SPA root.
 function deriveApiBase() {
     const path = window.location.pathname;
-    // Match the SPA root (/, /hmap, /hmap/) before any of the React-router segments
-    const match = path.match(/^(\/[^/]+)?(?:\/(?:entry|reports|clusters|weekly)?)?$/);
+    const match = path.match(/^(\/[^/]+)?(?:\/(?:entry|reports|clusters|weekly|login)?)?$/);
     const root = match && match[1] ? match[1] : '';
     return root + '/api';
 }
 
-const api = axios.create({ baseURL: deriveApiBase() });
+// withCredentials so the hmap_jwt HttpOnly cookie auto-attaches on every
+// XHR. Same-origin so CSRF isn't an issue (the SPA shell and the API live
+// at the same host:port).
+const api = axios.create({ baseURL: deriveApiBase(), withCredentials: true });
 
 export default function App() {
     const [view, setView] = useState(() => initialViewFromUrl());
     const [whoami, setWhoami] = useState(null);
     const [diseases, setDiseases] = useState([]);
     const [barangays, setBarangays] = useState([]);
+    const [authState, setAuthState] = useState('checking'); // checking | needs_login | ok | error
     const [bootError, setBootError] = useState(null);
 
+    // Try to load the current user. 401 means we need to show Login;
+    // any other error is a real boot failure.
+    const refreshAuth = () => {
+        setAuthState('checking');
+        setBootError(null);
+        api.get('/auth/me')
+            .then((r) => {
+                setWhoami(r.data);
+                setAuthState('ok');
+            })
+            .catch((err) => {
+                if (err.response?.status === 401) {
+                    setAuthState('needs_login');
+                } else {
+                    setBootError(err.response?.data?.detail || err.message);
+                    setAuthState('error');
+                }
+            });
+    };
+
+    // Boot: check auth, then load reference data once we know who we are.
+    useEffect(() => { refreshAuth(); }, []);
+
     useEffect(() => {
-        Promise.all([
-            api.get('/whoami'),
-            api.get('/diseases'),
-            api.get('/barangays'),
-        ])
-            .then(([w, d, b]) => {
-                setWhoami(w.data);
+        if (authState !== 'ok') return;
+        Promise.all([api.get('/diseases'), api.get('/barangays')])
+            .then(([d, b]) => {
                 setDiseases(d.data);
                 setBarangays(b.data);
             })
             .catch((err) => setBootError(err.response?.data?.detail || err.message));
-    }, []);
+    }, [authState]);
 
     // Update the URL (no full reload) when the view changes so bookmarks/back work.
     useEffect(() => {
+        if (authState !== 'ok') return;
         const path =
             view === 'entry' ? '/hmap/entry' :
             view === 'reports' ? '/hmap/reports' :
@@ -53,7 +77,15 @@ export default function App() {
         if (window.location.pathname !== path) {
             window.history.replaceState({}, '', path);
         }
-    }, [view]);
+    }, [view, authState]);
+
+    const handleLogout = async () => {
+        try { await api.post('/auth/logout'); } catch (_) { /* ignore */ }
+        setWhoami(null);
+        setDiseases([]);
+        setBarangays([]);
+        setAuthState('needs_login');
+    };
 
     if (bootError) {
         return (
@@ -62,6 +94,14 @@ export default function App() {
                 <p className="text-sm">{bootError}</p>
             </div>
         );
+    }
+
+    if (authState === 'checking') {
+        return <div className="p-8 text-slate-500 text-sm">Loading H-MAP…</div>;
+    }
+
+    if (authState === 'needs_login') {
+        return <Login api={api} onLoggedIn={refreshAuth} />;
     }
 
     if (!whoami || diseases.length === 0) {
@@ -94,6 +134,13 @@ export default function App() {
                 <div className="flex items-center gap-3 text-sm">
                     <span className="text-slate-600">{whoami.employee_name}</span>
                     <RoleBadge role={whoami.role} />
+                    <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="ml-2 px-3 py-1.5 text-xs rounded text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+                    >
+                        Sign out
+                    </button>
                 </div>
             </header>
 

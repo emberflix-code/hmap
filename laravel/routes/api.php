@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CaseEntryController;
 use App\Http\Controllers\ClustersController;
 use App\Http\Controllers\DashboardController;
@@ -7,9 +8,16 @@ use App\Http\Controllers\MlProxyController;
 use App\Http\Controllers\ReportsController;
 use Illuminate\Support\Facades\Route;
 
+// Public — login endpoint MUST sit outside the hrmo middleware (otherwise
+// nobody could ever log in).
+Route::post('/auth/login',  [AuthController::class, 'login']);
+Route::post('/auth/logout', [AuthController::class, 'logout']);  // safe to invoke without a session
+
 // All H-MAP API routes are HRMO-gated. The `hrmo` middleware attaches
 // hmap.employee_id / hmap.employee_name / hmap.role to the request.
 Route::middleware('hrmo')->group(function () {
+
+    Route::get('/auth/me', [AuthController::class, 'me']);
 
     // Reference data
     Route::get('/barangays', [DashboardController::class, 'barangays']);
