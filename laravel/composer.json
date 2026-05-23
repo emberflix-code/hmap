@@ -58,6 +58,9 @@
         },
         "audit": {
             "abandoned": "ignore"
+        },
+        "platform": {
+            "php": "7.4.3"
         }
     },
     "_policy_note": "Laravel 8 is EOL. The advisory-block check is disabled below because the production server is Ubuntu 20.04 (focal) and cannot install PHP 8.x until the OS is upgraded to 22.04 (jammy). Plan: schedule OS upgrade with BPLO IT post-defense (2026-05-26), then re-base on Laravel 11 / PHP 8.3. See docs/DEPLOYMENT.md and HRMO memory project_php_upgrade_blocked_2026_05_20.md.",
