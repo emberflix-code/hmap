@@ -21,8 +21,13 @@ function deriveApiBase() {
 
 // withCredentials so the hmap_jwt HttpOnly cookie auto-attaches on every
 // XHR. Same-origin so CSRF isn't an issue (the SPA shell and the API live
-// at the same host:port).
-const api = axios.create({ baseURL: deriveApiBase(), withCredentials: true });
+// at the same host:port). Accept: application/json forces Laravel to return
+// JSON responses on validation errors / 401 instead of HTML redirects.
+const api = axios.create({
+    baseURL: deriveApiBase(),
+    withCredentials: true,
+    headers: { Accept: 'application/json' },
+});
 
 export default function App() {
     const [view, setView] = useState(() => initialViewFromUrl());
