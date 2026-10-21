@@ -36,10 +36,12 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
         setError(null);
 
         Promise.allSettled([
-            api.post('/ml/risk', {
-                disease_code: disease,
-                morbidity_year: year,
-                morbidity_week: week,
+            api.get('/risk-tiers', {
+                params: {
+                    disease_code: disease,
+                    morbidity_year: year,
+                    morbidity_week: week,
+                },
             }),
             api.get('/heatmap-week', {
                 params: {
@@ -53,7 +55,7 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
                 if (cancelled) return;
                 if (risk.status === 'fulfilled') {
                     const m = {};
-                    for (const s of risk.value.data.scores || []) {
+                    for (const s of risk.value.data.tiers || []) {
                         m[s.barangay_id] = s;
                     }
                     setRiskScores(m);
@@ -137,7 +139,7 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
                         style={(feature) => {
                             const canon = feature.properties.canonical_name;
                             const p = riskByName[canon];
-                            const fill = RISK_COLORS[p?.risk?.risk_class] || '#cbd5e1';
+                            const fill = RISK_COLORS[p?.risk?.tier] || '#cbd5e1';
                             return {
                                 color: '#475569',
                                 weight: 1,
@@ -151,9 +153,10 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
                             const body = `<div class="text-xs">
                                 <div class="font-semibold">${canon}</div>
                                 <div>Cases this week: <b>${p?.cases ?? 0}</b></div>
-                                ${p?.risk ? `<div>RF risk: <b style="color:${RISK_COLORS[p.risk.risk_class]}">${p.risk.risk_class}</b></div>
+                                ${p?.risk ? `<div>Risk tier: <b style="color:${RISK_COLORS[p.risk.tier]}">${p.risk.tier}</b></div>
+                                ${p.risk.reasons.length ? `<div>${p.risk.reasons.join('; ')}</div>` : ''}
                                 <div>5-yr mean: ${p.risk.mean_5yr}</div>
-                                <div>Threshold: ${p.risk.threshold}</div>` : ''}
+                                <div>Epidemic threshold: ${p.risk.epidemic_threshold}</div>` : ''}
                             </div>`;
                             layer.bindTooltip(body, { sticky: true, opacity: 0.95 });
                         }}
@@ -179,9 +182,10 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
                                 <div>Cases this week: <b>{p.cases}</b></div>
                                 {p.risk && (
                                     <>
-                                        <div>RF risk: <b style={{ color: RISK_COLORS[p.risk.risk_class] }}>{p.risk.risk_class}</b></div>
+                                        <div>Risk tier: <b style={{ color: RISK_COLORS[p.risk.tier] }}>{p.risk.tier}</b></div>
+                                        {p.risk.reasons.length > 0 && <div>{p.risk.reasons.join('; ')}</div>}
                                         <div>5-yr mean: {p.risk.mean_5yr}</div>
-                                        <div>Threshold: {p.risk.threshold}</div>
+                                        <div>Epidemic threshold: {p.risk.epidemic_threshold}</div>
                                     </>
                                 )}
                             </div>
@@ -207,7 +211,7 @@ function spreadFallback(i, n) {
 function Legend({ hasPolygons }) {
     return (
         <div className="absolute bottom-3 left-3 z-[1000] bg-white/95 border border-slate-200 rounded shadow-sm px-3 py-2 text-xs">
-            <div className="font-semibold text-slate-700 mb-1">RF risk class</div>
+            <div className="font-semibold text-slate-700 mb-1">Risk tier (rule-based)</div>
             <LegendRow color={RISK_COLORS.High} label="High" />
             <LegendRow color={RISK_COLORS.Moderate} label="Moderate" />
             <LegendRow color={RISK_COLORS.Low} label="Low" />

@@ -3,11 +3,15 @@
 FastAPI app exposing endpoints used by the Laravel layer:
 
     POST /predict/forecast       Prophet weekly case forecast (city-wide or per-barangay)
-    POST /predict/risk           Random Forest barangay risk classification
+    POST /predict/trend          Rising / not-rising 4-week trend for all 16 barangays
     POST /geocode                Street-address → (lat, lng) via Nominatim cascade
 
 Models are loaded once at startup from ml/models/*.pkl (produced by
-ml/train_prophet.py). The service runs bound to 127.0.0.1:5000 in production
+ml/train_prophet.py). A model is served only if it beat the seasonal-naive
+(same week last year) baseline on its hold-out data (Ch.3 Module 5), because
+Prophet does not perform well on every disease. Barangay risk tiers are
+rule-based and computed in Laravel (App\\Services\\RiskTiers); the Random Forest
+classifier was retired with the revised Ch.3. The service runs bound to 127.0.0.1:5000 in production
 (per docs/architecture.md) and is NOT exposed to the public internet — Laravel
 proxies authenticated requests via Guzzle.
 """
@@ -24,7 +28,6 @@ from pathlib import Path
 from typing import Dict, List, Literal, Optional, Tuple
 
 import mysql.connector
-import numpy as np
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, Field
@@ -69,14 +72,21 @@ _ensure_tbb_on_path()
 
 # Prophet: key is (disease_code, barangay_id or None) → model bundle dict
 MODELS: Dict[Tuple[str, Optional[int]], dict] = {}
-# RandomForest: key is disease_code → bundle dict
-RF_MODELS: Dict[str, dict] = {}
+
+
+def outperforms_baseline(bundle: dict) -> bool:
+    """True if the model's hold-out MAPE beat the seasonal-naive baseline.
+
+    This is the display check in Ch.3 Module 5: an operational safeguard, not
+    model development. Bundles without a baseline comparison are not served.
+    """
+    mape, base = bundle.get("validation_mape"), bundle.get("baseline_mape")
+    return mape is not None and base is not None and mape < base
 
 
 def load_models() -> None:
-    """Load every prophet_*.pkl and rf_*.pkl from MODEL_DIR into the in-memory registries."""
+    """Load every prophet_*.pkl from MODEL_DIR into the in-memory registry."""
     MODELS.clear()
-    RF_MODELS.clear()
     if not MODEL_DIR.exists():
         log.warning("MODEL_DIR %s does not exist — no models available", MODEL_DIR)
         return
@@ -94,48 +104,37 @@ def load_models() -> None:
             log.warning("skipping %s — missing disease_code in bundle", path.name)
             continue
         MODELS[(code, bid)] = bundle
-        log.info("prophet loaded %s%s (mape=%s)",
+        log.info("prophet loaded %s%s (mape=%s, baseline=%s, served=%s)",
                  code,
                  f"/bgy{bid}" if bid else " (city-wide)",
-                 f"{bundle.get('validation_mape'):.1f}%" if bundle.get('validation_mape') is not None else "n/a")
+                 f"{bundle.get('validation_mape'):.1f}%" if bundle.get('validation_mape') is not None else "n/a",
+                 f"{bundle.get('baseline_mape'):.1f}%" if bundle.get('baseline_mape') is not None else "n/a",
+                 outperforms_baseline(bundle))
 
-    for path in sorted(MODEL_DIR.glob("rf_*.pkl")):
-        try:
-            with open(path, "rb") as f:
-                bundle = pickle.load(f)
-        except Exception as e:
-            log.error("failed to load %s: %s", path.name, e)
-            continue
-        code = bundle.get("disease_code")
-        if not code:
-            log.warning("skipping %s — missing disease_code in bundle", path.name)
-            continue
-        RF_MODELS[code] = bundle
-        log.info("rf loaded %s (accuracy=%s)",
-                 code,
-                 f"{bundle.get('accuracy'):.3f}" if bundle.get('accuracy') is not None else "n/a")
-
-    log.info("model registry: %d prophet + %d rf models loaded", len(MODELS), len(RF_MODELS))
+    served = sum(outperforms_baseline(b) for b in MODELS.values())
+    log.info("model registry: %d prophet models loaded, %d outperform the baseline and are served",
+             len(MODELS), served)
 
 
 def _resolve_model(disease_code: str, barangay_id: Optional[int]) -> Tuple[dict, str]:
-    """Pick the best available model for the requested (disease, barangay).
+    """Pick the best servable model for the requested (disease, barangay).
 
-    Falls back from per-barangay → city-wide if no per-barangay model exists.
-    Returns (bundle, resolution) where resolution is 'per_barangay' or 'city_wide_fallback'.
+    Falls back from per-barangay → city-wide when no per-barangay model exists
+    or it did not beat the baseline. Returns (bundle, resolution).
     """
     if barangay_id is not None:
         bundle = MODELS.get((disease_code, barangay_id))
-        if bundle is not None:
+        if bundle is not None and outperforms_baseline(bundle):
             return bundle, "per_barangay"
     bundle = MODELS.get((disease_code, None))
-    if bundle is not None:
+    if bundle is not None and outperforms_baseline(bundle):
         return bundle, ("city_wide_fallback" if barangay_id is not None else "city_wide")
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"No Prophet model available for disease_code={disease_code!r}"
-               + (f" or city-wide fallback" if barangay_id else ""),
-    )
+    if any(code == disease_code for code, _ in MODELS):
+        detail = (f"Forecast not displayed for {disease_code!r}: the model did not outperform "
+                  "the same-week-last-year comparison on its hold-out data.")
+    else:
+        detail = f"No Prophet model available for disease_code={disease_code!r}"
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=detail)
 
 
 # ─── Lifecycle ───────────────────────────────────────────────────────────────
@@ -150,8 +149,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="H-MAP ML Service",
-    description="Disease forecasting and barangay risk classification for H-MAP.",
-    version="0.2.0",
+    description="Disease trend forecasting (existing Prophet model) and geocoding.",
+    version="0.3.0",
     lifespan=lifespan,
 )
 
@@ -165,6 +164,8 @@ def health() -> dict:
         "service": "hmap-ml",
         "models_loaded": len(MODELS),
         "diseases": sorted({code for code, _ in MODELS.keys()}),
+        "forecast_diseases": sorted({code for (code, _), b in MODELS.items()
+                                     if outperforms_baseline(b)}),
     }
 
 
@@ -181,6 +182,8 @@ def list_models() -> List[dict]:
             "training_window": bundle.get("training_window"),
             "validation_holdout": bundle.get("validation_holdout"),
             "validation_mape": bundle.get("validation_mape"),
+            "baseline_mape": bundle.get("baseline_mape"),
+            "served": outperforms_baseline(bundle),
         })
     return out
 
@@ -227,12 +230,11 @@ def _this_week_monday() -> "pd.Timestamp":
     return today - pd.Timedelta(days=today.weekday())
 
 
-@app.post("/predict/forecast", response_model=ForecastResponse, tags=["predict"])
-def predict_forecast(req: ForecastRequest) -> ForecastResponse:
-    log.info("forecast disease=%s barangay=%s weeks=%d",
-             req.disease_code, req.barangay_id, req.weeks_ahead)
+def _forecast_points(bundle: dict, weeks_ahead: int) -> Tuple[List[ForecastPoint], "pd.Timestamp", "pd.Timestamp", int]:
+    """Forecast `weeks_ahead` weeks from this week's Monday.
 
-    bundle, resolution = _resolve_model(req.disease_code, req.barangay_id)
+    Returns (points, training_tail, anchor, weeks_bridged).
+    """
     model = bundle["model"]
 
     # Anchor the forecast at THIS week's Monday, not at the end of training
@@ -251,17 +253,17 @@ def predict_forecast(req: ForecastRequest) -> ForecastResponse:
         # Edge case: model was retrained recently; anchor falls inside history.
         # Just forecast the next weeks_ahead from training_tail+1.
         weeks_bridged = 0
-        total_periods = req.weeks_ahead
+        total_periods = weeks_ahead
     else:
         bridge_weeks = int((anchor - training_tail).days // 7)
         weeks_bridged = max(0, bridge_weeks - 1)  # weeks strictly between tail and anchor
-        total_periods = weeks_bridged + req.weeks_ahead
+        total_periods = weeks_bridged + weeks_ahead
 
     future = model.make_future_dataframe(periods=total_periods, freq="W-MON",
                                           include_history=False)
     forecast = model.predict(future)
     # Return only the tail slice the caller asked for
-    forecast_slice = forecast.tail(req.weeks_ahead)
+    forecast_slice = forecast.tail(weeks_ahead)
 
     points = [
         ForecastPoint(
@@ -272,6 +274,16 @@ def predict_forecast(req: ForecastRequest) -> ForecastResponse:
         )
         for _, row in forecast_slice.iterrows()
     ]
+    return points, training_tail, anchor, weeks_bridged
+
+
+@app.post("/predict/forecast", response_model=ForecastResponse, tags=["predict"])
+def predict_forecast(req: ForecastRequest) -> ForecastResponse:
+    log.info("forecast disease=%s barangay=%s weeks=%d",
+             req.disease_code, req.barangay_id, req.weeks_ahead)
+
+    bundle, resolution = _resolve_model(req.disease_code, req.barangay_id)
+    points, training_tail, anchor, weeks_bridged = _forecast_points(bundle, req.weeks_ahead)
 
     return ForecastResponse(
         disease_code=req.disease_code,
@@ -286,33 +298,58 @@ def predict_forecast(req: ForecastRequest) -> ForecastResponse:
     )
 
 
-# ─── /predict/risk ──────────────────────────────────────────────────────────
+# ─── /predict/trend ─────────────────────────────────────────────────────────
+# Input to the rule-based risk tier (Laravel App\Services\RiskTiers): whether
+# each barangay's 4-week forecast is rising. Per-barangay models are used where
+# they are served, otherwise the city-wide model applies to every barangay.
 
-class RiskRequest(BaseModel):
+RISING_MIN_RATIO = 1.10   # last forecast week at least 10% above the first ...
+RISING_MIN_CASES = 1.0    # ... and at least one case higher
+
+
+class TrendRequest(BaseModel):
     disease_code: str
-    morbidity_year: int = Field(..., ge=2010, le=2100,
-                                 description="Year to classify, e.g. 2026")
-    morbidity_week: int = Field(..., ge=1, le=53,
-                                 description="ISO morbidity week (1-53)")
+    weeks_ahead: int = Field(4, ge=2, le=12)
 
 
-class RiskScore(BaseModel):
+class BarangayTrend(BaseModel):
     barangay_id: int
-    barangay_name: str
-    risk_class: Literal["Low", "Moderate", "High"]
-    probabilities: Dict[str, float]
-    current_cases: int
-    mean_5yr: float
-    threshold: float
+    rising: bool
+    first_week_cases: float
+    last_week_cases: float
+    resolution: Literal["per_barangay", "city_wide_fallback"]
 
 
-class RiskResponse(BaseModel):
+class TrendResponse(BaseModel):
     disease_code: str
-    morbidity_year: int
-    morbidity_week: int
-    model: Literal["random_forest"] = "random_forest"
-    accuracy: Optional[float]
-    scores: List[RiskScore]
+    forecast_anchor_week: date
+    weeks_ahead: int
+    trends: List[BarangayTrend]
+
+
+def is_rising(first: float, last: float) -> bool:
+    return last >= first * RISING_MIN_RATIO and (last - first) >= RISING_MIN_CASES
+
+
+@app.post("/predict/trend", response_model=TrendResponse, tags=["predict"])
+def predict_trend(req: TrendRequest) -> TrendResponse:
+    log.info("trend disease=%s weeks=%d", req.disease_code, req.weeks_ahead)
+    cache: Dict[int, Tuple[List[ForecastPoint], "pd.Timestamp"]] = {}
+    trends: List[BarangayTrend] = []
+    anchor = None
+    for bid in range(1, 17):
+        bundle, resolution = _resolve_model(req.disease_code, bid)
+        key = id(bundle)  # the city-wide bundle is forecast once and reused
+        if key not in cache:
+            points, _tail, anchor, _bridged = _forecast_points(bundle, req.weeks_ahead)
+            cache[key] = (points, anchor)
+        points, anchor = cache[key]
+        first, last = points[0].predicted_cases, points[-1].predicted_cases
+        trends.append(BarangayTrend(barangay_id=bid, rising=is_rising(first, last),
+                                    first_week_cases=round(first, 2),
+                                    last_week_cases=round(last, 2), resolution=resolution))
+    return TrendResponse(disease_code=req.disease_code, forecast_anchor_week=anchor.date(),
+                         weeks_ahead=req.weeks_ahead, trends=trends)
 
 
 def _db_connect():
@@ -325,121 +362,6 @@ def _db_connect():
         password=os.environ["DB_PASSWORD"],
         database=os.getenv("DB_NAME", "hmap_db"),
         charset="utf8mb4",
-    )
-
-
-def _build_risk_features(conn, disease_code: str, year: int, week: int) -> List[dict]:
-    """For each of the 16 barangays, build the 8-feature vector needed by the RF.
-
-    Mirrors the feature engineering in ml/train_rf.py:build_features_and_labels,
-    but for a single (year, week) point against the full historical data in MySQL.
-    """
-    cur = conn.cursor(dictionary=True)
-    cur.execute("SELECT disease_id FROM diseases WHERE disease_code = %s", (disease_code,))
-    row = cur.fetchone()
-    if not row:
-        raise HTTPException(status_code=404, detail=f"unknown disease_code={disease_code!r}")
-    disease_id = row["disease_id"]
-
-    # Pull all weekly counts for this disease across the 11-year window we need
-    # (current year, prior year, plus 5-year baseline).
-    cur.execute(
-        """SELECT barangay_id, morbidity_year, morbidity_week, COUNT(*) AS cases
-             FROM cases
-            WHERE disease_id = %s
-              AND case_classification IN ('Confirmed','Probable')
-              AND morbidity_year BETWEEN %s AND %s
-              AND status_flag = 'Active'
-            GROUP BY barangay_id, morbidity_year, morbidity_week""",
-        (disease_id, year - 5, year),
-    )
-    counts_by_key: Dict[Tuple[int, int, int], int] = {
-        (r["barangay_id"], r["morbidity_year"], r["morbidity_week"]): int(r["cases"])
-        for r in cur.fetchall()
-    }
-
-    cur.execute("SELECT barangay_id, barangay_name FROM barangays ORDER BY barangay_id")
-    barangays = cur.fetchall()
-    cur.close()
-
-    rows: List[dict] = []
-    baseline_years = list(range(year - 5, year))
-    # Calendar month: real month of the ISO week's Monday. Must match the
-    # feature engineering in train_rf.py — otherwise train/serve skew.
-    import pandas as _pd
-    try:
-        month = _pd.Timestamp.fromisocalendar(year, min(week, 53), 1).month
-    except ValueError:
-        month = _pd.Timestamp.fromisocalendar(year, 52, 1).month
-    for b in barangays:
-        bid, bname = b["barangay_id"], b["barangay_name"]
-        current = counts_by_key.get((bid, year, week), 0)
-        prior_yr = counts_by_key.get((bid, year - 1, week), 0)
-        baseline = [counts_by_key.get((bid, by, week), 0) for by in baseline_years]
-        mean_5yr = float(np.mean(baseline))
-        std_5yr = float(np.std(baseline, ddof=1)) if len(baseline) > 1 else 0.0
-        threshold = mean_5yr + 2 * std_5yr
-        ratio = current / mean_5yr if mean_5yr > 0 else (1.0 if current == 0 else 100.0)
-        ratio = min(ratio, 100.0)
-        ytd = sum(counts_by_key.get((bid, year, w), 0) for w in range(1, week + 1))
-        rows.append({
-            "barangay_id": bid,
-            "barangay_name": bname,
-            "current_cases": current,
-            "prior_year_cases": prior_yr,
-            "mean_5yr": mean_5yr,
-            "threshold": threshold,
-            "ratio_to_mean": ratio,
-            "ytd_cases": ytd,
-            "morbidity_week": week,
-            "calendar_month": month,
-        })
-    return rows
-
-
-@app.post("/predict/risk", response_model=RiskResponse, tags=["predict"])
-def predict_risk(req: RiskRequest) -> RiskResponse:
-    log.info("risk disease=%s year=%d week=%d",
-             req.disease_code, req.morbidity_year, req.morbidity_week)
-
-    bundle = RF_MODELS.get(req.disease_code)
-    if bundle is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No Random Forest model for disease_code={req.disease_code!r}",
-        )
-    clf = bundle["model"]
-    feature_cols = bundle["feature_cols"]
-    classes = list(clf.classes_)
-
-    conn = _db_connect()
-    try:
-        feature_rows = _build_risk_features(conn, req.disease_code, req.morbidity_year, req.morbidity_week)
-    finally:
-        conn.close()
-
-    X = np.array([[r[c] for c in feature_cols] for r in feature_rows], dtype=float)
-    preds = clf.predict(X)
-    probs = clf.predict_proba(X)
-
-    scores: List[RiskScore] = []
-    for r, pred, p in zip(feature_rows, preds, probs):
-        scores.append(RiskScore(
-            barangay_id=r["barangay_id"],
-            barangay_name=r["barangay_name"],
-            risk_class=pred,
-            probabilities={cls: float(p[i]) for i, cls in enumerate(classes)},
-            current_cases=int(r["current_cases"]),
-            mean_5yr=round(r["mean_5yr"], 2),
-            threshold=round(r["threshold"], 2),
-        ))
-
-    return RiskResponse(
-        disease_code=req.disease_code,
-        morbidity_year=req.morbidity_year,
-        morbidity_week=req.morbidity_week,
-        accuracy=bundle.get("accuracy"),
-        scores=scores,
     )
 
 

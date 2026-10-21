@@ -30,6 +30,8 @@ Route::middleware('hrmo')->group(function () {
     Route::get('/weekly-series', [DashboardController::class, 'weeklySeries']);
     Route::get('/thresholds',    [DashboardController::class, 'thresholds']);
     Route::get('/heatmap-week',  [DashboardController::class, 'heatmapWeek']);
+    // Module 6 — rule-based barangay risk tiers (replaces the retired Random Forest)
+    Route::get('/risk-tiers',    [DashboardController::class, 'riskTiers'])->middleware('hrmo:Analyst');
 
     // CESU PIDSR workbook parity views (Summary Weekly Update, PIDSRMain, SBgy)
     Route::get('/weekly-summary',  [DashboardController::class, 'weeklySummary']);
@@ -44,7 +46,6 @@ Route::middleware('hrmo')->group(function () {
     Route::get('/ml/health',         [MlProxyController::class, 'health']);
     Route::get('/ml/models',         [MlProxyController::class, 'models']);
     Route::post('/ml/forecast',      [MlProxyController::class, 'forecast']);
-    Route::post('/ml/risk', [MlProxyController::class, 'risk'])->middleware('hrmo:Analyst');
     Route::post('/geocode',          [MlProxyController::class, 'geocode']);
 
     // Dengue cluster surveillance — CESU 200m / >=3 / 4-week rule.

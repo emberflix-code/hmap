@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Thin proxy in front of the FastAPI ML microservice (Prophet + Random Forest).
+ * Thin proxy in front of the FastAPI ML microservice (Prophet forecasts and
+ * geocoding). Risk tiers are rule-based and computed in App\Services\RiskTiers.
  *
  * The ML service binds to 127.0.0.1:5000 in production (per docs/architecture.md)
  * and is NOT exposed externally. The frontend talks to Laravel; Laravel talks to
@@ -22,15 +23,6 @@ class MlProxyController extends Controller
             'disease_code' => 'required|string|max:20',
             'barangay_id'  => 'nullable|integer|min:1|max:16',
             'weeks_ahead'  => 'nullable|integer|min:1|max:12',
-        ]));
-    }
-
-    public function risk(Request $request): JsonResponse
-    {
-        return $this->forward('/predict/risk', $request->validate([
-            'disease_code'   => 'required|string|max:20',
-            'morbidity_year' => 'required|integer|min:2010|max:2100',
-            'morbidity_week' => 'required|integer|min:1|max:53',
         ]));
     }
 

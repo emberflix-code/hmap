@@ -82,7 +82,12 @@ export default function ForecastPanel({ api, disease }) {
         return <div className="p-4 text-sm text-slate-500">Generating forecast…</div>;
     }
     if (error) {
-        return <div className="p-4 text-sm text-red-700 bg-red-50">{error}</div>;
+        // A withheld forecast (model did not beat the same-week-last-year
+        // comparison) is expected behavior, so it is shown as a note, not an error.
+        const withheld = typeof error === 'string' && error.startsWith('Forecast not displayed');
+        return withheld
+            ? <div className="p-4 text-sm text-slate-600 bg-slate-50">{error}</div>
+            : <div className="p-4 text-sm text-red-700 bg-red-50">{error}</div>;
     }
     if (!forecast || !chartData) {
         return null;

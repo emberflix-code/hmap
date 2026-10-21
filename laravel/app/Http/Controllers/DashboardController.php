@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\RiskTiers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -620,18 +621,28 @@ MEMO;
         return $d;
     }
 
+    /**
+     * Rule-based barangay risk tiers for the map (Ch.3 Module 6); see
+     * App\Services\RiskTiers for the rules.
+     */
+    public function riskTiers(Request $request): JsonResponse
+    {
+        $request->validate([
+            'disease_code'   => 'required|string|max:20',
+            'morbidity_year' => 'required|integer|min:2010|max:2100',
+            'morbidity_week' => 'required|integer|min:1|max:53',
+        ]);
+        $result = RiskTiers::compute($request->disease_code, (int) $request->morbidity_year,
+                                     (int) $request->morbidity_week);
+        if ($result === null) {
+            return response()->json(['error' => 'unknown_disease'], 404);
+        }
+        return response()->json($result);
+    }
+
     private function countAlertsAtWeek(int $diseaseId, int $year, int $week): int
     {
-        // Per-barangay current-week counts
-        $current = DB::table('cases')
-            ->where('disease_id', $diseaseId)
-            ->where('morbidity_year', $year)
-            ->where('morbidity_week', $week)
-            ->whereIn('case_classification', ['Confirmed', 'Probable'])
-            ->where('status_flag', 'Active')
-            ->groupBy('barangay_id')
-            ->selectRaw('barangay_id, COUNT(*) AS n')
-            ->pluck('n', 'barangay_id');
+        $current = RiskTiers::currentCounts($diseaseId, $year, $week);
 
         if ($current->isEmpty()) return 0;
 
@@ -644,36 +655,11 @@ MEMO;
         }
 
         // Per-barangay 5-year baseline mean + 2σ (PIDSR epidemic threshold)
-        $baselineStart = $year - 5;
-        $baselineEnd = $year - 1;
-        $baseline = DB::table('cases')
-            ->where('disease_id', $diseaseId)
-            ->where('morbidity_week', $week)
-            ->whereBetween('morbidity_year', [$baselineStart, $baselineEnd])
-            ->whereIn('case_classification', ['Confirmed', 'Probable'])
-            ->where('status_flag', 'Active')
-            ->groupBy('barangay_id', 'morbidity_year')
-            ->selectRaw('barangay_id, morbidity_year, COUNT(*) AS n')
-            ->get();
-
-        // Aggregate baseline rows → per-barangay mean and stddev
-        $perBgy = [];
-        foreach ($baseline as $r) {
-            $perBgy[$r->barangay_id][] = (int) $r->n;
-        }
-
+        $baselines = RiskTiers::barangayBaselines($diseaseId, $year, $week);
         $alerts = 0;
         foreach ($current as $bid => $n) {
-            $samples = $perBgy[$bid] ?? [];
-            // Pad with zeros to a 5-year baseline (years with no case observations
-            // still count as 0 for the baseline mean)
-            while (count($samples) < 5) $samples[] = 0;
-            $mean = array_sum($samples) / count($samples);
-            $var = 0.0;
-            foreach ($samples as $s) $var += ($s - $mean) ** 2;
-            $std = sqrt($var / (count($samples) - 1));
-            $threshold = $mean + 2 * $std;
-            if ($n > $threshold && $n > 0) $alerts++;
+            $b = $baselines[$bid] ?? ['mean' => 0.0, 'sd' => 0.0];
+            if ($n > 0 && $n > $b['mean'] + 2 * $b['sd']) $alerts++;
         }
         return $alerts;
     }
