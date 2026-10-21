@@ -87,31 +87,35 @@ class ReportsController extends Controller
             "disease-summary-{$suffix}.csv",
             ['disease_code', 'disease_name', 'barangay', 'morbidity_year',
               'morbidity_week', 'confirmed_probable', 'suspect', 'total_cases',
-              'mean_5yr', 'threshold', 'alert'],
+              'mean_5yr', 'alert_threshold', 'epidemic_threshold', 'alert'],
             function () use ($year, $diseaseCode) {
                 $q = DB::table('cases as c')
                     ->join('diseases as d', 'd.disease_id', '=', 'c.disease_id')
                     ->join('barangays as b', 'b.barangay_id', '=', 'c.barangay_id')
+                    // Only the PIDSR epidemic-method row: the table also holds the
+                    // CESU mean/median rows, which would triplicate every output row.
                     ->leftJoin('thresholds as t', function ($j) {
                         $j->on('t.disease_id', '=', 'c.disease_id')
-                          ->on('t.morbidity_week', '=', 'c.morbidity_week');
+                          ->on('t.morbidity_week', '=', 'c.morbidity_week')
+                          ->where('t.method', '=', 'ewarn_mu2sigma');
                     })
                     ->where('c.morbidity_year', $year)
                     ->where('c.status_flag', 'Active')
-                    ->groupBy('d.disease_code', 'd.disease_name', 'b.barangay_name',
-                              'c.morbidity_year', 'c.morbidity_week',
-                              't.mean_cases', 't.threshold_value')
+                    ->groupBy('d.disease_code', 'd.disease_name', 'd.single_case_trigger',
+                              'b.barangay_name', 'c.morbidity_year', 'c.morbidity_week',
+                              't.mean_cases', 't.std_dev', 't.threshold_value')
                     ->orderBy('d.disease_code')
                     ->orderBy('b.barangay_name')
                     ->orderBy('c.morbidity_week')
                     ->selectRaw("
-                        d.disease_code, d.disease_name, b.barangay_name AS barangay,
-                        c.morbidity_year, c.morbidity_week,
+                        d.disease_code, d.disease_name, d.single_case_trigger,
+                        b.barangay_name AS barangay, c.morbidity_year, c.morbidity_week,
                         SUM(CASE WHEN c.case_classification IN ('Confirmed','Probable') THEN 1 ELSE 0 END) AS confirmed_probable,
                         SUM(CASE WHEN c.case_classification = 'Suspect' THEN 1 ELSE 0 END) AS suspect,
                         COUNT(*) AS total_cases,
                         t.mean_cases AS mean_5yr,
-                        t.threshold_value AS threshold
+                        t.mean_cases + t.std_dev AS alert_threshold,
+                        t.threshold_value AS epidemic_threshold
                     ");
                 if ($diseaseCode) {
                     $q->where('d.disease_code', $diseaseCode);
@@ -119,13 +123,24 @@ class ReportsController extends Controller
                 return $q;
             },
             function ($r) {
-                $alert = ($r->threshold !== null && (int) $r->confirmed_probable > (float) $r->threshold) ? 'YES' : '';
+                // PIDSR levels (DOH, 2014, pp. 57-58): EPIDEMIC above mean + 2 SD,
+                // ALERT above mean + 1 SD, or any case of a single-case disease.
+                $n = (int) $r->confirmed_probable;
+                $alert = '';
+                if ($r->single_case_trigger && $n > 0) {
+                    $alert = 'ALERT (single case)';
+                } elseif ($r->epidemic_threshold !== null && $n > (float) $r->epidemic_threshold) {
+                    $alert = 'EPIDEMIC';
+                } elseif ($r->alert_threshold !== null && $n > (float) $r->alert_threshold) {
+                    $alert = 'ALERT';
+                }
                 return [
                     $r->disease_code, $r->disease_name, $r->barangay,
                     $r->morbidity_year, $r->morbidity_week,
                     $r->confirmed_probable, $r->suspect, $r->total_cases,
                     $r->mean_5yr !== null ? round((float) $r->mean_5yr, 2) : '',
-                    $r->threshold !== null ? round((float) $r->threshold, 2) : '',
+                    $r->alert_threshold !== null ? round((float) $r->alert_threshold, 2) : '',
+                    $r->epidemic_threshold !== null ? round((float) $r->epidemic_threshold, 2) : '',
                     $alert,
                 ];
             },

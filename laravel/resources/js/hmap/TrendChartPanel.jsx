@@ -67,19 +67,35 @@ export default function TrendChartPanel({ api, disease, year }) {
         const labels = Array.from({ length: 53 }, (_, i) => i + 1);
         const seriesByWeek = Object.fromEntries(series.map((r) => [Number(r.week), Number(r.cases)]));
         const meanByWeek = Object.fromEntries(thresholds.map((t) => [Number(t.morbidity_week), Number(t.mean_cases)]));
+        const alertByWeek = Object.fromEntries(thresholds.map((t) => [Number(t.morbidity_week), Number(t.alert_threshold)]));
         const thrByWeek = Object.fromEntries(thresholds.map((t) => [Number(t.morbidity_week), Number(t.threshold_value)]));
+        const singleCase = thresholds.some((t) => Number(t.single_case_trigger) === 1);
+        const counts = labels.map((w) => seriesByWeek[w] ?? 0);
+
+        // PIDSR levels (DOH, 2014, pp. 57-58): red above the epidemic threshold
+        // or any case of a single-case disease, amber above the alert threshold.
+        const levelColor = (n, w) => {
+            if (singleCase) return n > 0 ? '#dc2626' : '#2563eb';
+            if (thrByWeek[w] !== undefined && n > thrByWeek[w]) return '#dc2626';
+            if (alertByWeek[w] !== undefined && n > alertByWeek[w]) return '#f59e0b';
+            return '#2563eb';
+        };
+        const pointColors = counts.map((n, i) => levelColor(n, labels[i]));
+
         return {
             labels,
             datasets: [
                 {
-                    label: `${year} cases`,
-                    data: labels.map((w) => seriesByWeek[w] ?? 0),
+                    label: singleCase ? `${year} cases (any case = alert)` : `${year} cases`,
+                    data: counts,
                     borderColor: '#2563eb',
                     backgroundColor: 'rgba(37, 99, 235, 0.15)',
+                    pointBackgroundColor: pointColors,
+                    pointBorderColor: pointColors,
                     borderWidth: 2,
                     fill: true,
                     tension: 0.25,
-                    pointRadius: 2,
+                    pointRadius: counts.map((n, i) => (pointColors[i] === '#2563eb' ? 2 : 4)),
                 },
                 {
                     label: '5-yr mean',
@@ -92,7 +108,18 @@ export default function TrendChartPanel({ api, disease, year }) {
                     pointRadius: 0,
                 },
                 {
-                    label: 'EWARN threshold (μ + 2σ)',
+                    label: 'PIDSR alert threshold (mean + 1 SD)',
+                    data: labels.map((w) => alertByWeek[w] ?? null),
+                    borderColor: '#f59e0b',
+                    borderWidth: 1.5,
+                    borderDash: [6, 3],
+                    fill: false,
+                    tension: 0,
+                    pointRadius: 0,
+                    hidden: singleCase,
+                },
+                {
+                    label: 'PIDSR epidemic threshold (mean + 2 SD)',
                     data: labels.map((w) => thrByWeek[w] ?? null),
                     borderColor: '#dc2626',
                     borderWidth: 1.5,
@@ -100,6 +127,7 @@ export default function TrendChartPanel({ api, disease, year }) {
                     fill: false,
                     tension: 0,
                     pointRadius: 0,
+                    hidden: singleCase,
                 },
             ],
         };

@@ -39,6 +39,9 @@ CREATE TABLE diseases (
     disease_category  ENUM('Category 1','Category 2') NOT NULL,
     alert_enabled     TINYINT(1)   NOT NULL DEFAULT 1,
     forecast_enabled  TINYINT(1)   NOT NULL DEFAULT 0,
+    -- 1 = a single case raises an alert (PIDSR MOP 2014, p. 58, Table 5),
+    -- instead of the mean + 1/2 SD thresholds used for other diseases
+    single_case_trigger TINYINT(1) NOT NULL DEFAULT 0,
     display_order     TINYINT UNSIGNED NULL,
     PRIMARY KEY (disease_id),
     UNIQUE KEY uq_disease_code (disease_code),

@@ -3,10 +3,16 @@
 For every (disease × morbidity_week) where the disease has alert_enabled=1,
 this script computes THREE thresholds and stores them side-by-side:
 
-    ewarn_mu2sigma  — WHO EWARN (WHO, 2018): threshold = μ + 2·σ over the prior
-                      5 years' weekly counts, COUNTING ONLY Confirmed + Probable
-                      classifications. This is H-MAP's active alert threshold.
-                      Cited in thesis Ch.2 p.15.
+    ewarn_mu2sigma  — PIDSR epidemic threshold (DOH, 2014, p. 57): μ + 2·σ over
+                      the prior 5 years' weekly counts, COUNTING ONLY Confirmed +
+                      Probable classifications. The PIDSR alert threshold is the
+                      same row's μ + 1·σ (mean_cases + std_dev), computed by the
+                      API, so it needs no separate row. Both follow the
+                      historical limits method (Stroup et al., 1989). The method
+                      name predates the PIDSR attribution (the formula is not in
+                      the WHO EWARN documents) and is kept for data compatibility.
+                      Diseases with diseases.single_case_trigger = 1 alert on any
+                      single case instead (DOH, 2014, p. 58).
 
     cesu_mean       — Simple mean of weekly counts over the same 5-year baseline,
                       counting ALL classifications (Suspect + Probable + Confirmed +
@@ -218,7 +224,7 @@ def report(result: dict) -> None:
     bar = "=" * 86
     print()
     print(bar)
-    print("  Multi-method Threshold Computation (EWARN μ+2σ • CESU mean • CESU median)")
+    print("  Multi-method Threshold Computation (PIDSR μ+2σ • CESU mean • CESU median)")
     print(bar)
     print(f"  Alert year:        {result['alert_year']}")
     print(f"  Baseline years:    {result['baseline_years']}")
@@ -250,7 +256,7 @@ def report(result: dict) -> None:
         print(f"    ... {len(weeks_sorted) - 12} more weeks")
     print()
     print("  Interpretation:")
-    print("    EWARN μ+2σ  is H-MAP's alert threshold (Confirmed+Probable, μ+2σ)")
+    print("    PIDSR μ+2σ  is the epidemic threshold (Confirmed+Probable); μ+1σ is the alert threshold")
     print("    CESU mean   matches the 5YrAve sheet's 'Average' column (all classes)")
     print("    CESU median matches the 5YrAve sheet's 'Median' column (all classes)")
     print("    ↑ = EWARN threshold > CESU mean + 5; ↓ = EWARN threshold < CESU mean - 5")

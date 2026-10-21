@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     /**
+     * thresholds.method value that holds the PIDSR epidemic threshold
+     * (5-year mean + 2 SD, Confirmed + Probable; DOH, 2014, p. 57). The stored
+     * name predates the PIDSR attribution and is kept for data compatibility.
+     * The PIDSR alert threshold is the same row's mean + 1 SD.
+     */
+    private const EPIDEMIC_METHOD = 'ewarn_mu2sigma';
+
+    /**
      * Reference list: 16 Parañaque barangays.
      */
     public function barangays(): JsonResponse
@@ -22,12 +30,14 @@ class DashboardController extends Controller
 
     /**
      * Reference list: 29 PIDSR diseases (alert_enabled flag tells the frontend
-     * which ones support thresholds; forecast_enabled tells which support Prophet).
+     * which ones support thresholds; forecast_enabled tells which support Prophet;
+     * single_case_trigger marks diseases where one case is an alert).
      */
     public function diseases(): JsonResponse
     {
         $rows = DB::table('diseases')
-            ->select('disease_id', 'disease_code', 'disease_name', 'disease_category', 'alert_enabled', 'forecast_enabled')
+            ->select('disease_id', 'disease_code', 'disease_name', 'disease_category', 'alert_enabled',
+                     'forecast_enabled', 'single_case_trigger')
             ->orderBy('display_order')
             ->get();
         return response()->json($rows);
@@ -69,7 +79,10 @@ class DashboardController extends Controller
     }
 
     /**
-     * WHO EWARN thresholds (pre-computed) for the trend chart's overlay.
+     * PIDSR alert and epidemic thresholds (pre-computed) for the trend chart's
+     * overlay: alert_threshold = mean + 1 SD, threshold_value = mean + 2 SD
+     * (DOH, 2014, p. 57). Only the epidemic-method rows are returned; the CESU
+     * reference rows in the same table would otherwise overwrite them per week.
      */
     public function thresholds(Request $request): JsonResponse
     {
@@ -80,8 +93,11 @@ class DashboardController extends Controller
         $rows = DB::table('thresholds as t')
             ->join('diseases as d', 'd.disease_id', '=', 't.disease_id')
             ->where('d.disease_code', $request->disease_code)
+            ->where('t.method', self::EPIDEMIC_METHOD)
             ->orderBy('t.morbidity_week')
-            ->select('t.morbidity_week', 't.baseline_years', 't.mean_cases', 't.std_dev', 't.threshold_value')
+            ->select('t.morbidity_week', 't.baseline_years', 't.mean_cases', 't.std_dev', 't.threshold_value',
+                     'd.single_case_trigger')
+            ->selectRaw('t.mean_cases + t.std_dev AS alert_threshold')
             ->get();
 
         return response()->json($rows);
@@ -179,8 +195,8 @@ class DashboardController extends Controller
             ->where('status_flag', 'Active')
             ->count();
 
-        // Count barangays where this week's case count exceeds the (mean+2σ) threshold
-        // computed against the prior 5 years. Reuse the same logic the RF labels use.
+        // Count barangays in an alert condition this week: above the PIDSR
+        // epidemic threshold, or any case of a single-case-trigger disease.
         $alertsThisWeek = $this->countAlertsAtWeek($did, $year, $week);
 
         return response()->json([
@@ -205,8 +221,8 @@ class DashboardController extends Controller
      *
      * IMPORTANT: This uses ALL classifications (the CESU basis), NOT
      * Confirmed+Probable, because the PIDSR workbook does the same. The alerting
-     * threshold (countAlertsAtWeek) uses Confirmed+Probable per EWARN — that
-     * distinction is intentional.
+     * threshold (countAlertsAtWeek) uses Confirmed+Probable, the basis of the
+     * PIDSR alert and epidemic thresholds; that distinction is intentional.
      */
     public function weeklySummary(Request $request): JsonResponse
     {
@@ -619,7 +635,15 @@ MEMO;
 
         if ($current->isEmpty()) return 0;
 
-        // Per-barangay 5-year baseline mean + 2σ for the same week
+        // PIDSR MOP Table 5 diseases (e.g., measles, AFP): a single case is an
+        // alert, so every barangay with a case this week counts.
+        $singleCase = (bool) DB::table('diseases')->where('disease_id', $diseaseId)
+            ->value('single_case_trigger');
+        if ($singleCase) {
+            return $current->filter(function ($n) { return $n > 0; })->count();
+        }
+
+        // Per-barangay 5-year baseline mean + 2σ (PIDSR epidemic threshold)
         $baselineStart = $year - 5;
         $baselineEnd = $year - 1;
         $baseline = DB::table('cases')

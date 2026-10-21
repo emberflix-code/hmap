@@ -73,6 +73,12 @@ log = logging.getLogger("hmap.etl")
 
 # ─── Canonical reference data ────────────────────────────────────────────────
 
+# Diseases for which the PIDSR Manual of Procedures (DOH, 2014, p. 58, Table 5)
+# treats a single case as an alert instead of the mean + SD thresholds. Measles
+# and acute flaccid paralysis are confirmed from Table 5; add other codes here
+# (and in diseases.single_case_trigger) only after checking Table 5 with CESU.
+SINGLE_CASE_TRIGGER = {"MEA", "AFP"}
+
 # 28 PIDSR-notifiable diseases. The 20 we observe in the Registry are flagged
 # alert_enabled=1. The 8 unobserved are seeded so the dropdown is PIDSR-complete
 # but stay alert_enabled=0 / forecast_enabled=0 until cases are encoded.
@@ -496,11 +502,13 @@ def _split_sql(sql: str) -> Iterable[str]:
 
 def seed_diseases(conn) -> dict[str, int]:
     cur = conn.cursor()
+    rows = [dict(d, single=int(d["code"] in SINGLE_CASE_TRIGGER)) for d in DISEASES_SEED]
     cur.executemany(
         """INSERT INTO diseases
-               (disease_code, disease_name, disease_category, alert_enabled, forecast_enabled, display_order)
-           VALUES (%(code)s, %(name)s, %(cat)s, %(alert)s, %(forecast)s, %(order)s)""",
-        DISEASES_SEED,
+               (disease_code, disease_name, disease_category, alert_enabled, forecast_enabled,
+                single_case_trigger, display_order)
+           VALUES (%(code)s, %(name)s, %(cat)s, %(alert)s, %(forecast)s, %(single)s, %(order)s)""",
+        rows,
     )
     conn.commit()
     cur.execute("SELECT disease_id, disease_code FROM diseases")
