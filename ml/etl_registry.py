@@ -110,25 +110,26 @@ DISEASES_SEED: list[dict] = [
     {"code": "AHC",     "name": "Acute Hemorrhagic Conjunctivitis",      "cat": "Category 2", "alert": 0, "forecast": 0, "order": 29},
 ]
 
-# 16 official Parañaque barangays. Centroid lat/lng can be populated later from
-# PhilGIS shapefile; ETL doesn't need them for case loading.
+# 16 official Parañaque barangays. Population values copied from the PIDSR
+# workbook's `SBgy` sheet (2024 projection used in CESU's per-10k rate tables).
+# Centroid lat/lng populated separately from PhilGIS shapefile.
 BARANGAYS_SEED: list[dict] = [
-    {"name": "Baclaran",              "district": 1},
-    {"name": "B.F. Homes",            "district": 2},
-    {"name": "Don Bosco",             "district": 2},
-    {"name": "Don Galo",              "district": 1},
-    {"name": "La Huerta",             "district": 1},
-    {"name": "Marcelo Green Village", "district": 2},
-    {"name": "Merville",              "district": 2},
-    {"name": "Moonwalk",              "district": 2},
-    {"name": "San Antonio",           "district": 1},
-    {"name": "San Dionisio",          "district": 1},
-    {"name": "San Isidro",            "district": 1},
-    {"name": "San Martin de Porres",  "district": 2},
-    {"name": "Santo Niño",            "district": 1},
-    {"name": "Sun Valley",            "district": 2},
-    {"name": "Tambo",                 "district": 1},
-    {"name": "Vitalez",               "district": 1},
+    {"name": "Baclaran",              "district": 1, "population": 35512},
+    {"name": "B.F. Homes",            "district": 2, "population": 97304},
+    {"name": "Don Bosco",             "district": 2, "population": 56847},
+    {"name": "Don Galo",              "district": 1, "population": 11068},
+    {"name": "La Huerta",             "district": 1, "population": 9014},
+    {"name": "Marcelo Green Village", "district": 2, "population": 39419},
+    {"name": "Merville",              "district": 2, "population": 27921},
+    {"name": "Moonwalk",              "district": 2, "population": 76080},
+    {"name": "San Antonio",           "district": 1, "population": 73576},
+    {"name": "San Dionisio",          "district": 1, "population": 76082},
+    {"name": "San Isidro",            "district": 1, "population": 83267},
+    {"name": "San Martin de Porres",  "district": 2, "population": 21279},
+    {"name": "Santo Niño",            "district": 1, "population": 30345},
+    {"name": "Sun Valley",            "district": 2, "population": 52545},
+    {"name": "Tambo",                 "district": 1, "population": 28251},
+    {"name": "Vitalez",               "district": 1, "population": 5350},
 ]
 
 
@@ -231,6 +232,8 @@ BARANGAY_MAP: dict[str, str | None] = {
     "san isidro":                "San Isidro",
     "san antonio":               "San Antonio",
     "b. f. homes":               "B.F. Homes",
+    "b.f. homes":                "B.F. Homes",  # spelled without spaces in Sentinel Sites sheet
+    "bf homes":                  "B.F. Homes",
     "moonwalk":                  "Moonwalk",
     "don bosco":                 "Don Bosco",
     "donbosco":                  "Don Bosco",
@@ -333,10 +336,13 @@ SEX_MAP = {"M": "Male", "F": "Female", "m": "Male", "f": "Female"}
 # ─── Mojibake fix ────────────────────────────────────────────────────────────
 
 def fix_mojibake(s: str | None) -> str | None:
-    """Restore Ñ in strings that lost it during a bad encoding round-trip."""
+    """Restore Ñ and straighten curly apostrophes that broke during encoding round-trips."""
     if s is None or not isinstance(s, str):
         return s
-    return s.replace("�", "Ñ").replace("ñ", "ñ")  # second is a no-op safety
+    return (s.replace("�", "Ñ")
+             .replace("ñ", "ñ")        # no-op safety
+             .replace("’", "'")    # right single quote → ASCII apostrophe
+             .replace("‘", "'"))   # left single quote → ASCII apostrophe
 
 
 def norm_disease_key(raw: str) -> str:
@@ -370,6 +376,39 @@ def norm_barangay_key(raw: str | None) -> str | None:
     if raw is None or not isinstance(raw, str):
         return None
     s = fix_mojibake(raw).strip().lower()
+    s = re.sub(r"\s+", " ", s)
+    return s
+
+
+def norm_dru_key(raw: str | None) -> str | None:
+    """Normalize a DRU name so case/whitespace/mojibake variants collapse.
+
+    Empirically (2026 Registry): 249 raw distinct DRUNames → 233 after this
+    normalization (16 dedup'd), and every normalized key maps to exactly one
+    DRUTyPe. So we can use the normalized name as the canonical facility key.
+    """
+    if raw is None or not isinstance(raw, str):
+        return None
+    s = fix_mojibake(raw).strip().lower()
+    s = re.sub(r"\s+", " ", s)
+    return s
+
+
+# Registry.DRUTyPe → facilities.facility_type enum
+# (Health Center, Sentinel Site, Hospital, Other) — sentinel flag is set
+# separately from the Sentinel Sites sheet
+DRU_TYPE_MAP: dict[str, str] = {
+    "Local Hospital":       "Hospital",
+    "Regional":             "Hospital",
+    "Local Health Center":  "Health Center",
+    "City Health Office":   "Other",
+    "Unknown":              "Other",
+}
+
+
+def canonical_facility_name(raw: str) -> str:
+    """Mojibake-corrected, whitespace-collapsed display name (preserves case)."""
+    s = fix_mojibake(raw).strip()
     s = re.sub(r"\s+", " ", s)
     return s
 
@@ -473,13 +512,105 @@ def seed_diseases(conn) -> dict[str, int]:
 def seed_barangays(conn) -> dict[str, int]:
     cur = conn.cursor()
     cur.executemany(
-        "INSERT INTO barangays (barangay_name, district) VALUES (%(name)s, %(district)s)",
+        """INSERT INTO barangays (barangay_name, district, population)
+           VALUES (%(name)s, %(district)s, %(population)s)""",
         BARANGAYS_SEED,
     )
     conn.commit()
     cur.execute("SELECT barangay_id, barangay_name FROM barangays")
     name_to_id = {name: bid for bid, name in cur.fetchall()}
     log.info("seeded %d barangays", len(name_to_id))
+    return name_to_id
+
+
+def seed_facilities(conn, bgy_to_id: dict[str, int]) -> dict[str, int]:
+    """Build the facilities table from the PIDSR workbook.
+
+    Source of truth: the distinct (DRUName, DRUTyPe) pairs in Registry — these
+    are the facilities that *actually reported cases*, which is what
+    `cases.facility_id` should reference. Then enrich with the `Sentinel Sites`
+    sheet so we know which facilities are sentinel sites and which barangay
+    they sit in. Sentinel mapping uses the normalized name as the join key,
+    so spelling variants in either sheet still match.
+
+    Returns a {normalized_dru_name: facility_id} dict for use in load_cases().
+    """
+    log.info("reading distinct DRUs from %s", REGISTRY_XLSX.name)
+    df_reg = pd.read_excel(REGISTRY_XLSX, sheet_name="Registry",
+                            usecols=["DRUName", "DRUTyPe"])
+
+    # Build {norm_key: (display_name, dru_type)} — first-seen wins on display name
+    facilities: dict[str, tuple[str, str]] = {}
+    for _, r in df_reg.iterrows():
+        raw_name = r.get("DRUName")
+        raw_type = r.get("DRUTyPe")
+        if not isinstance(raw_name, str):
+            continue
+        key = norm_dru_key(raw_name)
+        if key is None or key == "":
+            continue
+        if key in facilities:
+            continue
+        display = canonical_facility_name(raw_name)
+        ftype = DRU_TYPE_MAP.get(str(raw_type).strip(), "Other") if pd.notna(raw_type) else "Other"
+        facilities[key] = (display, ftype)
+    log.info("registry has %d distinct DRUs (after name normalization)", len(facilities))
+
+    # Enrich with Sentinel Sites. Important caveat: the "Sentinel Sites" sheet
+    # actually lists ALL 246 DRUs known to CESU, not just sentinels — rows
+    # marked barangay="Outside Parañaque" are regional referral hospitals,
+    # NOT sentinel sites. CESU's true sentinels are the locals (Local Health
+    # Center + Local Hospital + City Health Office), which the sheet pairs
+    # with one of the 16 official barangays. We use that rule to flag
+    # is_sentinel=1 and to attach a barangay_id.
+    df_ss = pd.read_excel(REGISTRY_XLSX, sheet_name="Sentinel Sites")
+    name_col = "Name of Disease Reporting Unit"
+    bgy_col = "Barangay"
+    if name_col not in df_ss.columns:
+        raise RuntimeError(f"Sentinel Sites sheet missing expected column {name_col!r}")
+    # norm_key → barangay_id for true sentinels only (excludes Outside-Parañaque rows)
+    sentinel_by_key: dict[str, int] = {}
+    for _, r in df_ss.iterrows():
+        raw_name = r.get(name_col)
+        raw_bgy = r.get(bgy_col)
+        if not isinstance(raw_name, str):
+            continue
+        key = norm_dru_key(raw_name)
+        if not key:
+            continue
+        bgy_key = norm_barangay_key(raw_bgy) if isinstance(raw_bgy, str) else None
+        canonical_bgy = BARANGAY_MAP.get(bgy_key) if bgy_key else None
+        if canonical_bgy is None:
+            continue  # Outside Parañaque, Unknown, or unmapped → not a sentinel
+        bid = bgy_to_id.get(canonical_bgy)
+        if bid is not None:
+            sentinel_by_key[key] = bid
+
+    # Build insert rows. We keep facility_type honest to the Registry's
+    # DRUTyPe; the is_sentinel flag carries the surveillance-role distinction.
+    rows: list[tuple] = []
+    for key, (display, ftype) in facilities.items():
+        is_sentinel = 1 if key in sentinel_by_key else 0
+        barangay_id = sentinel_by_key.get(key)  # None for non-sentinels
+        rows.append((display[:120], ftype, barangay_id, is_sentinel))
+
+    cur = conn.cursor()
+    cur.executemany(
+        """INSERT INTO facilities
+               (facility_name, facility_type, barangay_id, is_sentinel)
+           VALUES (%s, %s, %s, %s)""",
+        rows,
+    )
+    conn.commit()
+
+    # Build the lookup dict (norm_key → facility_id) by reading back
+    cur.execute("SELECT facility_id, facility_name FROM facilities")
+    name_to_id: dict[str, int] = {}
+    for fid, fname in cur.fetchall():
+        name_to_id[norm_dru_key(fname)] = fid
+
+    sentinel_count = sum(1 for k in facilities if k in sentinel_by_key)
+    log.info("seeded %d facilities (%d flagged sentinel)", len(facilities), sentinel_count)
     return name_to_id
 
 
@@ -522,8 +653,8 @@ class CaseAddress:
     case_id: int | None = None    # filled after insert
 
 
-def load_cases(conn, code_to_id: dict[str, int], bgy_to_id: dict[str, int]
-                ) -> tuple[int, int, int, list[CaseAddress]]:
+def load_cases(conn, code_to_id: dict[str, int], bgy_to_id: dict[str, int],
+                dru_to_id: dict[str, int]) -> tuple[int, int, int, list[CaseAddress]]:
     log.info("reading %s", REGISTRY_XLSX.name)
     df = pd.read_excel(REGISTRY_XLSX, sheet_name="Registry")
     log.info("registry has %d rows", len(df))
@@ -531,6 +662,7 @@ def load_cases(conn, code_to_id: dict[str, int], bgy_to_id: dict[str, int]
     cases_rows: list[tuple] = []
     excluded_rows: list[tuple] = []
     unmapped_diseases: dict[str, int] = {}
+    unmapped_drus: dict[str, int] = {}
     # Per-loaded-case address metadata, parallel-indexed to cases_rows so we
     # can pair each row with its case_id after the executemany insert
     addr_meta: list[CaseAddress] = []
@@ -540,6 +672,7 @@ def load_cases(conn, code_to_id: dict[str, int], bgy_to_id: dict[str, int]
         raw_bgy = r["Barangay"]
         raw_caseclass = r.get("CASECLASS")
         raw_street_purok = r.get("StreetPurok")
+        raw_dru = r.get("DRUName")
         year = r.get("Year")
         mweek = r.get("MorbidityWeek")
         mmonth = r.get("MorbidityMonth")
@@ -605,6 +738,13 @@ def load_cases(conn, code_to_id: dict[str, int], bgy_to_id: dict[str, int]
         sex = SEX_MAP.get(str(r.get("Sex", "")).strip()) if pd.notna(r.get("Sex")) else None
         outcome = OUTCOME_MAP.get(str(r.get("Outcome", "")).strip()) if pd.notna(r.get("Outcome")) else None
 
+        # Look up facility. dru_to_id was seeded from this same column, so a
+        # NULL here means the DRUName itself was blank or non-string.
+        dru_key = norm_dru_key(raw_dru) if isinstance(raw_dru, str) else None
+        facility_id = dru_to_id.get(dru_key) if dru_key else None
+        if dru_key and facility_id is None:
+            unmapped_drus[raw_dru] = unmapped_drus.get(raw_dru, 0) + 1
+
         cases_rows.append((
             code_to_id[disease_code],
             case_classification,
@@ -612,7 +752,7 @@ def load_cases(conn, code_to_id: dict[str, int], bgy_to_id: dict[str, int]
             to_date(r.get("DAdmit")),
             None,  # date_reported not in Registry
             barangay_id,
-            None,  # facility_id — facilities table not yet populated
+            facility_id,
             age_int,
             age_grp,
             sex,
@@ -631,6 +771,11 @@ def load_cases(conn, code_to_id: dict[str, int], bgy_to_id: dict[str, int]
     log.info("normalized: %d to cases, %d to excluded_cases", len(cases_rows), len(excluded_rows))
     if unmapped_diseases:
         log.warning("unmapped disease strings (excluded as invalid_data): %s", unmapped_diseases)
+    if unmapped_drus:
+        # Should be empty since dru_to_id was seeded from the same column;
+        # warn loudly if not — indicates a normalization bug.
+        log.warning("DRUs seen during load but not seeded (facility_id=NULL): %s",
+                     dict(list(unmapped_drus.items())[:5]))
 
     cur = conn.cursor()
     cur.executemany(
@@ -839,6 +984,19 @@ def verify(conn, total_registry: int, loaded: int, excluded: int) -> None:
             GROUP BY b.barangay_name ORDER BY n DESC"""
     )
     by_barangay = cur.fetchall()
+    cur.execute("SELECT COUNT(*) FROM cases WHERE facility_id IS NOT NULL")
+    cases_with_facility = cur.fetchone()[0]
+    cur.execute("SELECT COUNT(*) FROM facilities")
+    facility_count = cur.fetchone()[0]
+    cur.execute("SELECT COUNT(*) FROM facilities WHERE is_sentinel = 1")
+    sentinel_count = cur.fetchone()[0]
+    cur.execute(
+        """SELECT f.facility_name, f.facility_type, COUNT(*) AS n
+             FROM cases c JOIN facilities f ON f.facility_id = c.facility_id
+            GROUP BY f.facility_id, f.facility_name, f.facility_type
+            ORDER BY n DESC LIMIT 10"""
+    )
+    top_facilities = cur.fetchall()
 
     bar = "=" * 67
     print()
@@ -865,6 +1023,17 @@ def verify(conn, total_registry: int, loaded: int, excluded: int) -> None:
     for name, n in by_barangay:
         safe_name = name.encode("ascii", "replace").decode("ascii")
         print(f"    {safe_name:<28} {n:>6,}")
+    print()
+    pct_fac = (cases_with_facility / db_cases * 100) if db_cases else 0
+    print(f"  Facilities seeded:             {facility_count:>7,} "
+           f"({sentinel_count} sentinel)")
+    print(f"  Cases with facility_id:        {cases_with_facility:>7,}  "
+           f"({pct_fac:.1f}%)")
+    print()
+    print("  Top 10 reporting facilities:")
+    for fname, ftype, n in top_facilities:
+        safe_name = fname.encode("ascii", "replace").decode("ascii")
+        print(f"    [{ftype:<13}] {safe_name:<48} {n:>6,}")
     print(bar)
 
 
@@ -903,7 +1072,8 @@ def main() -> None:
     try:
         code_to_id = seed_diseases(conn)
         bgy_to_id = seed_barangays(conn)
-        total, loaded, excluded, addr_meta = load_cases(conn, code_to_id, bgy_to_id)
+        dru_to_id = seed_facilities(conn, bgy_to_id)
+        total, loaded, excluded, addr_meta = load_cases(conn, code_to_id, bgy_to_id, dru_to_id)
         verify(conn, total, loaded, excluded)
 
         geocode_stats = geocode_addresses(
