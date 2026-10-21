@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const ROLE_LEVELS = { Encoder: 1, Analyst: 2, Administrator: 3 };
 
@@ -6,7 +6,7 @@ function roleMeets(actual, minimum) {
     return (ROLE_LEVELS[actual] ?? 0) >= (ROLE_LEVELS[minimum] ?? 0);
 }
 
-export default function Reports({ whoami, diseases }) {
+export default function Reports({ api, whoami, diseases }) {
     const today = useMemo(() => new Date(), []);
     const [summaryYear, setSummaryYear] = useState(today.getFullYear());
     const [summaryDisease, setSummaryDisease] = useState('');
@@ -77,12 +77,88 @@ export default function Reports({ whoami, diseases }) {
                 note="Large export (~35,000 rows); the file streams in chunks of 500."
             />
 
+            {roleMeets(role, 'Administrator') && <BackupStatus api={api} />}
+
             <div className="text-xs text-slate-500 mt-4 px-1">
                 Every export is recorded in the system audit log with your employee ID, the export
                 type, row count, IP address, and timestamp — consistent with Republic Act No.
                 10173, the Data Privacy Act of 2012.
             </div>
         </div>
+    );
+}
+
+// Read-only register of the nightly encrypted backups (ml/backup_db.py).
+// A backup older than ~1 day, or a failed test restoration, is shown in red.
+function BackupStatus({ api }) {
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        api.get('/admin/backups')
+            .then((r) => setData(r.data))
+            .catch(() => setError('Backup register unavailable.'));
+    }, [api]);
+
+    const stale =
+        data && (!data.last_success_at || Date.now() - new Date(data.last_success_at.replace(' ', 'T')) > 36 * 3600 * 1000);
+    const verifyFailed = data && data.last_verify_status === 'failed';
+
+    return (
+        <section className="bg-white rounded-lg border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
+            <div className="flex items-start justify-between gap-4">
+                <div>
+                    <h2 className="text-sm font-semibold text-slate-800">Database backups</h2>
+                    <p className="text-xs text-slate-600 mt-1">
+                        Encrypted (AES-256) nightly backups with SHA-256 checksums, test-restored weekly.
+                        Restoration is performed from the server by the system administrator.
+                    </p>
+                </div>
+                <span className="text-[10px] uppercase font-semibold tracking-wide px-2 py-1 rounded bg-emerald-50 text-emerald-700">
+                    Administrator+
+                </span>
+            </div>
+            {error && <div className="text-xs text-red-700">{error}</div>}
+            {data && (
+                <>
+                    <div className="flex gap-6 text-xs">
+                        <div className={stale ? 'text-red-700 font-semibold' : 'text-slate-700'}>
+                            Last successful backup: {data.last_success_at || 'none yet'}
+                        </div>
+                        <div className={verifyFailed ? 'text-red-700 font-semibold' : 'text-slate-700'}>
+                            Last test restoration: {data.last_verified_at || 'none yet'}
+                            {data.last_verify_status && ` (${data.last_verify_status})`}
+                        </div>
+                    </div>
+                    <table className="text-xs w-full">
+                        <thead className="text-slate-500 text-left">
+                            <tr>
+                                <th className="py-1">#</th>
+                                <th>Started</th>
+                                <th>Status</th>
+                                <th>Size</th>
+                                <th>Test restore</th>
+                            </tr>
+                        </thead>
+                        <tbody className="text-slate-700">
+                            {data.backups.slice(0, 10).map((b) => (
+                                <tr key={b.backup_id} className="border-t border-slate-100" title={b.error || b.verify_detail || ''}>
+                                    <td className="py-1">{b.backup_id}</td>
+                                    <td>{b.started_at}</td>
+                                    <td className={b.status === 'failed' ? 'text-red-700' : ''}>
+                                        {b.status}{b.file_pruned ? ' (file pruned)' : ''}
+                                    </td>
+                                    <td>{b.file_size_bytes != null ? (b.file_size_bytes / 1048576).toFixed(1) + ' MB' : '-'}</td>
+                                    <td className={b.verify_status === 'failed' ? 'text-red-700' : ''}>
+                                        {b.verify_status || '-'}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </>
+            )}
+        </section>
     );
 }
 

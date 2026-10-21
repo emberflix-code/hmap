@@ -162,7 +162,7 @@ export default function App() {
                 <CaseEntry api={api} diseases={diseases} barangays={barangays} />
             )}
             {view === 'reports' && (
-                <Reports whoami={whoami} diseases={diseases} />
+                <Reports api={api} whoami={whoami} diseases={diseases} />
             )}
         </div>
     );

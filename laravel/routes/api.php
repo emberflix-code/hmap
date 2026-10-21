@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BackupsController;
 use App\Http\Controllers\CaseEntryController;
 use App\Http\Controllers\ClustersController;
 use App\Http\Controllers\DashboardController;
@@ -55,9 +56,9 @@ Route::middleware('hrmo')->group(function () {
     Route::get('/clusters/{clusterId}', [ClustersController::class, 'show'])
         ->whereNumber('clusterId');
 
-    // Module 1 — Case data entry (Encoder+ only; the middleware echo `hrmo:Encoder`
-    // is implicit because the bare `hrmo` middleware already validates an active
-    // employee, and any active employee defaults to Encoder).
+    // Module 1 — Case data entry (Encoder+ only; `hrmo:Encoder` is implicit
+    // because the bare `hrmo` middleware already admits only CESU staff with
+    // an active user_roles row, and Encoder is the lowest role).
     Route::post('/cases',      [CaseEntryController::class, 'store']);
     Route::post('/cases/bulk', [CaseEntryController::class, 'bulk']);
 
@@ -65,4 +66,7 @@ Route::middleware('hrmo')->group(function () {
     Route::get('/export/my-entries',      [ReportsController::class, 'myEntries']);
     Route::get('/export/disease-summary', [ReportsController::class, 'diseaseSummary'])->middleware('hrmo:Analyst');
     Route::get('/export/full-registry',   [ReportsController::class, 'fullRegistry'])->middleware('hrmo:Administrator');
+
+    // Module 9 — backup register (read-only; backups run from cron via ml/backup_db.py)
+    Route::get('/admin/backups', [BackupsController::class, 'index'])->middleware('hrmo:Administrator');
 });

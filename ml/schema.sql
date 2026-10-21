@@ -12,6 +12,7 @@ CREATE DATABASE IF NOT EXISTS hmap_db
 USE hmap_db;
 
 SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS backup_log;
 DROP TABLE IF EXISTS excluded_cases;
 DROP TABLE IF EXISTS ai_predictions;
 DROP TABLE IF EXISTS audit_log;
@@ -331,4 +332,25 @@ CREATE TABLE excluded_cases (
     excluded_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (excluded_id),
     INDEX idx_reason (exclusion_reason)
+) ENGINE=InnoDB;
+
+-- ─── Operations: backup_log (ml/backup_db.py) ────────────────────────────
+-- One row per encrypted backup: checksum, per-table row counts, and the
+-- result of the latest test restoration. Rows outlive pruned files.
+CREATE TABLE backup_log (
+    backup_id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    started_at        DATETIME NOT NULL,
+    finished_at       DATETIME NULL,
+    file_name         VARCHAR(190) NOT NULL,
+    file_size_bytes   BIGINT UNSIGNED NULL,
+    sha256            CHAR(64) NULL,
+    table_row_counts  JSON NULL,
+    status            ENUM('running','success','failed') NOT NULL,
+    error             TEXT NULL,
+    verified_at       DATETIME NULL,
+    verify_status     ENUM('passed','failed') NULL,
+    verify_detail     TEXT NULL,
+    deleted_at        DATETIME NULL,
+    PRIMARY KEY (backup_id),
+    INDEX idx_backup_started (started_at)
 ) ENGINE=InnoDB;

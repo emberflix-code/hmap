@@ -444,6 +444,8 @@ ssh user1@dbsvr 'cd /var/www/html/hmap && git reset --hard <prev-sha> && \
 
 ## Files in this guide
 
+- `docs/BACKUP_AND_RESTORE.md` — nightly encrypted backups, weekly test restores, recovery
+- `ml/run_migrations.py` — applies `ml/migrations/*.sql` per database
 - `ml/anonymize_for_demo.py` — generates the demo SQL dump
 - `ml/schema.sql` — canonical DB schema
 - `ml/detect_clusters.py` — DBSCAN cluster detection (run after data load)
