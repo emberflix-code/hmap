@@ -111,17 +111,21 @@ def sql_escape(v) -> str:
     return f"'{s}'"
 
 
-def dump_table_raw(conn, out, table: str, target_db: str = "hmap_db_demo") -> int:
-    """Dump a table verbatim (no anonymization). Returns row count written."""
+def dump_table_raw(conn, out, table: str, target_db: str = "hmap_db_demo",
+                   null_columns: tuple = ()) -> int:
+    """Dump a table verbatim except for `null_columns`, which are written as
+    NULL (used to drop PII such as patient names). Returns row count written."""
     cur = conn.cursor()
     cur.execute(f"SHOW COLUMNS FROM {table}")
     cols = [r[0] for r in cur.fetchall()]
+    null_idx = {cols.index(c) for c in null_columns}
     cur.execute(f"SELECT {', '.join(cols)} FROM {table}")
     n = 0
     out.write(f"\n-- ---- {table} ----\n")
     out.write(f"TRUNCATE TABLE {target_db}.{table};\n")
     batch = []
     for row in cur:
+        row = [None if i in null_idx else v for i, v in enumerate(row)]
         values = ", ".join(sql_escape(v) for v in row)
         batch.append(f"({values})")
         if len(batch) >= 500:
@@ -279,9 +283,12 @@ def main() -> None:
         n_cases, _delta = dump_cases_anonymized(conn, out, rng, args.target_db)
         print(f"  cases: {n_cases} rows (anonymized)")
 
-        # excluded_cases: keep as-is (only counts, no PII fields)
-        n = dump_table_raw(conn, out, "excluded_cases", args.target_db)
-        print(f"  excluded_cases: {n} rows")
+        # excluded_cases: the raw registry row includes the patient's full
+        # name (raw_full_name), so it is nulled; the remaining columns are
+        # aggregate-level (disease, barangay string, year, week, reason).
+        n = dump_table_raw(conn, out, "excluded_cases", args.target_db,
+                           null_columns=("raw_full_name",))
+        print(f"  excluded_cases: {n} rows (patient names removed)")
 
         # Case addresses: jitter + drop raw text.
         n_addr = dump_case_addresses_anonymized(conn, out, rng, args.target_db)
