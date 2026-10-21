@@ -1,8 +1,9 @@
--- Adds the PIDSR single-case trigger flag to diseases (Ch.3 Module 3).
--- Run once against each database: hmap_db (production) and hmap_db_demo (staging).
+-- targets: hmap_db, hmap_db_demo
 --
---   mysql -u hris -p -h 127.0.0.1 --protocol=TCP hmap_db      < 2026_10_21_single_case_trigger.sql
---   mysql -u hris -p -h 127.0.0.1 --protocol=TCP hmap_db_demo < 2026_10_21_single_case_trigger.sql
+-- Adds the PIDSR single-case trigger flag to diseases (Ch.3 Module 3).
+--
+--   python ml/run_migrations.py --db hmap_db
+--   python ml/run_migrations.py --db hmap_db_demo
 --
 -- The PIDSR Manual of Procedures (DOH, 2014, p. 58, Table 5) treats a single
 -- case of measles or acute flaccid paralysis as an alert. Other Table 5
