@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\CesuAccess;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -11,15 +12,22 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Verifies the incoming request belongs to an active Parañaque City employee
- * by reading either a stub config (dev) or the HRIS Portal's PHP session (prod).
+ * Verifies the incoming request belongs to authorized CESU personnel.
+ *
+ * Two checks, both required:
+ *   1. HRMO identity: the user is an active Parañaque City employee, read from
+ *      a stub config (dev), the HRIS Portal's PHP session, or HRMO's JWT API.
+ *   2. CESU authorization: the employee has an active row in user_roles
+ *      (see App\Services\CesuAccess). Other city employees are refused even
+ *      with a valid HRMO account, and the refusal is audit-logged.
  *
  * On success it attaches three attributes to the request for downstream code:
  *   - hmap.employee_id
  *   - hmap.employee_name
  *   - hmap.role        ('Encoder' | 'Analyst' | 'Administrator')
  *
- * On failure: 401 with a JSON body for /api/*, redirect to HRIS login otherwise.
+ * On failure: 401 (no HRMO identity) or 403 (not CESU staff) with a JSON body
+ * for /api/*; otherwise a redirect to the HRIS login or a plain 403 page.
  */
 class HrmoSessionAuth
 {
@@ -43,6 +51,17 @@ class HrmoSessionAuth
 
         if (!$user) {
             return $this->unauthorized($request);
+        }
+
+        // Stub mode carries its own role for local development; every real mode
+        // takes the role from the CESU authorization list, re-checked on each
+        // request so removing someone from user_roles cuts access immediately.
+        if ($config['mode'] !== 'stub') {
+            $user['role'] = CesuAccess::roleFor((int) $user['employee_id']);
+            if (!$user['role']) {
+                CesuAccess::logDenied((int) $user['employee_id'], $request->ip(), 'not CESU staff');
+                return $this->notCesuStaff($request);
+            }
         }
 
         // Optional role gate per route (Encoder < Analyst < Administrator)
@@ -104,15 +123,9 @@ class HrmoSessionAuth
             return null;
         }
 
-        $role = DB::table('user_roles')
-            ->where('employee_id', $employeeId)
-            ->where('is_active', 1)
-            ->value('role') ?? 'Encoder';
-
         return [
             'employee_id' => $employeeId,
             'name' => $row->full_name,
-            'role' => $role,
         ];
     }
 
@@ -165,10 +178,11 @@ class HrmoSessionAuth
             return null;
         }
 
+        // Identity only: the H-MAP role comes from user_roles in handle(),
+        // never from the HRMO role.
         $hmapUser = [
             'employee_id' => (int) $payload['id'],
             'name'        => $payload['full_name'] ?? $payload['username'] ?? 'HRMO user',
-            'role'        => $this->mapHrmoRole($payload['role'] ?? null, $config),
         ];
 
         Cache::put($cacheKey, $hmapUser, $config['me_cache_ttl']);
@@ -182,15 +196,6 @@ class HrmoSessionAuth
             return trim($m[1]);
         }
         return null;
-    }
-
-    private function mapHrmoRole(?string $hrmoRole, array $config): string
-    {
-        if ($hrmoRole === null || $hrmoRole === '') {
-            return $config['default_role'];
-        }
-        $map = $config['role_map'] ?? [];
-        return $map[strtolower($hrmoRole)] ?? $config['default_role'];
     }
 
     private function roleMeets(string $actual, string $required): bool
@@ -210,5 +215,15 @@ class HrmoSessionAuth
         // Production HRIS portal login. In dev with stub mode the middleware
         // shouldn't normally reach here at all.
         return redirect('/hris/login?return=' . urlencode($request->fullUrl()));
+    }
+
+    private function notCesuStaff(Request $request): Response
+    {
+        $detail = 'Access is limited to authorized CESU personnel. '
+            . 'Contact the CESU system Administrator to request access.';
+        if ($request->is('api/*') || $request->wantsJson()) {
+            return response()->json(['error' => 'not_cesu_staff', 'detail' => $detail], 403);
+        }
+        return response($detail, 403);
     }
 }

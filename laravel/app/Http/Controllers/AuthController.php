@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CesuAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -16,10 +17,12 @@ use Illuminate\Support\Facades\Log;
  * Flow:
  *   1. Browser POSTs username+password to /api/auth/login on H-MAP
  *   2. H-MAP forwards to HRMO /api/v1/auth/login
- *   3. On success H-MAP sets the HRMO-issued JWT in an HttpOnly cookie
+ *   3. If the employee is not on the CESU authorization list (user_roles),
+ *      H-MAP refuses with 403 and issues no cookie
+ *   4. Otherwise H-MAP sets the HRMO-issued JWT in an HttpOnly cookie
  *      (`hmap_jwt`) so it can't be exfiltrated by XSS
- *   4. Every subsequent H-MAP API call goes through HrmoSessionAuth,
- *      which reads the cookie and calls /auth/me to resolve the user
+ *   5. Every subsequent H-MAP API call goes through HrmoSessionAuth,
+ *      which reads the cookie, calls /auth/me, and re-checks user_roles
  */
 class AuthController extends Controller
 {
@@ -52,6 +55,21 @@ class AuthController extends Controller
             ], $resp->status() ?: 401);
         }
 
+        // A valid HRMO password is not enough: only CESU staff on the
+        // authorization list get a session. Refuse before issuing the cookie.
+        $employeeId = (int) ($body['user']['id'] ?? 0);
+        $role = $employeeId ? CesuAccess::roleFor($employeeId) : null;
+        if (!$role) {
+            if ($employeeId) {
+                CesuAccess::logDenied($employeeId, $request->ip(), 'login refused: not CESU staff');
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Access is limited to authorized CESU personnel. '
+                    . 'Contact the CESU system Administrator to request access.',
+            ], 403);
+        }
+
         $token = $body['access_token'];
         $ttlMinutes = isset($body['expires_in']) ? max(1, (int) ($body['expires_in'] / 60)) : 60;
         $cookieName = config('hmap.hrmo.jwt_cookie');
@@ -73,6 +91,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'user'    => $body['user'] ?? null,
+            'role'    => $role,
         ])->withCookie($cookie);
     }
 

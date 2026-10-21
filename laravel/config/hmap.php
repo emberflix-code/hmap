@@ -33,16 +33,9 @@ return [
         // /auth/me response cache TTL in seconds (per-IP+token). Reduces
         // round-trips to HRMO during a dashboard session.
         'me_cache_ttl'  => (int) env('HMAP_ME_CACHE_TTL', 300),
-        // Map HRMO role strings to H-MAP's 3-tier enum.
-        'role_map' => [
-            'superadmin' => 'Administrator',
-            'admin'      => 'Administrator',
-            'hrmo'       => 'Analyst',
-            'manager'    => 'Analyst',
-            'employee'   => 'Encoder',
-            'guest'      => 'Encoder',
-        ],
-        'default_role' => env('HMAP_DEFAULT_ROLE', 'Encoder'),
+        // There is deliberately no HRMO-role mapping or default role: in php
+        // and jwt modes the H-MAP role comes only from hmap_db.user_roles, and
+        // employees without an active row there (non-CESU staff) are refused.
     ],
 
 ];
