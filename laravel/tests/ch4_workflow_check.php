@@ -175,7 +175,9 @@ tc('TC-SEC-02', 'Security', 'Every role-restricted route refuses users below its
 config(['hmap.hrmo.mode' => 'jwt', 'hmap.mfa.enabled' => false]);
 Http::fake(function ($q) {
     preg_match('/tok-(\d+)/', $q->header('Authorization')[0] ?? '', $m);
-    return Http::response(['user' => ['id' => (int) ($m[1] ?? 0), 'full_name' => 'Employee']]);
+    // the real HRMO /auth/me shape: top-level, user_id differs from the employee number
+    $emp = (int) ($m[1] ?? 0);
+    return Http::response(['user_id' => $emp + 90000, 'empid' => $emp, 'full_name' => 'Employee']);
 });
 $asToken = function ($id, $uri) use ($kernel) {
     $r = Illuminate\Http\Request::create('/api' . $uri, 'GET', [], [], [], ['HTTP_ACCEPT' => 'application/json', 'HTTP_AUTHORIZATION' => "Bearer tok-$id"]);

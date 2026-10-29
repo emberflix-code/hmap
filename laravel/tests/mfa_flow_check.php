@@ -69,12 +69,13 @@ Http::fake(function ($req) use ($users) {
     if (str_ends_with($req->url(), '/auth/login')) {
         $id = $users[$req['username']] ?? null;
         return $id ? Http::response(['access_token' => "tok-$id-" . uniqid(), 'expires_in' => 3600,
-                                     'user' => ['id' => $id, 'full_name' => "User $id"]])
+                                     'user' => ['user_id' => $id + 90000, 'empid' => $id, 'full_name' => "User $id"]])
                    : Http::response(['message' => 'bad'], 401);
     }
     if (str_ends_with($req->url(), '/auth/me')) {
         preg_match('/tok-(\d+)-/', $req->header('Authorization')[0] ?? '', $m);
-        return $m ? Http::response(['user' => ['id' => (int) $m[1], 'full_name' => "User {$m[1]}"]])
+        // the real HRMO /auth/me shape: top-level { user_id, empid, full_name }
+        return $m ? Http::response(['user_id' => (int) $m[1] + 90000, 'empid' => (int) $m[1], 'full_name' => "User {$m[1]}"])
                   : Http::response([], 401);
     }
     if (str_ends_with($req->url(), '/auth/logout')) return Http::response([]);

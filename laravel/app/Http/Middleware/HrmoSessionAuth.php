@@ -123,10 +123,10 @@ class HrmoSessionAuth
         session_save_path($config['session_save_path']);
         session_id($sessionId);
         @session_start();
-        $employeeId = $_SESSION['user_id'] ?? null;
+        $userId = $_SESSION['user_id'] ?? null;   // the portal's internal users.id
         session_write_close();
 
-        if (!$employeeId) {
+        if (!$userId) {
             return null;
         }
 
@@ -134,20 +134,21 @@ class HrmoSessionAuth
         // (read-only access via the hmap_app grant on hrmo_evaluation_db.users).
         try {
             $row = DB::connection('hrmo')->table('users')
-                ->where('id', $employeeId)
+                ->where('id', $userId)
                 ->where('status', 'ACTIVE')
-                ->first(['id', 'full_name', 'email']);
+                ->first(['id', 'empid', 'full_name', 'email']);
         } catch (\Throwable $e) {
             // hrmo connection not configured locally — treat as auth failure
             return null;
         }
 
-        if (!$row) {
+        if (!$row || empty($row->empid)) {
             return null;
         }
 
+        // Keyed on the HRIS employee number, as in jwt mode
         return [
-            'employee_id' => $employeeId,
+            'employee_id' => (int) $row->empid,
             'name' => $row->full_name,
         ];
     }
@@ -195,16 +196,19 @@ class HrmoSessionAuth
             return null;
         }
 
+        // HRMO's /auth/me answers { user_id, empid, full_name, ... } at the top
+        // level. The CESU authorization list is keyed on the HRIS employee
+        // number (empid), not on the portal's internal user_id.
         $body = $resp->json();
-        $payload = $body['user'] ?? null;
-        if (!$payload || empty($payload['id'])) {
+        $payload = isset($body['user']) && is_array($body['user']) ? $body['user'] : $body;
+        if (!is_array($payload) || empty($payload['empid'])) {
             return null;
         }
 
         // Identity only: the H-MAP role comes from user_roles in handle(),
         // never from the HRMO role.
         $hmapUser = [
-            'employee_id' => (int) $payload['id'],
+            'employee_id' => (int) $payload['empid'],
             'name'        => $payload['full_name'] ?? $payload['username'] ?? 'HRMO user',
         ];
 

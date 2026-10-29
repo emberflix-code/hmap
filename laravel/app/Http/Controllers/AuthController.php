@@ -60,7 +60,9 @@ class AuthController extends Controller
 
         // A valid HRMO password is not enough: only CESU staff on the
         // authorization list get a session. Refuse before issuing the cookie.
-        $employeeId = (int) ($body['user']['id'] ?? 0);
+        // The list is keyed on the HRIS employee number (empid); HRMO's
+        // login response is { user: { user_id, empid, full_name } }.
+        $employeeId = (int) ($body['user']['empid'] ?? 0);
         $role = $employeeId ? CesuAccess::roleFor($employeeId) : null;
         if (!$role) {
             if ($employeeId) {

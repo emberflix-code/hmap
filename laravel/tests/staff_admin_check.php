@@ -92,10 +92,16 @@ check('the last active Administrator cannot be removed', $s === 422 && strpos($b
 echo "removal takes effect at once (production login mode)\n";
 config(['hmap.hrmo.mode' => 'jwt', 'hmap.mfa.enabled' => false]);
 Http::fake(function ($q) {
-    if (str_ends_with($q->url(), '/auth/login')) {
-        return Http::response(['access_token' => 'tok-2002', 'expires_in' => 3600, 'user' => ['id' => 2002, 'full_name' => 'Nurse A. Santos']]);
+    if (str_ends_with($q->url(), '/auth/login') && $q['username'] === 'hrisadmin') {
+        // HRMO refuses its own admin/superadmin accounts on this API
+        return Http::response(['message' => 'Administrator accounts must sign in through the web portal.'], 403);
     }
-    return Http::response(['user' => ['id' => 2002, 'full_name' => 'Nurse A. Santos']]);
+    if (str_ends_with($q->url(), '/auth/login')) {
+        // the real HRMO login and /auth/me shapes; user_id is the portal's own number
+        return Http::response(['access_token' => 'tok-2002', 'expires_in' => 3600,
+                               'user' => ['user_id' => 92002, 'empid' => 2002, 'full_name' => 'Nurse A. Santos']]);
+    }
+    return Http::response(['user_id' => 92002, 'empid' => 2002, 'full_name' => 'Nurse A. Santos']);
 });
 $asNurse = function ($uri) use ($kernel) {
     $r = Illuminate\Http\Request::create('/api' . $uri, 'GET', [], [], [], ['HTTP_ACCEPT' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer tok-2002']);
@@ -106,6 +112,11 @@ $r = Illuminate\Http\Request::create('/api/auth/login', 'POST', [], [], [],
 $login = $kernel->handle($r)->getStatusCode();
 check('sign-in stores the HRMO name on the list', $login === 200
       && DB::table('user_roles')->where('employee_id', 2002)->value('full_name') === 'Nurse A. Santos');
+$r = Illuminate\Http\Request::create('/api/auth/login', 'POST', [], [], [],
+    ['HTTP_ACCEPT' => 'application/json', 'CONTENT_TYPE' => 'application/json'], json_encode(['username' => 'hrisadmin', 'password' => 'x']));
+$resp = $kernel->handle($r);
+check("HRMO's refusal of its own admin accounts reaches the user", $resp->getStatusCode() === 403
+      && strpos(json_decode($resp->getContent(), true)['message'] ?? '', 'web portal') !== false, $resp->getContent());
 $before = $asNurse('/whoami');
 DB::table('user_roles')->where('employee_id', 2002)->update(['is_active' => 0]);   // as the panel does
 $after = $asNurse('/whoami');
