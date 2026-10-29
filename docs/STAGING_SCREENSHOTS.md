@@ -1,7 +1,7 @@
 # Staging update and Ch.4 screenshots
 
 Puts the current code (`feat/panel-revisions`) on the staging site
-(`http://hrmo.paranaque.gov.ph:8080/hmap/`, anonymized demo data, stub login)
+(`https://hrmo.paranaque.gov.ph:8080/hmap/`, anonymized demo data, stub login)
 and lists the screenshots for Chapter 4, Figures 5 to 11.
 
 ---
@@ -35,14 +35,14 @@ cd ../laravel
 php artisan hmap:notify --year 2025 --week 5 --no-send
 ```
 
-Check: open `http://hrmo.paranaque.gov.ph:8080/hmap/`. The header now has
+Check: open `https://hrmo.paranaque.gov.ph:8080/hmap/`. The header now has
 **Alerts**, and the Dashboard has a **Recommended response** panel.
 
 **To undo:** `git checkout develop && cd laravel && npm run build`. The new
 tables can stay; the old code ignores them.
 
-Staging stays on stub login, so the MFA screen does not appear there. Never
-switch staging to real HRMO login: it runs over plain HTTP (see DEPLOYMENT.md).
+Staging stays on stub login, so the MFA screen does not appear there.
+Capture it on production (see the table below).
 
 ---
 
