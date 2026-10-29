@@ -51,7 +51,9 @@ developer, not by anyone. Right after generating it:
 1. Print `/etc/hmap/backup.key` (or write it down). Seal it in an envelope
    marked "H-MAP backup key" and give it to the CESU head for the CHO safe.
 2. Do not store the key next to the backup files, in the repository, or in email.
-3. If the key is ever exposed, generate a new one, run `create` straight away,
+3. Seal a copy of `laravel/.env` with it. Its `APP_KEY` decrypts the staff
+   authenticator secrets in `user_mfa`, so a restored database needs the same key.
+4. If the key is ever exposed, generate a new one, run `create` straight away,
    and keep the old key only until every backup made with it has aged out.
 
 ---

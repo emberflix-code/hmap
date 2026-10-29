@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\CesuAccess;
+use App\Services\Mfa;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -23,6 +24,8 @@ use Illuminate\Support\Facades\Log;
  *      (`hmap_jwt`) so it can't be exfiltrated by XSS
  *   5. Every subsequent H-MAP API call goes through HrmoSessionAuth,
  *      which reads the cookie, calls /auth/me, and re-checks user_roles
+ *   6. Until the session enters a one-time code (MfaController), every route
+ *      except /auth/mfa/* answers 401 `mfa_required`
  */
 class AuthController extends Controller
 {
@@ -117,6 +120,7 @@ class AuthController extends Controller
         // we still want to clear the local cookie.
         if ($token) {
             Cache::forget('hmap:hrmo_me:' . hash('sha256', $token));
+            Mfa::forget(Mfa::sessionKey('jwt:' . $token));
             try {
                 Http::timeout(3)
                     ->withToken($token)

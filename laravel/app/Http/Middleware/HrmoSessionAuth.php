@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Services\CesuAccess;
+use App\Services\Mfa;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -14,12 +15,15 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Verifies the incoming request belongs to authorized CESU personnel.
  *
- * Two checks, both required:
+ * Three checks, all required:
  *   1. HRMO identity: the user is an active Parañaque City employee, read from
  *      a stub config (dev), the HRIS Portal's PHP session, or HRMO's JWT API.
  *   2. CESU authorization: the employee has an active row in user_roles
  *      (see App\Services\CesuAccess). Other city employees are refused even
  *      with a valid HRMO account, and the refusal is audit-logged.
+ *   3. Multi-factor authentication: this login session has passed a one-time
+ *      code (see App\Services\Mfa); otherwise 401 `mfa_required`. Stub mode
+ *      skips checks 2 and 3.
  *
  * On success it attaches three attributes to the request for downstream code:
  *   - hmap.employee_id
@@ -31,6 +35,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class HrmoSessionAuth
 {
+    /** Route parameter (`hrmo:mfa-pending`) for the MFA endpoints, which run before the code is entered. */
+    const MFA_PENDING = 'mfa-pending';
+
     public function handle(Request $request, Closure $next, ?string $minRole = null): Response
     {
         $config = config('hmap.hrmo');
@@ -62,6 +69,22 @@ class HrmoSessionAuth
                 CesuAccess::logDenied((int) $user['employee_id'], $request->ip(), 'not CESU staff');
                 return $this->notCesuStaff($request);
             }
+
+            // Second factor: the session must have passed a one-time code.
+            // Only the MFA endpoints themselves are reachable before that.
+            $sessionKey = Mfa::sessionKey($this->credentialOf($request, $config));
+            $request->attributes->set('hmap.mfa_session', $sessionKey);
+            if (config('hmap.mfa.enabled') && $minRole !== self::MFA_PENDING
+                && !Mfa::sessionVerified($sessionKey, (int) $user['employee_id'])) {
+                return response()->json([
+                    'error'    => 'mfa_required',
+                    'enrolled' => Mfa::isEnrolled((int) $user['employee_id']),
+                    'detail'   => 'Enter the code from your authenticator app to continue.',
+                ], 401);
+            }
+        }
+        if ($minRole === self::MFA_PENDING) {
+            $minRole = null;
         }
 
         // Optional role gate per route (Encoder < Analyst < Administrator)
@@ -187,6 +210,15 @@ class HrmoSessionAuth
 
         Cache::put($cacheKey, $hmapUser, $config['me_cache_ttl']);
         return $hmapUser;
+    }
+
+    /** The credential that identifies this login session: the JWT or the HRIS session id. */
+    private function credentialOf(Request $request, array $config): string
+    {
+        if ($config['mode'] === 'php') {
+            return 'php:' . $request->cookie($config['session_cookie']);
+        }
+        return 'jwt:' . ($request->cookie($config['jwt_cookie']) ?: $this->bearerFromHeader($request));
     }
 
     private function bearerFromHeader(Request $request): ?string

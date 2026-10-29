@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS backup_log;
 DROP TABLE IF EXISTS excluded_cases;
 DROP TABLE IF EXISTS ai_predictions;
 DROP TABLE IF EXISTS audit_log;
+DROP TABLE IF EXISTS user_mfa;
 DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS thresholds;
 DROP TABLE IF EXISTS case_cluster_members;
@@ -275,6 +276,19 @@ CREATE TABLE user_roles (
     PRIMARY KEY (role_id),
     UNIQUE KEY uq_employee (employee_id),
     INDEX idx_role (role)
+) ENGINE=InnoDB;
+
+-- ─── Access control: user_mfa (authenticator enrollment) ─────────────────
+-- secret_enc is encrypted with the Laravel APP_KEY; recovery_codes holds
+-- SHA-256 hashes only. last_used_step stops a code being used twice.
+CREATE TABLE user_mfa (
+    employee_id     INT UNSIGNED NOT NULL,
+    secret_enc      TEXT NOT NULL,
+    confirmed_at    DATETIME NULL,
+    last_used_step  BIGINT UNSIGNED NULL,
+    recovery_codes  JSON NULL,
+    created_at      DATETIME NOT NULL,
+    PRIMARY KEY (employee_id)
 ) ENGINE=InnoDB;
 
 -- ─── Audit: complete user action log (RA 10173) ──────────────────────────

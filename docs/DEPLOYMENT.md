@@ -130,8 +130,20 @@ HMAP_HRMO_MODE=php
 HMAP_HRMO_SESSION_PATH=/var/lib/php/sessions
 HMAP_HRMO_SESSION_COOKIE=PHPSESSID
 
+# Authenticator-app codes after the HRMO password (see "Multi-factor
+# authentication" below). On by default; never turn it off in production.
+HMAP_MFA_ENABLED=true
+HMAP_MFA_SESSION_TTL=43200
+
 HMAP_ML_URL=http://127.0.0.1:5001
 ```
+
+**Never regenerate `APP_KEY` on production once staff have enrolled.**
+The authenticator secrets in `user_mfa` are encrypted with it. A new key
+locks everyone out of MFA, and every account would then need
+`hmap:mfa-reset`. Keep a copy of `.env` with the sealed backup key (see
+`docs/BACKUP_AND_RESTORE.md`). A database restore also needs the same
+`APP_KEY`.
 
 **Staging / Demo** (`/var/www/html/hmap_staging/laravel/.env`):
 ```ini
@@ -426,6 +438,35 @@ The staging DB only has the following PII transformations from real data
 
 The jitter is deterministic (seed=20260523) so re-running anonymization
 produces the same demo dataset; change `--seed` to rotate it.
+
+---
+
+## Multi-factor authentication
+
+In `php` and `jwt` modes, every CESU account needs two steps: the HRMO
+password, then a 6-digit code from an authenticator app (Google or
+Microsoft Authenticator). Stub mode, used for the demo, skips both the CESU
+list check and MFA.
+
+- **First login:** the app shows a QR code. The staff member scans it,
+  enters one code, and writes down 8 single-use recovery codes.
+- **Enroll in person.** Have each nurse do the first login at the CESU
+  office, with the Administrator present. Otherwise someone who learned
+  their HRMO password could enroll their own phone first.
+- **Lost phone:** sign in with a recovery code. If none are left, the
+  Administrator approves a reset, run from the server:
+  ```bash
+  cd /var/www/html/hmap/laravel
+  php artisan hmap:mfa-reset <employee_id> --by=<administrator_employee_id>
+  ```
+  The reset ends the person's sessions, and they enroll again at next login.
+- **Attempt limit:** 5 wrong codes lock that account's MFA for 15 minutes.
+  Every enrollment, success, failure, lock, recovery-code use and reset is
+  written to `audit_log`.
+- **Phone clock:** codes depend on the phone's clock. If codes keep failing,
+  set the phone's date and time to automatic.
+- **Check after deploy:** `php tests/mfa_flow_check.php` runs the whole flow
+  against a throwaway in-memory database. It should end with `all passed`.
 
 ---
 

@@ -7,6 +7,7 @@ import Reports from './Reports.jsx';
 import ClusterMapPanel from './ClusterMapPanel.jsx';
 import WeeklyReport from './WeeklyReport.jsx';
 import Login from './Login.jsx';
+import MfaPrompt from './MfaPrompt.jsx';
 
 // Derive the API base from the page's mount path so we work whether the
 // app is served at "/" (local dev) or under a subpath like "/hmap" (LGU
@@ -34,7 +35,8 @@ export default function App() {
     const [whoami, setWhoami] = useState(null);
     const [diseases, setDiseases] = useState([]);
     const [barangays, setBarangays] = useState([]);
-    const [authState, setAuthState] = useState('checking'); // checking | needs_login | ok | error
+    const [authState, setAuthState] = useState('checking'); // checking | needs_login | needs_mfa | ok | error
+    const [mfaEnrolled, setMfaEnrolled] = useState(false);
     const [bootError, setBootError] = useState(null);
 
     // Try to load the current user. 401 means we need to show Login;
@@ -48,7 +50,10 @@ export default function App() {
                 setAuthState('ok');
             })
             .catch((err) => {
-                if (err.response?.status === 401) {
+                if (err.response?.status === 401 && err.response.data?.error === 'mfa_required') {
+                    setMfaEnrolled(!!err.response.data.enrolled);
+                    setAuthState('needs_mfa');
+                } else if (err.response?.status === 401) {
                     setAuthState('needs_login');
                 } else {
                     setBootError(err.response?.data?.detail || err.message);
@@ -107,6 +112,10 @@ export default function App() {
 
     if (authState === 'needs_login') {
         return <Login api={api} onLoggedIn={refreshAuth} />;
+    }
+
+    if (authState === 'needs_mfa') {
+        return <MfaPrompt api={api} enrolled={mfaEnrolled} onVerified={refreshAuth} onCancel={handleLogout} />;
     }
 
     if (!whoami || diseases.length === 0) {

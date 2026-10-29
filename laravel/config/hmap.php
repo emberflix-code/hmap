@@ -38,4 +38,13 @@ return [
         // employees without an active row there (non-CESU staff) are refused.
     ],
 
+    'mfa' => [
+        // Authenticator-app codes (TOTP) after the HRMO password, for every
+        // CESU account in php and jwt modes. Stub mode never asks.
+        'enabled'     => (bool) env('HMAP_MFA_ENABLED', true),
+        // How long one verified login session stays verified, in seconds.
+        // The HRMO token usually expires sooner, which ends the session anyway.
+        'session_ttl' => (int) env('HMAP_MFA_SESSION_TTL', 43200),
+    ],
+
 ];

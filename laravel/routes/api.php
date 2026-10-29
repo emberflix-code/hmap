@@ -5,14 +5,25 @@ use App\Http\Controllers\BackupsController;
 use App\Http\Controllers\CaseEntryController;
 use App\Http\Controllers\ClustersController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MfaController;
 use App\Http\Controllers\MlProxyController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Middleware\HrmoSessionAuth;
 use Illuminate\Support\Facades\Route;
 
 // Public — login endpoint MUST sit outside the hrmo middleware (otherwise
 // nobody could ever log in).
 Route::post('/auth/login',  [AuthController::class, 'login']);
 Route::post('/auth/logout', [AuthController::class, 'logout']);  // safe to invoke without a session
+
+// Second login step: HRMO password and CESU authorization already passed,
+// one-time code not yet entered. Every route below the next group needs it.
+Route::middleware('hrmo:' . HrmoSessionAuth::MFA_PENDING)->prefix('auth/mfa')->group(function () {
+    Route::get('/status',          [MfaController::class, 'status']);
+    Route::post('/enroll',         [MfaController::class, 'enroll']);
+    Route::post('/enroll/confirm', [MfaController::class, 'confirm']);
+    Route::post('/verify',         [MfaController::class, 'verify']);
+});
 
 // All H-MAP API routes are HRMO-gated. The `hrmo` middleware attaches
 // hmap.employee_id / hmap.employee_name / hmap.role to the request.
