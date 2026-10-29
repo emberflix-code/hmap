@@ -441,6 +441,39 @@ produces the same demo dataset; change `--seed` to rotate it.
 
 ---
 
+## Outbreak notifications
+
+`php artisan hmap:notify` checks the current and previous morbidity week for
+every alert-enabled disease. It creates an alert for each barangay that:
+- is above its epidemic threshold
+- reports a case of a single-case alert disease (measles, AFP)
+- has an active hotspot
+
+Then it emails and texts the recipients listed under **Reports → Outbreak alert
+recipients**. Each disease, barangay, alert type and week is sent only once,
+so the command is safe to run often. Messages contain no patient
+information.
+
+```cron
+# H-MAP: outbreak alerts every 15 minutes (user1's crontab)
+*/15 * * * *  cd /var/www/html/hmap/laravel && php artisan hmap:notify >> /var/log/hmap/notify.log 2>&1
+```
+
+- **Email:** set `MAIL_MAILER=smtp` and the `MAIL_*` host, port, user and
+  sender of the City Government mail server in `laravel/.env`. Use **Send
+  test** next to a recipient to confirm it arrives.
+- **SMS:** `HMAP_SMS_DRIVER=none` until CESU provides a gateway. SMS
+  deliveries are then logged as `skipped` (never as sent). For a gateway
+  with a JSON API, set `HMAP_SMS_DRIVER=http` and `HMAP_SMS_HTTP_URL`,
+  `HMAP_SMS_HTTP_TOKEN` and `HMAP_SMS_SENDER`. The field names can be
+  adjusted with `HMAP_SMS_NUMBER_FIELD` and `HMAP_SMS_MESSAGE_FIELD`.
+  A gateway with a different API needs a small addition in
+  `app/Services/SmsSender.php`.
+- **Retries:** failed deliveries are retried on later runs, up to 3 attempts.
+  The **Alerts** menu in the header shows each alert's delivery status.
+
+---
+
 ## Multi-factor authentication
 
 In `php` and `jwt` modes, every CESU account needs two steps: the HRMO

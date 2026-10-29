@@ -7,6 +7,7 @@ use App\Http\Controllers\ClustersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MfaController;
 use App\Http\Controllers\MlProxyController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\RecommendationsController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Middleware\HrmoSessionAuth;
@@ -88,6 +89,15 @@ Route::middleware('hrmo')->group(function () {
     Route::get('/export/my-entries',      [ReportsController::class, 'myEntries']);
     Route::get('/export/disease-summary', [ReportsController::class, 'diseaseSummary'])->middleware('hrmo:Analyst');
     Route::get('/export/full-registry',   [ReportsController::class, 'fullRegistry'])->middleware('hrmo:Administrator');
+
+    // Module 7 — outbreak notifications (alerts are created by `php artisan hmap:notify`)
+    Route::get('/notifications', [NotificationsController::class, 'index']);
+    Route::get('/notification-recipients', [NotificationsController::class, 'recipients'])->middleware('hrmo:Administrator');
+    Route::post('/notification-recipients', [NotificationsController::class, 'storeRecipient'])->middleware('hrmo:Administrator');
+    Route::put('/notification-recipients/{id}', [NotificationsController::class, 'updateRecipient'])
+        ->whereNumber('id')->middleware('hrmo:Administrator');
+    Route::post('/notification-recipients/{id}/test', [NotificationsController::class, 'testRecipient'])
+        ->whereNumber('id')->middleware('hrmo:Administrator');
 
     // Module 9 — backup register (read-only; backups run from cron via ml/backup_db.py)
     Route::get('/admin/backups', [BackupsController::class, 'index'])->middleware('hrmo:Administrator');

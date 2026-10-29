@@ -38,6 +38,24 @@ return [
         // employees without an active row there (non-CESU staff) are refused.
     ],
 
+    'notifications' => [
+        // Link placed in every alert message.
+        'dashboard_url' => env('HMAP_DASHBOARD_URL', env('APP_URL', 'http://localhost')),
+        // A failed delivery is retried on later runs up to this many attempts.
+        'max_attempts'  => (int) env('HMAP_NOTIFY_MAX_ATTEMPTS', 3),
+        'sms' => [
+            // 'none' records SMS deliveries as skipped (no gateway yet).
+            // 'http' POSTs JSON to the gateway CESU provides.
+            'driver'        => env('HMAP_SMS_DRIVER', 'none'),
+            'http_url'      => env('HMAP_SMS_HTTP_URL'),
+            'http_token'    => env('HMAP_SMS_HTTP_TOKEN'),       // sent as a Bearer token
+            'number_field'  => env('HMAP_SMS_NUMBER_FIELD', 'number'),
+            'message_field' => env('HMAP_SMS_MESSAGE_FIELD', 'message'),
+            'sender_field'  => env('HMAP_SMS_SENDER_FIELD', 'sendername'),
+            'sender'        => env('HMAP_SMS_SENDER'),
+        ],
+    ],
+
     'mfa' => [
         // Authenticator-app codes (TOTP) after the HRMO password, for every
         // CESU account in php and jwt modes. Stub mode never asks.

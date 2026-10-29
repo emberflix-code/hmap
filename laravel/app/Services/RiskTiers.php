@@ -78,11 +78,13 @@ class RiskTiers
 
     /**
      * Tier for every barangay. Returns null if the disease code is unknown.
+     * $withForecast = false skips the ML trend call (the notification check
+     * needs only thresholds and hotspots).
      *
      * @return array{disease_code:string, morbidity_year:int, morbidity_week:int,
      *               forecast_considered:bool, hotspot_run_id:?int, tiers:array}|null
      */
-    public static function compute(string $diseaseCode, int $year, int $week): ?array
+    public static function compute(string $diseaseCode, int $year, int $week, bool $withForecast = true): ?array
     {
         $disease = DB::table('diseases')->where('disease_code', $diseaseCode)
             ->first(['disease_id', 'single_case_trigger']);
@@ -95,7 +97,7 @@ class RiskTiers
         $counts = self::currentCounts($did, $year, $week);
         $baselines = self::barangayBaselines($did, $year, $week);
         [$hotspotBarangays, $runId] = self::hotspotBarangays($diseaseCode, $year, $week);
-        $rising = self::isCurrentWeek($year, $week) ? self::risingForecast($diseaseCode) : null;
+        $rising = $withForecast && self::isCurrentWeek($year, $week) ? self::risingForecast($diseaseCode) : null;
 
         $tiers = [];
         foreach (DB::table('barangays')->orderBy('barangay_id')->get(['barangay_id', 'barangay_name']) as $b) {

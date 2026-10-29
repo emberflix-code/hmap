@@ -8,6 +8,7 @@ import ClusterMapPanel from './ClusterMapPanel.jsx';
 import WeeklyReport from './WeeklyReport.jsx';
 import Login from './Login.jsx';
 import MfaPrompt from './MfaPrompt.jsx';
+import AlertsBell from './AlertsBell.jsx';
 
 // Derive the API base from the page's mount path so we work whether the
 // app is served at "/" (local dev) or under a subpath like "/hmap" (LGU
@@ -146,6 +147,7 @@ export default function App() {
                     </nav>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
+                    <AlertsBell api={api} />
                     <span className="text-slate-600">{whoami.employee_name}</span>
                     <RoleBadge role={whoami.role} />
                     <button
