@@ -166,9 +166,11 @@ class CaseEntryController extends Controller
         $validator = validator($input, [
             'disease_code'        => 'required|string|max:20',
             'case_classification' => 'required|in:' . implode(',', self::CLASSIFICATIONS),
-            'date_onset'          => 'nullable|date',
-            'date_admitted'       => 'nullable|date',
-            'date_reported'       => 'nullable|date',
+            // No dates in the future, and no admission before onset (Ch.4 TC-CAS-02)
+            'date_onset'          => 'nullable|date|before_or_equal:today',
+            'date_admitted'       => 'nullable|date|before_or_equal:today'
+                . (!empty($input['date_onset']) && strtotime((string) $input['date_onset']) ? '|after_or_equal:date_onset' : ''),
+            'date_reported'       => 'nullable|date|before_or_equal:today',
             'barangay_name'       => 'required|string|max:80',
             'facility_name'       => 'nullable|string|max:120',
             'age'                 => 'nullable|integer|min:0|max:130',
@@ -206,9 +208,15 @@ class CaseEntryController extends Controller
         }
         $data['barangay_id'] = $barangay->barangay_id;
 
-        // Auto-derive age_group if not provided
-        if (empty($data['age_group']) && isset($data['age'])) {
-            $data['age_group'] = $this->ageGroupFor((int) $data['age']);
+        // Derive the age group from the age; a given group must agree with it
+        if (isset($data['age'])) {
+            $derived = $this->ageGroupFor((int) $data['age']);
+            if (!empty($data['age_group']) && $data['age_group'] !== $derived) {
+                throw ValidationException::withMessages([
+                    'age_group' => "Age group {$data['age_group']} does not match age {$data['age']} ({$derived})",
+                ]);
+            }
+            $data['age_group'] = $derived;
         }
 
         // Auto-derive morbidity_month if not provided

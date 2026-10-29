@@ -8,6 +8,7 @@ patient data) that contains:
     P1-P3   compact clusters (3-5 cases within 100 m, same week)
     P4      a growing cluster (6 cases within 100 m over two weeks)
     P5      a cross-barangay cluster (4 cases within 150 m, two barangays)
+    P6      a cluster in the last days of the data (end-of-data regression)
   must NOT be detected
     N1      3 cases 250 m apart in the same week (too far apart)
     N2      3 cases within 50 m but about a month apart (too slow for 4 weeks)
@@ -81,6 +82,14 @@ def build(rng):
         if all(haversine_m(lat, lng, c["lat"], c["lng"]) >= 400 for c in cases):
             add("noise", lat, lng, wk(rng.randrange(0, 50)) + timedelta(days=rng.randrange(0, 7)), "Various")
             placed += 1
+
+    # P6: a cluster in the last days of the data, just after a weekly step of
+    # the sliding window (regression test for the end-of-data defect found in
+    # TC-E2E-01: the old loop stopped before any window covered these cases)
+    first = min(c["case_date"] for c in cases)
+    last = max(c["case_date"] for c in cases)
+    step = first + timedelta(days=7 * ((last - first).days // 7 + 1))
+    compact("P6", offset(*ORIGIN, 0, 3000), 3, 60, [step + timedelta(days=d) for d in (1, 2, 3)], ["Sun Valley"])
     cases.sort(key=lambda c: c["case_date"])
     return cases, truth
 

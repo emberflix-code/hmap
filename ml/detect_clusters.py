@@ -245,8 +245,12 @@ def run_detection(cases: list[dict], eps_m: float, min_samples: int,
 
     detected: dict[str, dict] = {}   # fingerprint → cluster record
 
+    # Step weekly from the first case. The loop runs until a window has ENDED
+    # on or after the last case: stopping at the last window that ends before
+    # it would leave the most recent cases (the current week, where a new
+    # hotspot appears) outside every complete window (Ch.4 defect, TC-E2E-01).
     cursor_date = first_date
-    while cursor_date <= last_date:
+    while cursor_date - timedelta(days=7) < last_date:
         window_start = cursor_date - timedelta(days=window_days - 1)
         window_end = cursor_date
         # Collect cases falling in [window_start, window_end]
