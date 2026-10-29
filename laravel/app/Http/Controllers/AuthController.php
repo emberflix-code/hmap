@@ -73,6 +73,13 @@ class AuthController extends Controller
             ], 403);
         }
 
+        // Keep the display name on the authorization list current (shown in
+        // the Administrator's staff panel; HRMO's directory is another database)
+        $name = $body['user']['full_name'] ?? null;
+        if ($name) {
+            CesuAccess::rememberName($employeeId, $name);
+        }
+
         $token = $body['access_token'];
         $ttlMinutes = isset($body['expires_in']) ? max(1, (int) ($body['expires_in'] / 60)) : 60;
         $cookieName = config('hmap.hrmo.jwt_cookie');

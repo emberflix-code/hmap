@@ -77,6 +77,7 @@ export default function Reports({ api, whoami, diseases }) {
                 note="Large export (~35,000 rows); the file streams in chunks of 500."
             />
 
+            {roleMeets(role, 'Administrator') && <StaffPanel api={api} me={whoami.employee_id} />}
             {roleMeets(role, 'Administrator') && <ChannelSettingsPanel api={api} />}
             {roleMeets(role, 'Administrator') && <NotificationRecipients api={api} />}
             {roleMeets(role, 'Administrator') && <BackupStatus api={api} />}
@@ -87,6 +88,121 @@ export default function Reports({ api, whoami, diseases }) {
                 10173, the Data Privacy Act of 2012.
             </div>
         </div>
+    );
+}
+
+// The CESU staff authorization list (Module 9). An HRMO account alone grants
+// nothing; only employees listed here can sign in, at the role given here.
+function StaffPanel({ api, me }) {
+    const [rows, setRows] = useState(null);
+    const [form, setForm] = useState({ employee_id: '', full_name: '', role: 'Encoder' });
+    const [message, setMessage] = useState(null);
+
+    const load = () => api.get('/admin/staff').then((r) => setRows(r.data))
+        .catch(() => setMessage('Staff list unavailable.'));
+    useEffect(() => { load(); }, [api]);
+
+    const errorText = (err) => {
+        const e = err.response?.data?.errors;
+        return e ? Object.values(e).flat().join(' ') : err.response?.data?.message || err.message;
+    };
+    const act = (promise, ok) => promise.then(() => { setMessage(ok); load(); }).catch((err) => setMessage(errorText(err)));
+
+    const add = (e) => {
+        e.preventDefault();
+        act(api.post('/admin/staff', {
+            employee_id: parseInt(form.employee_id, 10),
+            full_name: form.full_name || null,
+            role: form.role,
+        }), 'Staff member added. They can now sign in with their HRMO account.');
+        setForm({ employee_id: '', full_name: '', role: 'Encoder' });
+    };
+    const setRole = (r, role) => act(api.put(`/admin/staff/${r.employee_id}`, { role }), `Role of ${r.full_name || r.employee_id} changed to ${role}.`);
+    const setActive = (r, active) => {
+        if (!active && !window.confirm(`Remove access for ${r.full_name || r.employee_id}? It takes effect at once.`)) return;
+        act(active
+            ? api.post('/admin/staff', { employee_id: r.employee_id, full_name: r.full_name, role: r.role })
+            : api.put(`/admin/staff/${r.employee_id}`, { is_active: false }),
+            active ? 'Access restored.' : 'Access removed.');
+    };
+    const resetMfa = (r) => {
+        if (!window.confirm(`Reset the authenticator of ${r.full_name || r.employee_id}? Do this only after confirming their identity in person.`)) return;
+        api.post(`/admin/staff/${r.employee_id}/reset-mfa`).then((res) => { setMessage(res.data.message); load(); })
+            .catch((err) => setMessage(errorText(err)));
+    };
+
+    const input = 'border border-slate-300 rounded px-2 py-1 text-xs';
+    return (
+        <section className="bg-white rounded-lg border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
+            <div className="flex items-start justify-between gap-4">
+                <div>
+                    <h2 className="text-sm font-semibold text-slate-800">Authorized CESU staff</h2>
+                    <p className="text-xs text-slate-600 mt-1">
+                        Only employees on this list can sign in, with the role shown. Removing someone ends their
+                        access at once. An Administrator cannot remove their own access, and at least one
+                        Administrator always remains.
+                    </p>
+                </div>
+                <span className="text-[10px] uppercase font-semibold tracking-wide px-2 py-1 rounded bg-emerald-50 text-emerald-700">
+                    Administrator+
+                </span>
+            </div>
+            {message && <div className="text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded px-3 py-2">{message}</div>}
+            {rows && (
+                <table className="text-xs w-full">
+                    <thead className="text-slate-500 text-left">
+                        <tr><th className="py-1">Employee</th><th>Role</th><th>Two-step sign-in</th><th>Last sign-in</th><th /></tr>
+                    </thead>
+                    <tbody className="text-slate-700">
+                        {rows.map((r) => {
+                            const self = r.employee_id === me;
+                            return (
+                                <tr key={r.employee_id} className={'border-t border-slate-100 ' + (r.is_active ? '' : 'opacity-50')}>
+                                    <td className="py-1.5">
+                                        {r.full_name || <span className="text-slate-400">name appears after first sign-in</span>}
+                                        <div className="text-slate-400">ID {r.employee_id}{self ? ' (you)' : ''}</div>
+                                    </td>
+                                    <td>
+                                        <select className={input} value={r.role} disabled={!r.is_active || (self && r.role === 'Administrator')}
+                                                onChange={(e) => setRole(r, e.target.value)}>
+                                            {['Encoder', 'Analyst', 'Administrator'].map((o) => <option key={o}>{o}</option>)}
+                                        </select>
+                                    </td>
+                                    <td>{r.mfa_enrolled ? 'Set up' : <span className="text-amber-700">Not yet</span>}</td>
+                                    <td>{r.last_sign_in ? r.last_sign_in.slice(0, 16) : '-'}</td>
+                                    <td className="text-right whitespace-nowrap">
+                                        {r.mfa_enrolled && (
+                                            <button type="button" onClick={() => resetMfa(r)}
+                                                    className="px-2 py-0.5 rounded border border-slate-300 hover:bg-slate-100 mr-1">Reset authenticator</button>
+                                        )}
+                                        {!self && (
+                                            <button type="button" onClick={() => setActive(r, !r.is_active)}
+                                                    className="px-2 py-0.5 rounded border border-slate-300 hover:bg-slate-100">
+                                                {r.is_active ? 'Remove access' : 'Restore access'}
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            )}
+            <form onSubmit={add} className="flex flex-wrap gap-2 items-end">
+                <input className={input} placeholder="HRMO employee ID" required inputMode="numeric" value={form.employee_id}
+                       onChange={(e) => setForm({ ...form, employee_id: e.target.value.replace(/\D/g, '') })} />
+                <input className={input} placeholder="Name (optional)" value={form.full_name}
+                       onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
+                <select className={input} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
+                    {['Encoder', 'Analyst', 'Administrator'].map((o) => <option key={o}>{o}</option>)}
+                </select>
+                <button type="submit" className="px-3 py-1 rounded bg-blue-600 text-white text-xs hover:bg-blue-700">Add staff member</button>
+            </form>
+            <p className="text-[11px] text-slate-500">
+                The employee ID is the HRMO Portal user ID. After being added, a staff member signs in with their
+                HRMO account and sets up two-step sign-in on their phone, preferably at the CESU office.
+            </p>
+        </section>
     );
 }
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\MlProxyController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\RecommendationsController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\StaffController;
 use App\Http\Middleware\HrmoSessionAuth;
 use Illuminate\Support\Facades\Route;
 
@@ -99,6 +100,14 @@ Route::middleware('hrmo')->group(function () {
         ->whereNumber('id')->middleware('hrmo:Administrator');
     Route::post('/notification-recipients/{id}/test', [NotificationsController::class, 'testRecipient'])
         ->whereNumber('id')->middleware('hrmo:Administrator');
+
+    // Module 9 — the CESU staff authorization list (user_roles)
+    Route::get('/admin/staff', [StaffController::class, 'index'])->middleware('hrmo:Administrator');
+    Route::post('/admin/staff', [StaffController::class, 'store'])->middleware('hrmo:Administrator');
+    Route::put('/admin/staff/{employeeId}', [StaffController::class, 'update'])
+        ->whereNumber('employeeId')->middleware('hrmo:Administrator');
+    Route::post('/admin/staff/{employeeId}/reset-mfa', [StaffController::class, 'resetMfa'])
+        ->whereNumber('employeeId')->middleware('hrmo:Administrator');
 
     // Email (SMTP) and SMS (Paranaque SMS API) settings, maintained by the Administrator
     Route::get('/admin/channel-settings', [ChannelSettingsController::class, 'index'])->middleware('hrmo:Administrator');

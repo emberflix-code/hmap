@@ -27,6 +27,20 @@ class CesuAccess
             ->value('role');
     }
 
+    /** Store the HRMO display name on the authorization list. Never throws. */
+    public static function rememberName(int $employeeId, string $name): void
+    {
+        try {
+            DB::table('user_roles')->where('employee_id', $employeeId)
+                ->where(function ($q) use ($name) {
+                    $q->whereNull('full_name')->orWhere('full_name', '!=', $name);
+                })
+                ->update(['full_name' => mb_substr($name, 0, 120)]);
+        } catch (\Throwable $e) {
+            Log::warning('Could not store the staff name: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Record a refused login or request in the audit log (RA 10173 Sec. 20).
      * Never throws: a logging failure must not turn a denial into an error page.

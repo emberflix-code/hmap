@@ -161,11 +161,11 @@ DB_DATABASE=hmap_db_demo
 DB_USERNAME=hris
 DB_PASSWORD=<same>
 
-# stub auth so the panel doesn't need an HRMO account
-HMAP_HRMO_MODE=stub
-HMAP_HRMO_STUB_USER_ID=999
-HMAP_HRMO_STUB_USER_NAME=Defense Panel
-HMAP_HRMO_STUB_USER_ROLE=Administrator
+# Staging runs with real HRMO login (jwt), so the CESU staff list and MFA
+# work as in production; the panel uses the defense_panel HRMO account,
+# which an Administrator adds to the staff list. (stub mode, which skips
+# both, is for local development only.)
+HMAP_HRMO_MODE=jwt
 
 HMAP_ML_URL=http://127.0.0.1:5002
 ```
@@ -519,25 +519,53 @@ information.
 
 ---
 
+## CESU staff list (who can sign in)
+
+A valid HRMO account is not enough: the employee must also be on the CESU
+staff list (`user_roles`). The role (Encoder, Analyst, Administrator) comes
+only from that list.
+
+- **First Administrator.** On a new database, nobody is on the list, so the
+  first Administrator is added once in SQL:
+  1. Sign in once with your HRMO account, so the refusal is logged with your
+     employee ID.
+  2. Run:
+     ```bash
+     sudo mysql hmap_db -e "SELECT employee_id FROM audit_log WHERE action_type='ACCESS_DENIED' ORDER BY log_id DESC LIMIT 1;"
+     sudo mysql hmap_db -e "INSERT INTO user_roles (employee_id, role, is_active) VALUES (<employee_id>, 'Administrator', 1);"
+     ```
+- **Everyone else.** An Administrator adds, changes, removes and restores
+  staff under **Reports → Authorized CESU staff**, and resets a lost
+  authenticator there.
+- **Effect and logging.** A removal takes effect on the person's next
+  request. Every change is written to the audit log.
+- **Lock-out protection.** An Administrator cannot remove their own access,
+  and the last active Administrator cannot be removed.
+
+---
+
 ## Multi-factor authentication
 
 In `php` and `jwt` modes, every CESU account needs two steps: the HRMO
 password, then a 6-digit code from an authenticator app (Google or
-Microsoft Authenticator). Stub mode, used for the demo, skips both the CESU
-list check and MFA.
+Microsoft Authenticator). Stub mode, for local development only, skips both
+the CESU list check and MFA.
 
 - **First login:** the app shows a QR code. The staff member scans it,
   enters one code, and writes down 8 single-use recovery codes.
 - **Enroll in person.** Have each nurse do the first login at the CESU
   office, with the Administrator present. Otherwise someone who learned
   their HRMO password could enroll their own phone first.
-- **Lost phone:** sign in with a recovery code. If none are left, the
-  Administrator approves a reset, run from the server:
+- **Lost phone:** sign in with a recovery code. If none are left, an
+  Administrator confirms the person's identity in person, then presses
+  **Reset authenticator** next to them under **Reports → Authorized CESU
+  staff**. The reset ends the person's sessions, and they enroll again at
+  next login. If the only Administrator loses their phone, run this on the
+  server instead:
   ```bash
   cd /var/www/html/hmap/laravel
   php artisan hmap:mfa-reset <employee_id> --by=<administrator_employee_id>
   ```
-  The reset ends the person's sessions, and they enroll again at next login.
 - **Attempt limit:** 5 wrong codes lock that account's MFA for 15 minutes.
   Every enrollment, success, failure, lock, recovery-code use and reset is
   written to `audit_log`.

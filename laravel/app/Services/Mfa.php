@@ -195,6 +195,22 @@ class Mfa
         return str_pad((string) ($value % (10 ** self::DIGITS)), self::DIGITS, '0', STR_PAD_LEFT);
     }
 
+    /**
+     * Remove an employee's authenticator (lost or replaced phone). Their
+     * verified sessions end at once, because sessionVerified() also requires
+     * an enrollment, and they set up the authenticator again at next sign-in.
+     * Returns false when there was nothing to reset.
+     */
+    public static function reset(int $employeeId, int $byEmployeeId, ?string $ip): bool
+    {
+        if (!DB::table('user_mfa')->where('employee_id', $employeeId)->delete()) {
+            return false;
+        }
+        self::clearFailures($employeeId);
+        self::audit($byEmployeeId, $ip, 'MFA_RESET', ['employee_id' => $employeeId]);
+        return true;
+    }
+
     // ─── attempt limit ───────────────────────────────────────────────────
 
     public static function lockedOut(int $employeeId): bool

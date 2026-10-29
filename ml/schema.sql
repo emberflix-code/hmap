@@ -401,6 +401,7 @@ CREATE TABLE channel_settings (
 CREATE TABLE user_roles (
     role_id      INT UNSIGNED NOT NULL AUTO_INCREMENT,
     employee_id  INT UNSIGNED NOT NULL,
+    full_name    VARCHAR(120) NULL,   -- display name, refreshed from HRMO at sign-in
     role         ENUM('Encoder','Analyst','Administrator') NOT NULL,
     assigned_by  INT UNSIGNED NULL,
     assigned_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

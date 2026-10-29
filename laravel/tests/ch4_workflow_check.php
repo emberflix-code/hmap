@@ -136,7 +136,10 @@ $routes = collect(app('router')->getRoutes()->getRoutes())->filter(function ($r)
         return is_string($m) && strpos($m, 'hrmo') === 0;
     });
 });
-$path = function ($r) { return '/' . substr(str_replace(['{id}', '{clusterId}', '{channel}'], ['1', '1', 'sms'], $r->uri()), 4); };
+// Fill every route parameter so each route is really reached ({channel} must be email or sms)
+$path = function ($r) {
+    return '/' . substr(preg_replace('/\{[^}]+\}/', '1', str_replace('{channel}', 'sms', $r->uri())), 4);
+};
 config(['hmap.hrmo.mode' => 'jwt']);
 $denied = 0; $leaks = [];
 foreach ($routes as $r) {

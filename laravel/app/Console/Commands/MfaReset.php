@@ -29,12 +29,10 @@ class MfaReset extends Command
             $this->error('--by must be the employee ID of an active CESU Administrator.');
             return 1;
         }
-        if (!DB::table('user_mfa')->where('employee_id', $id)->delete()) {
+        if (!Mfa::reset($id, $by, null)) {
             $this->warn("Employee {$id} has no authenticator set up; nothing to reset.");
             return 0;
         }
-        Mfa::clearFailures($id);
-        Mfa::audit($by, null, 'MFA_RESET', ['employee_id' => $id]);
         $this->info("Authenticator removed for employee {$id}. They will set it up again at next login.");
         return 0;
     }
