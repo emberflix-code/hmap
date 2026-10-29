@@ -303,6 +303,43 @@ location @hmap {
 }
 ```
 
+#### HTTPS enforcement (production)
+
+Production runs inside the HRMO site's port-443 server block. To make sure
+it can only be reached over HTTPS:
+
+1. **Check that http redirects to https.** From any computer:
+   ```bash
+   curl -sI http://hrmo.paranaque.gov.ph/hmap/ | head -3
+   ```
+   Expect `301 Moved Permanently` with `Location: https://hrmo.paranaque.gov.ph/hmap/`.
+   If you get `200`, add a port-80 block that redirects everything to https:
+   ```nginx
+   server {
+       listen 80;
+       server_name hrmo.paranaque.gov.ph;
+       return 301 https://$host$request_uri;
+   }
+   ```
+2. **Tell browsers to use HTTPS only (HSTS).** Add this line inside each of the
+   three `/hmap/` location blocks above. It must be in every block, because
+   nginx stops inheriting `add_header` once a block sets its own:
+   ```nginx
+   add_header Strict-Transport-Security "max-age=31536000" always;
+   ```
+   Then check:
+   ```bash
+   curl -sI https://hrmo.paranaque.gov.ph/hmap/ | grep -i strict-transport
+   ```
+3. **Laravel.** With `APP_ENV=production`, the app generates only `https://`
+   URLs (`AppServiceProvider`). The `hmap_jwt` cookie is marked Secure
+   whenever the request arrives over HTTPS.
+
+Staging (`:8080`) is plain HTTP. That's acceptable only while it uses stub
+login and anonymized data. **Never switch staging to real HRMO login over
+HTTP**, because passwords and one-time codes would cross the network
+unencrypted.
+
 **Edit `/etc/nginx/sites-enabled/hrmo-staging`** (port 8080). Same block,
 but every `/var/www/html/hmap` → `/var/www/html/hmap_staging`.
 
