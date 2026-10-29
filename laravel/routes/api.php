@@ -6,6 +6,7 @@ use App\Http\Controllers\ChannelSettingsController;
 use App\Http\Controllers\CaseEntryController;
 use App\Http\Controllers\ClustersController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MemoTemplateController;
 use App\Http\Controllers\MfaController;
 use App\Http\Controllers\MlProxyController;
 use App\Http\Controllers\NotificationsController;
@@ -100,6 +101,12 @@ Route::middleware('hrmo')->group(function () {
         ->whereNumber('id')->middleware('hrmo:Administrator');
     Route::post('/notification-recipients/{id}/test', [NotificationsController::class, 'testRecipient'])
         ->whereNumber('id')->middleware('hrmo:Administrator');
+
+    // Weekly dengue memo template, editable by the Administrator
+    Route::get('/admin/memo-template', [MemoTemplateController::class, 'show'])->middleware('hrmo:Administrator');
+    Route::post('/admin/memo-template/preview', [MemoTemplateController::class, 'preview'])->middleware('hrmo:Administrator');
+    Route::put('/admin/memo-template', [MemoTemplateController::class, 'update'])->middleware('hrmo:Administrator');
+    Route::post('/admin/memo-template/reset', [MemoTemplateController::class, 'reset'])->middleware('hrmo:Administrator');
 
     // Module 9 — the CESU staff authorization list (user_roles)
     Route::get('/admin/staff', [StaffController::class, 'index'])->middleware('hrmo:Administrator');

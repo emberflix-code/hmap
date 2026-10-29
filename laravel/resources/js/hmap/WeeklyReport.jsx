@@ -9,7 +9,7 @@ import React, { useEffect, useMemo, useState } from 'react';
  * All values are YTD-through-week-N to match how CESU reads "5-year average"
  * in the workbook (see reference_5yrave_ytd_semantic memory entry).
  */
-export default function WeeklyReport({ api, diseases }) {
+export default function WeeklyReport({ api, diseases, isAdmin }) {
     const today = useMemo(() => isoMorbidityWeek(new Date()), []);
     const [year, setYear] = useState(today.year);
     const [week, setWeek] = useState(today.week);
@@ -42,7 +42,7 @@ export default function WeeklyReport({ api, diseases }) {
                 {tab === 'summary' && <SummaryTab api={api} year={year} week={week} />}
                 {tab === 'dengue'  && <DengueTab  api={api} year={year} week={week} />}
                 {tab === 'rates'   && <RatesTab   api={api} diseases={diseases} year={year} week={week} />}
-                {tab === 'memo'    && <MemoTab    api={api} year={year} week={week} />}
+                {tab === 'memo'    && <MemoTab    api={api} year={year} week={week} isAdmin={isAdmin} />}
             </main>
         </>
     );
@@ -367,7 +367,8 @@ function RatesTab({ api, diseases, year, week }) {
 
 // ── Tab 4: Memo draft (auto-generated from H-MAP data) ────────────────────
 
-function MemoTab({ api, year, week }) {
+function MemoTab({ api, year, week, isAdmin }) {
+    const [editing, setEditing] = useState(false);
     const [memo, setMemo] = useState('');
     const [original, setOriginal] = useState('');
     const [loading, setLoading] = useState(false);
@@ -445,7 +446,20 @@ function MemoTab({ api, year, week }) {
                                 Edited from original draft
                             </span>
                         )}
+                        {isAdmin && (
+                            <button
+                                type="button"
+                                onClick={() => setEditing(!editing)}
+                                className={'px-3 py-1.5 rounded border border-slate-300 bg-white hover:bg-slate-50 ' + (isEdited ? '' : 'ml-auto')}
+                            >
+                                {editing ? 'Close template editor' : 'Edit template'}
+                            </button>
+                        )}
                     </div>
+
+                    {editing && (
+                        <MemoTemplateEditor api={api} year={year} week={week} onSaved={regenerate} />
+                    )}
 
                     {err && <ErrorBox>{err}</ErrorBox>}
 
@@ -468,6 +482,83 @@ function MemoTab({ api, year, week }) {
     );
 }
 
+
+// The memo template itself, for the Administrator: recipients, signatory and
+// wording, with {placeholders} that are filled with each week's figures.
+function MemoTemplateEditor({ api, year, week, onSaved }) {
+    const [tpl, setTpl] = useState(null);
+    const [body, setBody] = useState('');
+    const [preview, setPreview] = useState('');
+    const [note, setNote] = useState(null);
+    const ref = React.useRef(null);
+
+    const load = () => api.get('/admin/memo-template').then((r) => { setTpl(r.data); setBody(r.data.body); })
+        .catch((e) => setNote(e.response?.data?.message || e.message));
+    useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, []);
+
+    const insert = (key) => {
+        const el = ref.current;
+        const token = `{${key}}`;
+        if (!el) { setBody(body + token); return; }
+        const s = el.selectionStart, e = el.selectionEnd;
+        setBody(body.slice(0, s) + token + body.slice(e));
+        setTimeout(() => { el.focus(); el.selectionStart = el.selectionEnd = s + token.length; }, 0);
+    };
+    const unknownNote = (u) => (u && u.length ? ` Unknown placeholders, left as written: ${u.map((k) => `{${k}}`).join(', ')}.` : '');
+    const doPreview = () => api.post('/admin/memo-template/preview', { body, year, week })
+        .then((r) => { setPreview(r.data.memo); setNote(`Preview for MW ${week} of ${year}.` + unknownNote(r.data.unknown)); })
+        .catch((e) => setNote(e.response?.data?.message || e.message));
+    const save = () => api.put('/admin/memo-template', { body })
+        .then((r) => { setNote('Template saved. New drafts use it.' + unknownNote(r.data.unknown)); load(); onSaved(); })
+        .catch((e) => setNote(e.response?.data?.message || e.message));
+    const reset = () => {
+        if (!window.confirm('Replace the template with the built-in default?')) return;
+        api.post('/admin/memo-template/reset')
+            .then(() => { setNote('Default template restored.'); load(); onSaved(); })
+            .catch((e) => setNote(e.response?.data?.message || e.message));
+    };
+
+    if (!tpl) return <div className="text-xs text-slate-500">{note || 'Loading template…'}</div>;
+    const changed = body !== tpl.body;
+    return (
+        <div className="border border-blue-200 bg-blue-50/40 rounded p-3 space-y-3">
+            <div className="text-xs text-slate-700">
+                <span className="font-semibold">Memo template</span>{' '}
+                ({tpl.is_default ? 'built-in default' : `edited ${tpl.updated_at?.slice(0, 16) ?? ''}`}).
+                Change the recipients, the signatory, or the wording. Words in braces are filled with each
+                week's figures; click one below to insert it.
+            </div>
+            <div className="flex flex-wrap gap-1">
+                {tpl.placeholders.map((p) => (
+                    <button key={p.key} type="button" title={p.description} onClick={() => insert(p.key)}
+                            className="px-1.5 py-0.5 rounded border border-slate-300 bg-white text-[11px] font-mono hover:bg-slate-100">
+                        {`{${p.key}}`}
+                    </button>
+                ))}
+            </div>
+            <textarea ref={ref} value={body} onChange={(e) => setBody(e.target.value)} spellCheck={false}
+                      className="w-full h-72 font-mono text-xs text-slate-800 border border-slate-300 rounded p-3 leading-relaxed resize-y bg-white" />
+            <div className="flex flex-wrap gap-2 items-center text-sm">
+                <button type="button" onClick={doPreview} className="px-3 py-1.5 rounded border border-slate-300 bg-white hover:bg-slate-50">
+                    Preview with MW {week} of {year}
+                </button>
+                <button type="button" onClick={save} disabled={!changed}
+                        className="px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50">
+                    Save template
+                </button>
+                {!tpl.is_default && (
+                    <button type="button" onClick={reset} className="px-3 py-1.5 rounded border border-slate-300 bg-white hover:bg-slate-50">
+                        Restore default
+                    </button>
+                )}
+            </div>
+            {note && <div className="text-xs text-slate-700">{note}</div>}
+            {preview && (
+                <pre className="whitespace-pre-wrap font-mono text-xs text-slate-800 bg-white border border-slate-200 rounded p-3 max-h-72 overflow-auto">{preview}</pre>
+            )}
+        </div>
+    );
+}
 
 // ── Shared UI helpers ─────────────────────────────────────────────────────
 

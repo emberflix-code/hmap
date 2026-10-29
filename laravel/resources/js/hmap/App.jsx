@@ -164,7 +164,7 @@ export default function App() {
                 <Dashboard api={api} diseases={diseases} barangays={barangays} whoami={whoami} />
             )}
             {view === 'weekly' && (
-                <WeeklyReport api={api} diseases={diseases} />
+                <WeeklyReport api={api} diseases={diseases} isAdmin={whoami.role === 'Administrator'} />
             )}
             {view === 'clusters' && (
                 <ClusterMapPanel api={api} />

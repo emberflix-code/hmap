@@ -12,6 +12,14 @@ Usage:
     python ml/run_migrations.py --db hmap_db_demo            # apply pending
     python ml/run_migrations.py --db hmap_db --dry-run       # list pending only
     python ml/run_migrations.py --db hmap_db --port 3307     # e.g. via SSH tunnel
+
+After a fresh load of ml/schema.sql (e.g. by ml/etl_registry.py), the
+schema already contains what the ALTER-style migrations add, so record those
+as applied without running them, then apply the rest (which seed data):
+
+    python ml/run_migrations.py --db hmap_db --mark-applied \\
+        2026_10_21_single_case_trigger.sql 2026_10_31_user_roles_name.sql
+    python ml/run_migrations.py --db hmap_db
 """
 
 from __future__ import annotations
@@ -45,6 +53,9 @@ def main() -> None:
     p.add_argument("--host", default=None)
     p.add_argument("--port", type=int, default=None)
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--mark-applied", nargs="+", metavar="FILE", default=None,
+                   help="record these migration files as applied without running them "
+                        "(for a database just built from the current schema.sql)")
     p.add_argument("--as", dest="as_name", default=None,
                    help="treat --db as this target name for the targets check "
                         "(for a renamed or test copy, e.g. --db test_copy --as hmap_db_demo)")
@@ -62,6 +73,16 @@ def main() -> None:
     cur.execute("""CREATE TABLE IF NOT EXISTS schema_migrations (
                        filename   VARCHAR(190) NOT NULL PRIMARY KEY,
                        applied_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)""")
+    if args.mark_applied:
+        for name in args.mark_applied:
+            if not (MIGRATIONS / name).exists():
+                raise SystemExit(f"no such migration: {name}")
+            cur.execute("INSERT IGNORE INTO schema_migrations (filename) VALUES (%s)", (name,))
+            print(f"marked {name}")
+        conn.commit()
+        conn.close()
+        return
+
     cur.execute("SELECT filename FROM schema_migrations")
     applied = {r[0] for r in cur.fetchall()}
 

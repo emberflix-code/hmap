@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS backup_log;
 DROP TABLE IF EXISTS excluded_cases;
 DROP TABLE IF EXISTS ai_predictions;
 DROP TABLE IF EXISTS audit_log;
+DROP TABLE IF EXISTS memo_templates;
 DROP TABLE IF EXISTS channel_settings;
 DROP TABLE IF EXISTS notification_deliveries;
 DROP TABLE IF EXISTS notifications;
@@ -384,6 +385,16 @@ CREATE TABLE notification_deliveries (
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_delivery_recipient FOREIGN KEY (recipient_id) REFERENCES notification_recipients(recipient_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- ─── Reports: memo_templates (Administrator-editable weekly memo) ────────
+-- No row = the built-in default in laravel/app/Services/MemoTemplate.php.
+CREATE TABLE memo_templates (
+    template_key  VARCHAR(40) NOT NULL,
+    body          TEXT NOT NULL,
+    updated_by    INT UNSIGNED NULL,
+    updated_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (template_key)
 ) ENGINE=InnoDB;
 
 -- ─── Alerts: channel_settings (Administrator-maintained email/SMS setup) ─
