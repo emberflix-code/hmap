@@ -230,6 +230,9 @@ def _this_week_monday() -> "pd.Timestamp":
     return today - pd.Timedelta(days=today.weekday())
 
 
+FORECAST_SEED = 2026
+
+
 def _forecast_points(bundle: dict, weeks_ahead: int) -> Tuple[List[ForecastPoint], "pd.Timestamp", "pd.Timestamp", int]:
     """Forecast `weeks_ahead` weeks from this week's Monday.
 
@@ -261,6 +264,11 @@ def _forecast_points(bundle: dict, weeks_ahead: int) -> Tuple[List[ForecastPoint
 
     future = model.make_future_dataframe(periods=total_periods, freq="W-MON",
                                           include_history=False)
+    # Prophet draws its uncertainty interval by random simulation. A fixed seed
+    # makes the same request return the same bounds every time, so the
+    # dashboard figures do not change on refresh (Ch.4 test TC-FCT-02).
+    import numpy as np
+    np.random.seed(FORECAST_SEED)
     forecast = model.predict(future)
     # Return only the tail slice the caller asked for
     forecast_slice = forecast.tail(weeks_ahead)

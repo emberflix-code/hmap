@@ -83,66 +83,63 @@ class ReportsController extends Controller
 
         $employeeId = (int) $request->attributes->get('hmap.employee_id');
         $suffix = $diseaseCode ? "{$diseaseCode}-{$year}" : "all-{$year}";
+        // Each row is one barangay, so it is judged against that barangay's own
+        // 5-year baseline for the week, as the dashboard risk tiers are.
+        $baselines = $this->barangayBaselines($year, $diseaseCode);
 
         return $this->streamCsv(
             "disease-summary-{$suffix}.csv",
             ['disease_code', 'disease_name', 'barangay', 'morbidity_year',
               'morbidity_week', 'confirmed_probable', 'suspect', 'total_cases',
-              'mean_5yr', 'alert_threshold', 'epidemic_threshold', 'alert'],
+              'barangay_mean_5yr', 'alert_threshold', 'epidemic_threshold', 'alert'],
             function () use ($year, $diseaseCode) {
                 $q = DB::table('cases as c')
                     ->join('diseases as d', 'd.disease_id', '=', 'c.disease_id')
                     // left join: cases with no recorded barangay are reported as "Unknown"
                     ->leftJoin('barangays as b', 'b.barangay_id', '=', 'c.barangay_id')
-                    // Only the PIDSR epidemic-method row: the table also holds the
-                    // CESU mean/median rows, which would triplicate every output row.
-                    ->leftJoin('thresholds as t', function ($j) {
-                        $j->on('t.disease_id', '=', 'c.disease_id')
-                          ->on('t.morbidity_week', '=', 'c.morbidity_week')
-                          ->where('t.method', '=', 'ewarn_mu2sigma');
-                    })
                     ->where('c.morbidity_year', $year)
                     ->where('c.status_flag', 'Active')
-                    ->groupBy('d.disease_code', 'd.disease_name', 'd.single_case_trigger',
-                              'b.barangay_name', 'c.morbidity_year', 'c.morbidity_week',
-                              't.mean_cases', 't.std_dev', 't.threshold_value')
+                    ->groupBy('d.disease_id', 'd.disease_code', 'd.disease_name', 'd.single_case_trigger',
+                              'c.barangay_id', 'b.barangay_name', 'c.morbidity_year', 'c.morbidity_week')
                     ->orderBy('d.disease_code')
                     ->orderBy('b.barangay_name')
                     ->orderBy('c.morbidity_week')
                     ->selectRaw("
-                        d.disease_code, d.disease_name, d.single_case_trigger,
+                        d.disease_id, d.disease_code, d.disease_name, d.single_case_trigger, c.barangay_id,
                         COALESCE(b.barangay_name, 'Unknown') AS barangay, c.morbidity_year, c.morbidity_week,
                         SUM(CASE WHEN c.case_classification IN ('Confirmed','Probable') THEN 1 ELSE 0 END) AS confirmed_probable,
                         SUM(CASE WHEN c.case_classification = 'Suspect' THEN 1 ELSE 0 END) AS suspect,
-                        COUNT(*) AS total_cases,
-                        t.mean_cases AS mean_5yr,
-                        t.mean_cases + t.std_dev AS alert_threshold,
-                        t.threshold_value AS epidemic_threshold
+                        COUNT(*) AS total_cases
                     ");
                 if ($diseaseCode) {
                     $q->where('d.disease_code', $diseaseCode);
                 }
                 return $q;
             },
-            function ($r) {
+            function ($r) use ($baselines) {
                 // PIDSR levels (DOH, 2014, pp. 57-58): EPIDEMIC above mean + 2 SD,
                 // ALERT above mean + 1 SD, or any case of a single-case disease.
+                // Cases with no barangay have no barangay baseline.
                 $n = (int) $r->confirmed_probable;
+                $b = $r->barangay_id === null ? null
+                    : ($baselines[$r->disease_id][$r->barangay_id][$r->morbidity_week] ?? ['mean' => 0.0, 'sd' => 0.0]);
+                $alertAt = $b ? $b['mean'] + $b['sd'] : null;
+                $epidemicAt = $b ? $b['mean'] + 2 * $b['sd'] : null;
                 $alert = '';
                 if ($r->single_case_trigger && $n > 0) {
                     $alert = 'ALERT (single case)';
-                } elseif ($r->epidemic_threshold !== null && $n > (float) $r->epidemic_threshold) {
+                } elseif ($epidemicAt !== null && $n > 0 && $n > $epidemicAt) {
                     $alert = 'EPIDEMIC';
-                } elseif ($r->alert_threshold !== null && $n > (float) $r->alert_threshold) {
+                } elseif ($alertAt !== null && $n > 0 && $n > $alertAt) {
                     $alert = 'ALERT';
                 }
                 return [
                     $r->disease_code, $r->disease_name, $r->barangay,
                     $r->morbidity_year, $r->morbidity_week,
                     $r->confirmed_probable, $r->suspect, $r->total_cases,
-                    $r->mean_5yr !== null ? round((float) $r->mean_5yr, 2) : '',
-                    $r->alert_threshold !== null ? round((float) $r->alert_threshold, 2) : '',
-                    $r->epidemic_threshold !== null ? round((float) $r->epidemic_threshold, 2) : '',
+                    $b ? round($b['mean'], 2) : '',
+                    $alertAt !== null ? round($alertAt, 2) : '',
+                    $epidemicAt !== null ? round($epidemicAt, 2) : '',
                     $alert,
                 ];
             },
@@ -195,6 +192,48 @@ class ReportsController extends Controller
             $request->ip(),
             'full_registry'
         );
+    }
+
+    /**
+     * Per-barangay baselines for every (disease, week) of $year in one query:
+     * [disease_id][barangay_id][week] => ['mean', 'sd'] over the 5 prior years,
+     * Confirmed + Probable, years without cases counted as 0 (the same rule
+     * as App\Services\RiskTiers::barangayBaselines). Missing keys mean 0 / 0.
+     */
+    private function barangayBaselines(int $year, ?string $diseaseCode): array
+    {
+        $q = DB::table('cases as c')
+            ->join('diseases as d', 'd.disease_id', '=', 'c.disease_id')
+            ->whereBetween('c.morbidity_year', [$year - 5, $year - 1])
+            ->whereIn('c.case_classification', ['Confirmed', 'Probable'])
+            ->where('c.status_flag', 'Active')
+            ->whereNotNull('c.barangay_id')
+            ->groupBy('c.disease_id', 'c.barangay_id', 'c.morbidity_week', 'c.morbidity_year')
+            ->selectRaw('c.disease_id, c.barangay_id, c.morbidity_week, COUNT(*) AS n');
+        if ($diseaseCode) {
+            $q->where('d.disease_code', $diseaseCode);
+        }
+        $samples = [];
+        foreach ($q->get() as $r) {
+            $samples[$r->disease_id][$r->barangay_id][$r->morbidity_week][] = (int) $r->n;
+        }
+        $out = [];
+        foreach ($samples as $did => $byBgy) {
+            foreach ($byBgy as $bid => $byWeek) {
+                foreach ($byWeek as $week => $s) {
+                    while (count($s) < 5) {
+                        $s[] = 0;
+                    }
+                    $mean = array_sum($s) / 5;
+                    $var = 0.0;
+                    foreach ($s as $x) {
+                        $var += ($x - $mean) ** 2;
+                    }
+                    $out[$did][$bid][$week] = ['mean' => $mean, 'sd' => sqrt($var / 4)];
+                }
+            }
+        }
+        return $out;
     }
 
     /**
