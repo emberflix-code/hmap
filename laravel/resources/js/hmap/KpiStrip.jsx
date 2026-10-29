@@ -35,9 +35,9 @@ export default function KpiStrip({ api, disease, year, week }) {
     return (
         <div className="bg-white border-b border-slate-200 px-6 py-3 flex flex-wrap items-center gap-6 text-sm">
             <Kpi
-                label="EWARN alerts"
+                label="PIDSR alerts"
                 value={k.alerts_this_week ?? '—'}
-                hint="Barangays exceeding mean + 2σ this week"
+                hint="Barangays above their epidemic threshold, or with a single-case alert disease, this week"
                 tone={k.alerts_this_week > 0 ? 'red' : 'green'}
             />
             <Kpi

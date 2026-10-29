@@ -49,7 +49,7 @@ export default function Dashboard({ api, diseases, barangays, whoami }) {
                     />
                 </Panel>
 
-                <Panel title="Disease trend with EWARN threshold" subtitle={`${disease}, year ${year}`}>
+                <Panel title="Disease trend with PIDSR alert and epidemic thresholds" subtitle={`${disease}, year ${year}`}>
                     <TrendChartPanel api={api} disease={disease} year={year} />
                 </Panel>
 

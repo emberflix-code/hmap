@@ -26,7 +26,7 @@ export default function Reports({ api, whoami, diseases }) {
 
             <ReportCard
                 title="Disease summary report"
-                description="Per-(disease, barangay, week) aggregates for the selected year, with EWARN alert flag. Anonymized; suitable for sharing with city health office leadership."
+                description="Per-(disease, barangay, week) aggregates for the selected year, with the PIDSR alert level of each barangay (alert, epidemic, or single case). Anonymized; suitable for sharing with city health office leadership."
                 role={role}
                 requires="Analyst"
                 href={
