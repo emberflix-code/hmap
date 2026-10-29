@@ -459,16 +459,20 @@ information.
 */15 * * * *  cd /var/www/html/hmap/laravel && php artisan hmap:notify >> /var/log/hmap/notify.log 2>&1
 ```
 
-- **Email:** set `MAIL_MAILER=smtp` and the `MAIL_*` host, port, user and
-  sender of the City Government mail server in `laravel/.env`. Use **Send
-  test** next to a recipient to confirm it arrives.
-- **SMS:** `HMAP_SMS_DRIVER=none` until CESU provides a gateway. SMS
-  deliveries are then logged as `skipped` (never as sent). For a gateway
-  with a JSON API, set `HMAP_SMS_DRIVER=http` and `HMAP_SMS_HTTP_URL`,
-  `HMAP_SMS_HTTP_TOKEN` and `HMAP_SMS_SENDER`. The field names can be
-  adjusted with `HMAP_SMS_NUMBER_FIELD` and `HMAP_SMS_MESSAGE_FIELD`.
-  A gateway with a different API needs a small addition in
-  `app/Services/SmsSender.php`.
+- **Email and SMS settings:** the CESU Administrator sets these from
+  **Reports → Email and SMS settings**, with no server access needed.
+  This follows the HRIS Portal's email and SMS configuration pages.
+  - *Email:* SMTP host, port, encryption, account and sender.
+  - *SMS:* the **Parañaque SMS API** (`app.paranaque.gov.ph/sms-api`)
+    client ID, client secret and department code. Ask the API's
+    administrator for CESU's own client credentials and department code.
+    Don't reuse the HRIS Portal's.
+  - *Storage:* passwords and secrets are stored encrypted with `APP_KEY`
+    and are never shown again. Each channel has **Send test**.
+- **Fallback when a channel isn't enabled there:**
+  - *Email* uses the `MAIL_*` settings in `laravel/.env`.
+  - *SMS* uses `HMAP_SMS_DRIVER`. `none` logs SMS as `skipped`, never as
+    sent. `http` posts JSON to `HMAP_SMS_HTTP_URL`.
 - **Retries:** failed deliveries are retried on later runs, up to 3 attempts.
   The **Alerts** menu in the header shows each alert's delivery status.
 

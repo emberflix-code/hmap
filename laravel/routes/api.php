@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BackupsController;
+use App\Http\Controllers\ChannelSettingsController;
 use App\Http\Controllers\CaseEntryController;
 use App\Http\Controllers\ClustersController;
 use App\Http\Controllers\DashboardController;
@@ -98,6 +99,13 @@ Route::middleware('hrmo')->group(function () {
         ->whereNumber('id')->middleware('hrmo:Administrator');
     Route::post('/notification-recipients/{id}/test', [NotificationsController::class, 'testRecipient'])
         ->whereNumber('id')->middleware('hrmo:Administrator');
+
+    // Email (SMTP) and SMS (Paranaque SMS API) settings, maintained by the Administrator
+    Route::get('/admin/channel-settings', [ChannelSettingsController::class, 'index'])->middleware('hrmo:Administrator');
+    Route::put('/admin/channel-settings/{channel}', [ChannelSettingsController::class, 'update'])
+        ->where('channel', 'email|sms')->middleware('hrmo:Administrator');
+    Route::post('/admin/channel-settings/{channel}/test', [ChannelSettingsController::class, 'test'])
+        ->where('channel', 'email|sms')->middleware('hrmo:Administrator');
 
     // Module 9 — backup register (read-only; backups run from cron via ml/backup_db.py)
     Route::get('/admin/backups', [BackupsController::class, 'index'])->middleware('hrmo:Administrator');

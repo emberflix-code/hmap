@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS backup_log;
 DROP TABLE IF EXISTS excluded_cases;
 DROP TABLE IF EXISTS ai_predictions;
 DROP TABLE IF EXISTS audit_log;
+DROP TABLE IF EXISTS channel_settings;
 DROP TABLE IF EXISTS notification_deliveries;
 DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS notification_recipients;
@@ -383,6 +384,17 @@ CREATE TABLE notification_deliveries (
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_delivery_recipient FOREIGN KEY (recipient_id) REFERENCES notification_recipients(recipient_id)
         ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- ─── Alerts: channel_settings (Administrator-maintained email/SMS setup) ─
+-- settings_enc = settings JSON encrypted with the Laravel APP_KEY.
+CREATE TABLE channel_settings (
+    channel       ENUM('email','sms') NOT NULL,
+    settings_enc  TEXT NOT NULL,
+    is_active     TINYINT(1) NOT NULL DEFAULT 0,
+    updated_by    INT UNSIGNED NULL,
+    updated_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (channel)
 ) ENGINE=InnoDB;
 
 -- ─── Access control: user_roles (logical FK to HRMO db) ──────────────────

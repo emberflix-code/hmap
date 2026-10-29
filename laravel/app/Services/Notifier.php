@@ -172,7 +172,7 @@ class Notifier
             return ['skipped', 'no valid email address'];
         }
         try {
-            Mail::raw($body . "\n\nThis is an automated message from the CESU disease surveillance system. "
+            self::mailer()->raw($body . "\n\nThis is an automated message from the CESU disease surveillance system. "
                 . 'It contains no patient information.', function ($m) use ($to, $subject) {
                     $m->to($to)->subject($subject);
                 });
@@ -181,6 +181,36 @@ class Notifier
             Log::warning('Notification email failed: ' . $e->getMessage());
             return ['failed', $e->getMessage()];
         }
+    }
+
+    /**
+     * The SMTP server the Administrator set under Reports > Email and SMS
+     * settings, or the .env mailer (MAIL_*) when none is switched on.
+     */
+    public static function mailer(): \Illuminate\Contracts\Mail\Mailer
+    {
+        $s = ChannelSettings::active('email');
+        if (!$s || empty($s['host'])) {
+            return Mail::mailer();
+        }
+        $enc = $s['encryption'] ?? 'tls';
+        config([
+            'mail.mailers.cesu_smtp' => [
+                'transport'  => 'smtp',
+                'host'       => $s['host'],
+                'port'       => (int) ($s['port'] ?? 587),
+                'encryption' => $enc === 'none' ? null : $enc,
+                'username'   => $s['username'] ?? null,
+                'password'   => $s['password'] ?? null,
+                'timeout'    => 15,
+            ],
+            'mail.from' => [
+                'address' => $s['from_email'] ?: ($s['username'] ?? null),
+                'name'    => $s['from_name'] ?: 'CESU Disease Surveillance',
+            ],
+        ]);
+        app('mail.manager')->purge('cesu_smtp');   // rebuild with the settings just read
+        return Mail::mailer('cesu_smtp');
     }
 
     /** @return array{0:string,1:?string} */
