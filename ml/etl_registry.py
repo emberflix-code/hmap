@@ -111,6 +111,7 @@ DISEASES_SEED: list[dict] = [
     {"code": "ZIKA",    "name": "Zika Virus Disease",                    "cat": "Category 2", "alert": 1, "forecast": 0, "order": 25},
     {"code": "CHO",     "name": "Cholera",                               "cat": "Category 1", "alert": 1, "forecast": 0, "order": 26},
     {"code": "COVID",   "name": "COVID-19",                              "cat": "Category 1", "alert": 1, "forecast": 0, "order": 27},
+    {"code": "AMES",    "name": "Acute Myelogic Encephalitis Syndrome",  "cat": "Category 1", "alert": 1, "forecast": 0, "order": 30},
     # PIDSR-listed but not seen in Registry — kept so dropdown is complete
     {"code": "ANT",     "name": "Anthrax",                               "cat": "Category 1", "alert": 0, "forecast": 0, "order": 28},
     {"code": "AHC",     "name": "Acute Hemorrhagic Conjunctivitis",      "cat": "Category 2", "alert": 0, "forecast": 0, "order": 29},
@@ -197,7 +198,8 @@ DISEASE_MAP: dict[str, tuple[str, str | None, bool]] = {
     "meningococcemia_notpque":             ("MENG", None,        False),
     # AES
     "acute encephalitis syndrome":             ("AES", None, True),
-    "acute myelogic encephalitis syndrome":    ("AES", None, True),
+    # Reported by CESU on its own Category I row (5YrAve), so kept apart from AES
+    "acute myelogic encephalitis syndrome":    ("AMES", None, True),
     # AFP
     "acute flaccid paralysis":             ("AFP", None, True),
     # Diphtheria (was misspelled "Diptheria" in Registry)
@@ -671,6 +673,7 @@ def load_cases(conn, code_to_id: dict[str, int], bgy_to_id: dict[str, int],
     excluded_rows: list[tuple] = []
     unmapped_diseases: dict[str, int] = {}
     unmapped_drus: dict[str, int] = {}
+    unknown_barangay = 0   # Paranaque cases loaded with barangay_id = NULL
     # Per-loaded-case address metadata, parallel-indexed to cases_rows so we
     # can pair each row with its case_id after the executemany insert
     addr_meta: list[CaseAddress] = []
@@ -715,24 +718,25 @@ def load_cases(conn, code_to_id: dict[str, int], bgy_to_id: dict[str, int],
             continue
 
         # --- map barangay ---
+        # A Paranaque case whose barangay is blank, "UNKNOWN", or unrecognized
+        # is still a city case: CESU counts it in the city totals (and SBgy has
+        # an "Unknown" row), so it is loaded with barangay_id = NULL. Barangay
+        # maps, risk tiers, and hotspots leave it out; city totals and
+        # thresholds include it. Only out-of-city barangays are excluded.
         bkey = norm_barangay_key(raw_bgy)
-        if bkey is None or bkey == "" or bkey == "nan":
-            excluded_rows.append(excluded("unknown_barangay", "null/blank barangay"))
-            continue
-        if bkey in EXCLUDE_AS_UNKNOWN:
-            excluded_rows.append(excluded("unknown_barangay", "explicit UNKNOWN"))
-            continue
+        canonical_bgy, barangay_id = None, None
         if bkey in OUT_OF_CITY_BARANGAYS:
             excluded_rows.append(excluded("out_of_city", f"out-of-city barangay: {raw_bgy!r}"))
             continue
-        canonical_bgy = BARANGAY_MAP.get(bkey)
-        if canonical_bgy is None:
-            excluded_rows.append(excluded("unknown_barangay", f"unmapped barangay: {raw_bgy!r}"))
-            continue
-        barangay_id = bgy_to_id.get(canonical_bgy)
+        if bkey is not None and bkey not in ("", "nan") and bkey not in EXCLUDE_AS_UNKNOWN:
+            canonical_bgy = BARANGAY_MAP.get(bkey)
+            if canonical_bgy is not None:
+                barangay_id = bgy_to_id.get(canonical_bgy)
+                if barangay_id is None:
+                    excluded_rows.append(excluded("invalid_data", f"barangay seed mismatch: {canonical_bgy!r}"))
+                    continue
         if barangay_id is None:
-            excluded_rows.append(excluded("invalid_data", f"barangay seed mismatch: {canonical_bgy!r}"))
-            continue
+            unknown_barangay += 1
 
         # --- validate week/year ---
         if pd.isna(year) or pd.isna(mweek):
@@ -776,7 +780,8 @@ def load_cases(conn, code_to_id: dict[str, int], bgy_to_id: dict[str, int],
             raw_barangay=canonical_bgy,
         ))
 
-    log.info("normalized: %d to cases, %d to excluded_cases", len(cases_rows), len(excluded_rows))
+    log.info("normalized: %d to cases (%d with unknown barangay), %d to excluded_cases",
+             len(cases_rows), unknown_barangay, len(excluded_rows))
     if unmapped_diseases:
         log.warning("unmapped disease strings (excluded as invalid_data): %s", unmapped_diseases)
     if unmapped_drus:
@@ -864,6 +869,8 @@ def geocode_addresses(conn, addr_meta: list[CaseAddress], scope: str,
 
     # Filter the metadata list
     targets = addr_meta
+    # without a barangay the cascade has nothing to anchor the address to
+    targets = [m for m in targets if m.raw_barangay is not None]
     if scope == "dengue":
         targets = [m for m in targets if m.disease_code == "DENGUE"]
     if pilot_year is not None:

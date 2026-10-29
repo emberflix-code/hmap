@@ -41,12 +41,13 @@ class ReportsController extends Controller
             function () use ($employeeId) {
                 return DB::table('cases as c')
                     ->join('diseases as d', 'd.disease_id', '=', 'c.disease_id')
-                    ->join('barangays as b', 'b.barangay_id', '=', 'c.barangay_id')
+                    ->leftJoin('barangays as b', 'b.barangay_id', '=', 'c.barangay_id')
                     ->where('c.entered_by', $employeeId)
                     ->where('c.status_flag', 'Active')
                     ->orderBy('c.entered_at', 'desc')
                     ->select(
-                        'c.case_id', 'd.disease_code', 'c.case_classification', 'b.barangay_name',
+                        'c.case_id', 'd.disease_code', 'c.case_classification',
+                        DB::raw("COALESCE(b.barangay_name, 'Unknown') AS barangay_name"),
                         'c.morbidity_year', 'c.morbidity_week', 'c.date_onset', 'c.date_admitted',
                         'c.age', 'c.sex', 'c.outcome', 'c.entered_at'
                     );
@@ -91,7 +92,8 @@ class ReportsController extends Controller
             function () use ($year, $diseaseCode) {
                 $q = DB::table('cases as c')
                     ->join('diseases as d', 'd.disease_id', '=', 'c.disease_id')
-                    ->join('barangays as b', 'b.barangay_id', '=', 'c.barangay_id')
+                    // left join: cases with no recorded barangay are reported as "Unknown"
+                    ->leftJoin('barangays as b', 'b.barangay_id', '=', 'c.barangay_id')
                     // Only the PIDSR epidemic-method row: the table also holds the
                     // CESU mean/median rows, which would triplicate every output row.
                     ->leftJoin('thresholds as t', function ($j) {
@@ -109,7 +111,7 @@ class ReportsController extends Controller
                     ->orderBy('c.morbidity_week')
                     ->selectRaw("
                         d.disease_code, d.disease_name, d.single_case_trigger,
-                        b.barangay_name AS barangay, c.morbidity_year, c.morbidity_week,
+                        COALESCE(b.barangay_name, 'Unknown') AS barangay, c.morbidity_year, c.morbidity_week,
                         SUM(CASE WHEN c.case_classification IN ('Confirmed','Probable') THEN 1 ELSE 0 END) AS confirmed_probable,
                         SUM(CASE WHEN c.case_classification = 'Suspect' THEN 1 ELSE 0 END) AS suspect,
                         COUNT(*) AS total_cases,

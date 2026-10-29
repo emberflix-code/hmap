@@ -90,7 +90,7 @@ Authoritative source: [ml/schema.sql](../ml/schema.sql). Ch.3 of the thesis spec
 | `case_cluster_members` | M:N | **NEW.** Junction table linking cases to clusters |
 | `user_roles` | per active employee | RBAC role assignments |
 | `audit_log` | growing | RA 10173 compliance — every INSERT/UPDATE/DELETE/EXPORT/AI_REQUEST/LOGIN |
-| `excluded_cases` | 542 | Audit table for rows the ETL rejected (out-of-city, unknown barangay) |
+| `excluded_cases` | 25 | Audit table for rows the ETL rejected (out-of-city). Unknown-barangay cases are loaded with `barangay_id` NULL |
 | `geocode_cache` | growing | Address-string → (lat, lng, source) memo. **Persists across schema reloads** to avoid re-hitting Nominatim's 1 req/sec limit. |
 
 ## Module structure (functional modules, per current implementation)

@@ -338,6 +338,16 @@ function RatesTab({ api, diseases, year, week }) {
                                         </td>
                                     </tr>
                                 ))}
+                                {data.unknown_barangay_cases > 0 && (
+                                    <tr className="border-b border-slate-100 text-slate-500">
+                                        <td className="px-3 py-2">—</td>
+                                        <td className="px-3 py-2">Unknown barangay</td>
+                                        <td className="px-3 py-2 text-right">—</td>
+                                        <td className="px-3 py-2 text-right tabular-nums">{data.unknown_barangay_cases}</td>
+                                        <td className="px-3 py-2 text-right">—</td>
+                                        <td className="px-3 py-2" />
+                                    </tr>
+                                )}
                                 <tr className="border-t-2 border-slate-300 bg-slate-50 font-semibold">
                                     <td className="px-3 py-2">—</td>
                                     <td className="px-3 py-2">Total (Parañaque City)</td>

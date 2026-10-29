@@ -449,7 +449,18 @@ class DashboardController extends Controller
         usort($out, fn($a, $b) => $b['rate_per_10k'] <=> $a['rate_per_10k']);
         foreach ($out as $i => $row) $out[$i]['rank'] = $i + 1;
 
-        $totalCases = array_sum(array_column($out, 'cases'));
+        // Paranaque cases with no recorded barangay: SBgy's "Unknown" row. They
+        // count in the city total but have no population or rank of their own.
+        $unknown = DB::table('cases as c')
+            ->join('diseases as d', 'd.disease_id', '=', 'c.disease_id')
+            ->where('d.disease_code', $request->disease_code)
+            ->whereNull('c.barangay_id')
+            ->where('c.morbidity_year', (int) $request->morbidity_year)
+            ->where('c.morbidity_week', '<=', (int) $request->morbidity_week)
+            ->where('c.status_flag', 'Active')
+            ->count();
+
+        $totalCases = array_sum(array_column($out, 'cases')) + $unknown;
         $totalPop = array_sum(array_column($out, 'population'));
         $cityRate = $totalPop > 0 ? round(($totalCases / $totalPop) * 10000, 4) : 0;
 
@@ -458,6 +469,7 @@ class DashboardController extends Controller
             'year' => (int) $request->morbidity_year,
             'week' => (int) $request->morbidity_week,
             'rows' => $out,
+            'unknown_barangay_cases' => $unknown,
             'total' => [
                 'cases' => $totalCases,
                 'population' => $totalPop,

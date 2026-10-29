@@ -18,12 +18,21 @@ ETL auto-picks the newest `PIDSR Report YR NNNN.xlsx` from `docs/` by year-in-fi
 
 ```
 Registry source rows:       35,706
-→ cases (loaded):           35,164
-→ excluded_cases (audit):      542
+→ cases (loaded):           35,681
+    of which barangay unknown  517   (barangay_id NULL)
+→ excluded_cases (audit):       25
     out_of_city                25
-    unknown_barangay          517
 Reconciliation:             MATCH
 ```
+
+Cases whose barangay is blank, `UNKNOWN`, or unrecognized are Parañaque
+cases and are loaded with `barangay_id = NULL` (changed 2026-10-30). Until
+then they were excluded, which left them out of city totals: the Ch.4
+reconciliation against the workbook's `5YrAve` sheet found 9 dengue cases
+from 2021 to 2023 missing for that reason. CESU's workbook counts them, and
+its SBgy table has an "Unknown" row. They appear in city totals, the
+Weekly Report, thresholds and exports ("Unknown" barangay), but not on
+barangay maps, risk tiers or hotspots.
 
 Case-classification distribution in the loaded `cases` table:
 
@@ -180,7 +189,7 @@ Baclaran · B.F. Homes · Don Bosco · Don Galo · La Huerta · Marcelo Green Vi
 | `DON GALO`, `Don Galo`† | Don Galo | 683 |
 | `SAN MARTIN DE PORRES` | San Martin de Porres | 652 |
 | `VITALEZ` | Vitalez | 262 |
-| `UNKNOWN`, `Unknown` | *(null)* — **excluded as `unknown_barangay`** | 522 |
+| `UNKNOWN`, `Unknown`, blank, unrecognized | *(null)*: **loaded with `barangay_id` NULL** (counts in city totals) | 517 |
 | out-of-city aliases (see below) | *(null)* — **excluded as `out_of_city`** | varies |
 
 † Aliases retained for backward compatibility with the 2023 file. The 2026 file no longer uses these forms.
