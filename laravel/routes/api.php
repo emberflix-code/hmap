@@ -7,6 +7,7 @@ use App\Http\Controllers\ClustersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MfaController;
 use App\Http\Controllers\MlProxyController;
+use App\Http\Controllers\RecommendationsController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Middleware\HrmoSessionAuth;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +45,16 @@ Route::middleware('hrmo')->group(function () {
     Route::get('/heatmap-week',  [DashboardController::class, 'heatmapWeek']);
     // Module 6 — rule-based barangay risk tiers (replaces the retired Random Forest)
     Route::get('/risk-tiers',    [DashboardController::class, 'riskTiers'])->middleware('hrmo:Analyst');
+    // Module 6 — resource allocation recommendations from the rule table
+    Route::get('/recommendations', [RecommendationsController::class, 'index'])->middleware('hrmo:Analyst');
+    Route::post('/recommendations/{id}/action', [RecommendationsController::class, 'action'])
+        ->whereNumber('id')->middleware('hrmo:Analyst');
+    Route::get('/recommendation-rules', [RecommendationsController::class, 'rules'])->middleware('hrmo:Analyst');
+    Route::post('/recommendation-rules', [RecommendationsController::class, 'storeRule'])->middleware('hrmo:Administrator');
+    Route::put('/recommendation-rules/{id}', [RecommendationsController::class, 'updateRule'])
+        ->whereNumber('id')->middleware('hrmo:Administrator');
+    Route::post('/recommendation-rules/{id}/validate', [RecommendationsController::class, 'validateRule'])
+        ->whereNumber('id')->middleware('hrmo:Administrator');
 
     // CESU PIDSR workbook parity views (Summary Weekly Update, PIDSRMain, SBgy)
     Route::get('/weekly-summary',  [DashboardController::class, 'weeklySummary']);

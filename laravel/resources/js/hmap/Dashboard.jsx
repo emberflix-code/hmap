@@ -4,8 +4,10 @@ import HeatMapPanel from './HeatMapPanel.jsx';
 import TrendChartPanel from './TrendChartPanel.jsx';
 import ForecastPanel from './ForecastPanel.jsx';
 import KpiStrip from './KpiStrip.jsx';
+import RecommendationsPanel from './RecommendationsPanel.jsx';
 
-export default function Dashboard({ api, diseases, barangays }) {
+export default function Dashboard({ api, diseases, barangays, whoami }) {
+    const canSeeRecommendations = whoami?.role === 'Analyst' || whoami?.role === 'Administrator';
     const today = useMemo(() => isoMorbidityWeek(new Date()), []);
     const [disease, setDisease] = useState('DENGUE');
     const [year, setYear] = useState(today.year);
@@ -65,6 +67,22 @@ export default function Dashboard({ api, diseases, barangays }) {
                         </div>
                     )}
                 </Panel>
+
+                {canSeeRecommendations && (
+                    <Panel
+                        title="Recommended response"
+                        subtitle={`Moderate and High barangays, ranked, week ${week} of ${year}`}
+                        span={2}
+                    >
+                        <RecommendationsPanel
+                            api={api}
+                            disease={disease}
+                            year={year}
+                            week={week}
+                            isAdmin={whoami?.role === 'Administrator'}
+                        />
+                    </Panel>
+                )}
             </main>
 
             <footer className="text-center text-xs text-slate-400 py-3 border-t border-slate-200 bg-white">

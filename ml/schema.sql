@@ -16,6 +16,8 @@ DROP TABLE IF EXISTS backup_log;
 DROP TABLE IF EXISTS excluded_cases;
 DROP TABLE IF EXISTS ai_predictions;
 DROP TABLE IF EXISTS audit_log;
+DROP TABLE IF EXISTS recommendations;
+DROP TABLE IF EXISTS recommendation_rules;
 DROP TABLE IF EXISTS user_mfa;
 DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS thresholds;
@@ -263,6 +265,65 @@ CREATE TABLE thresholds (
     CONSTRAINT fk_thresholds_disease
         FOREIGN KEY (disease_id) REFERENCES diseases(disease_id)
         ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- ─── Decision support: recommendation_rules, recommendations (Module 6) ──
+-- The draft rule set is seeded by ml/migrations/2026_10_30_recommendations.sql.
+-- Rules for 'Moderate' apply to Moderate and High barangays; 'High' rules
+-- only to High. disease_id NULL = fallback for diseases without rules.
+CREATE TABLE recommendation_rules (
+    rule_id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    disease_id       INT UNSIGNED NULL,
+    risk_tier        ENUM('Moderate','High') NOT NULL,
+    category         ENUM('Team','Supply','Medicine','IEC') NOT NULL,
+    item             VARCHAR(200) NOT NULL,
+    scaling_basis    ENUM('fixed','per_case','per_1000_pop','as_assessed') NOT NULL,
+    quantity_factor  DECIMAL(8,2) NULL,
+    unit             VARCHAR(40) NULL,
+    priority         TINYINT UNSIGNED NOT NULL DEFAULT 50,
+    source           VARCHAR(255) NOT NULL,
+    notes            VARCHAR(500) NULL,
+    status           ENUM('Draft','Validated') NOT NULL DEFAULT 'Draft',
+    validated_by     INT UNSIGNED NULL,
+    validated_at     DATETIME NULL,
+    is_active        TINYINT(1) NOT NULL DEFAULT 1,
+    updated_by       INT UNSIGNED NULL,
+    updated_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (rule_id),
+    INDEX idx_rule_lookup (disease_id, risk_tier, is_active),
+    CONSTRAINT fk_rule_disease FOREIGN KEY (disease_id) REFERENCES diseases(disease_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE recommendations (
+    recommendation_id  INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    disease_id         INT UNSIGNED NOT NULL,
+    barangay_id        INT UNSIGNED NOT NULL,
+    morbidity_year     SMALLINT UNSIGNED NOT NULL,
+    morbidity_week     TINYINT UNSIGNED NOT NULL,
+    rule_id            INT UNSIGNED NOT NULL,
+    risk_tier          ENUM('Moderate','High') NOT NULL,
+    barangay_rank      SMALLINT UNSIGNED NOT NULL,
+    active_cases       INT UNSIGNED NOT NULL,
+    category           ENUM('Team','Supply','Medicine','IEC') NOT NULL,
+    item               VARCHAR(200) NOT NULL,
+    quantity           INT UNSIGNED NULL,
+    unit               VARCHAR(40) NULL,
+    rule_status        ENUM('Draft','Validated') NOT NULL,
+    generated_at       DATETIME NOT NULL,
+    action_status      ENUM('Pending','Acted','Not acted') NOT NULL DEFAULT 'Pending',
+    action_note        VARCHAR(500) NULL,
+    action_by          INT UNSIGNED NULL,
+    action_at          DATETIME NULL,
+    PRIMARY KEY (recommendation_id),
+    UNIQUE KEY uq_rec (disease_id, barangay_id, morbidity_year, morbidity_week, rule_id),
+    INDEX idx_rec_week (disease_id, morbidity_year, morbidity_week),
+    CONSTRAINT fk_rec_disease FOREIGN KEY (disease_id) REFERENCES diseases(disease_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_rec_barangay FOREIGN KEY (barangay_id) REFERENCES barangays(barangay_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_rec_rule FOREIGN KEY (rule_id) REFERENCES recommendation_rules(rule_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 -- ─── Access control: user_roles (logical FK to HRMO db) ──────────────────
