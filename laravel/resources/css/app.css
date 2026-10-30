@@ -51,6 +51,13 @@
 /* Page background: the HRIS Portal homepage wash (white to pale green) */
 .app-shell { background: linear-gradient(180deg, #ffffff 0%, #f6faf7 100%); background-attachment: fixed; }
 
+/* Phones and small tablets: wide tables scroll sideways inside their card
+   instead of stretching the page */
+@media (max-width: 767px) {
+    table { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    thead th, tbody td { white-space: nowrap; }
+}
+
 /* No focus box around clicked map shapes */
 .leaflet-interactive:focus { outline: none; }
 

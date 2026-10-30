@@ -53,7 +53,7 @@ export default function AlertsBell({ api }) {
                     <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
                     <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
                 </svg>
-                Alerts
+                <span className="sr-only sm:not-sr-only">Alerts</span>
                 {unseen > 0 && (
                     <span className="px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-semibold leading-none">
                         {unseen}
@@ -61,7 +61,7 @@ export default function AlertsBell({ api }) {
                 )}
             </button>
             {open && (
-                <div className="absolute right-0 mt-2 w-[26rem] max-h-[28rem] overflow-y-auto bg-white border border-slate-200 rounded-lg shadow-lg z-[1000]">
+                <div className="absolute right-0 mt-2 w-[min(26rem,calc(100vw-2rem))] max-h-[28rem] overflow-y-auto bg-white border border-slate-200 rounded-lg shadow-lg z-[1000]">
                     {alerts.length === 0 ? (
                         <div className="p-4 text-sm text-slate-500">No outbreak alerts yet.</div>
                     ) : (

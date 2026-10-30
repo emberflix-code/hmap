@@ -21,7 +21,7 @@ export default function KpiStrip({ api, disease, year, week }) {
 
     if (error) {
         return (
-            <div className="mx-6 mt-5 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+            <div className="mx-4 md:mx-6 mt-5 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
                 KPI fetch failed: {error}
             </div>
         );
@@ -34,7 +34,7 @@ export default function KpiStrip({ api, disease, year, week }) {
     const alerts = k.alerts_this_week;
 
     return (
-        <div className="px-6 pt-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="px-4 md:px-6 pt-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             <Kpi
                 label="PIDSR alerts"
                 value={alerts ?? '—'}

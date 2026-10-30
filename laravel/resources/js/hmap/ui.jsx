@@ -21,7 +21,7 @@ export function PageHeader({ title, description, children }) {
                 {description && <p className="text-sm text-slate-500 mt-0.5">{description}</p>}
             </div>
             {children && (
-                <div className="flex flex-wrap items-end gap-3 bg-white border border-slate-200 rounded-xl shadow-sm px-3 py-2.5">
+                <div className="w-full md:w-auto flex flex-wrap items-end gap-3 bg-white border border-slate-200 rounded-xl shadow-sm px-3 py-2.5">
                     {children}
                 </div>
             )}

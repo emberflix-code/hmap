@@ -78,22 +78,34 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
         return () => { cancelled = true; };
     }, [api, disease, year, week]);
 
-    // Join barangay metadata (centroid, name) with case count + risk class
+    // Where each barangay's badge goes: a point inside its boundary polygon,
+    // else the centroid stored in the database. A barangay with neither gets
+    // no badge (it is still listed in the tooltips and the risk tiers).
+    const anchors = useMemo(() => {
+        const m = {};
+        for (const f of geoJson?.features || []) {
+            const pt = interiorPoint(f.geometry);
+            if (pt) m[f.properties.canonical_name] = pt;
+        }
+        return m;
+    }, [geoJson]);
+
+    // Join barangay metadata (position, name) with case count + risk class
     const points = useMemo(() => {
-        return barangays.map((b, i) => {
-            const hasCentroid = b.centroid_lat != null && b.centroid_lng != null;
-            const fallback = spreadFallback(i, barangays.length);
+        return barangays.map((b) => {
+            const stored = b.centroid_lat != null && b.centroid_lng != null
+                ? [Number(b.centroid_lat), Number(b.centroid_lng)] : null;
+            const pos = anchors[b.barangay_name] || stored;
             return {
                 id: b.barangay_id,
                 name: b.barangay_name,
-                lat: hasCentroid ? Number(b.centroid_lat) : fallback[0],
-                lng: hasCentroid ? Number(b.centroid_lng) : fallback[1],
-                hasCentroid,
+                lat: pos ? pos[0] : null,
+                lng: pos ? pos[1] : null,
                 cases: heatmapCounts[b.barangay_id] || 0,
                 risk: riskScores[b.barangay_id],
             };
         });
-    }, [barangays, heatmapCounts, riskScores]);
+    }, [barangays, heatmapCounts, riskScores, anchors]);
 
     // Build a map from canonical_name (from the GeoJSON properties) → risk + cases.
     // The Python script writes properties.canonical_name in the GeoJSON.
@@ -166,7 +178,7 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
 
                 {/* Case-count badges on top: the week's count, coloured by the
                     barangay's risk tier, sized by sqrt(cases) */}
-                {points.map((p) => p.cases > 0 && (
+                {points.map((p) => p.cases > 0 && p.lat != null && (
                     <Marker
                         key={p.id}
                         position={[p.lat, p.lng]}
@@ -209,10 +221,55 @@ function badgeIcon(cases, color) {
     });
 }
 
-function spreadFallback(i, n) {
-    const angle = (i / n) * Math.PI * 2;
-    const r = 0.025;
-    return [PARANAQUE_CENTER[0] + r * Math.cos(angle), PARANAQUE_CENTER[1] + r * Math.sin(angle)];
+// A [lat, lng] inside a (Multi)Polygon: the area centroid of its largest
+// part when that falls inside, otherwise the middle of the widest inside
+// stretch along the centroid's latitude (for C- or L-shaped barangays).
+function interiorPoint(geometry) {
+    if (!geometry) return null;
+    const polys = geometry.type === 'Polygon' ? [geometry.coordinates]
+        : geometry.type === 'MultiPolygon' ? geometry.coordinates : [];
+    let best = null;
+    let bestArea = 0;
+    for (const poly of polys) {
+        const ring = poly[0];
+        let a = 0, cx = 0, cy = 0;
+        for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+            const f = ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1];
+            a += f;
+            cx += (ring[j][0] + ring[i][0]) * f;
+            cy += (ring[j][1] + ring[i][1]) * f;
+        }
+        if (Math.abs(a) > bestArea) {
+            bestArea = Math.abs(a);
+            best = { ring, x: cx / (3 * a), y: cy / (3 * a) };
+        }
+    }
+    if (!best) return null;
+    const { ring, x, y } = best;
+    if (insideRing(ring, x, y)) return [y, x];
+    // crossings of the horizontal line through y; take the widest inside span
+    const xs = [];
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const [x1, y1] = ring[j];
+        const [x2, y2] = ring[i];
+        if ((y1 > y) !== (y2 > y)) xs.push(x1 + ((y - y1) / (y2 - y1)) * (x2 - x1));
+    }
+    xs.sort((p, q) => p - q);
+    let span = null;
+    for (let k = 0; k + 1 < xs.length; k += 2) {
+        if (!span || xs[k + 1] - xs[k] > span[1] - span[0]) span = [xs[k], xs[k + 1]];
+    }
+    return span ? [y, (span[0] + span[1]) / 2] : [y, x];
+}
+
+function insideRing(ring, x, y) {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const [xi, yi] = ring[i];
+        const [xj, yj] = ring[j];
+        if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
 }
 
 function Legend({ hasPolygons }) {

@@ -22,7 +22,7 @@ export default function Dashboard({ api, diseases, barangays, whoami }) {
 
     return (
         <>
-            <div className="px-6 pt-6 flex flex-wrap items-end justify-between gap-4">
+            <div className="px-4 md:px-6 pt-6 flex flex-wrap items-end justify-between gap-4">
                 <div>
                     <h2 className="text-xl font-semibold tracking-tight text-slate-900">Surveillance overview</h2>
                     <p className="text-sm text-slate-500 mt-0.5">
@@ -30,7 +30,7 @@ export default function Dashboard({ api, diseases, barangays, whoami }) {
                         <span className="text-slate-400"> ({weekRange(year, week)})</span>
                     </p>
                 </div>
-                <div className="flex flex-wrap items-end gap-3 bg-white border border-slate-200 rounded-xl shadow-sm px-3 py-2.5">
+                <div className="w-full md:w-auto flex flex-wrap items-end gap-3 bg-white border border-slate-200 rounded-xl shadow-sm px-3 py-2.5">
                     <FieldSelect
                         label="Disease"
                         value={disease}
@@ -56,7 +56,7 @@ export default function Dashboard({ api, diseases, barangays, whoami }) {
 
             <KpiStrip api={api} disease={disease} year={year} week={week} />
 
-            <main className="flex-1 p-6 grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <main className="flex-1 px-4 md:px-6 py-5 md:py-6 grid grid-cols-1 lg:grid-cols-2 gap-5 min-w-0">
                 <Panel title="Geographic distribution" subtitle={`Week ${week} of ${year}`}>
                     <HeatMapPanel
                         api={api}
@@ -108,7 +108,7 @@ export default function Dashboard({ api, diseases, barangays, whoami }) {
                 )}
             </main>
 
-            <footer className="px-6 py-4 flex flex-wrap justify-between gap-2 text-xs text-slate-400 border-t border-slate-200 bg-white">
+            <footer className="px-4 md:px-6 py-4 flex flex-wrap justify-between gap-2 text-xs text-slate-400 border-t border-slate-200 bg-white">
                 <span>H-MAP · City Epidemiology and Surveillance Unit, City Health Office of Parañaque</span>
                 <span>Decision support only. PIDSR thresholds per DOH (2014); outbreak declaration rests with the City Health Officer.</span>
             </footer>
@@ -176,7 +176,7 @@ function FieldSelect({ label, value, onChange, options }) {
         <label className="flex flex-col text-[11px] font-medium text-slate-500">
             <span className="mb-1">{label}</span>
             <select
-                className={FIELD + ' min-w-[12rem]'}
+                className={FIELD + ' w-full sm:w-auto sm:min-w-[12rem]'}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
             >

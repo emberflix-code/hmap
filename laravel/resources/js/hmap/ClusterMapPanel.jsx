@@ -104,9 +104,9 @@ export default function ClusterMapPanel({ api }) {
     }
 
     return (
-        <div className="flex-1 flex overflow-hidden">
-            {/* Side panel */}
-            <aside className="w-80 shrink-0 border-r border-slate-200 bg-white flex flex-col">
+        <div className="flex-1 flex flex-col md:flex-row md:overflow-hidden">
+            {/* Side panel: above the map on phones, beside it from tablet width */}
+            <aside className="w-full md:w-80 shrink-0 max-h-[50vh] md:max-h-none border-b md:border-b-0 md:border-r border-slate-200 bg-white flex flex-col">
                 <div className="px-4 py-4 border-b border-slate-200">
                     <h2 className="text-lg font-semibold tracking-tight text-slate-900">Dengue Clusters</h2>
                     <div className="text-xs text-slate-500 mt-1">
@@ -178,7 +178,7 @@ export default function ClusterMapPanel({ api }) {
             </aside>
 
             {/* Map */}
-            <div className="flex-1 relative">
+            <div className="relative h-[60vh] shrink-0 md:h-auto md:flex-1 md:shrink">
                 <MapContainer
                     center={PARANAQUE_CENTER}
                     zoom={PARANAQUE_ZOOM}

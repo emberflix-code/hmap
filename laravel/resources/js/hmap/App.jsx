@@ -168,9 +168,13 @@ export default function App() {
                     <button
                         type="button"
                         onClick={handleLogout}
-                        className="ml-1 px-3 py-1.5 text-xs font-medium rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                        title="Sign out"
+                        className="ml-1 inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                     >
-                        Sign out
+                        <svg viewBox="0 0 24 24" className="h-4 w-4 sm:hidden" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+                        </svg>
+                        <span className="sr-only sm:not-sr-only">Sign out</span>
                     </button>
                 </div>
             </header>
@@ -240,7 +244,7 @@ const THEME_ICONS = {
 function ThemeSwitch() {
     const [choice, setChoice] = useThemeChoice();
     return (
-        <div className="hidden sm:inline-flex p-0.5 rounded-lg bg-slate-100" role="group" aria-label="Theme">
+        <div className="inline-flex p-0.5 rounded-lg bg-slate-100" role="group" aria-label="Theme">
             {[['light', 'Light'], ['system', 'Match system'], ['dark', 'Dark']].map(([v, label]) => (
                 <button
                     key={v}
