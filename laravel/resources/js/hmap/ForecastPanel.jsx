@@ -23,6 +23,24 @@ ChartJS.register(
     Filler
 );
 
+const SHORT_DATE = { month: 'short', day: 'numeric' };
+
+// '2026-11-02' -> 'Nov 2 - Nov 8'
+function weekRange(isoMonday) {
+    const start = new Date(`${isoMonday}T00:00:00`);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    return `${start.toLocaleDateString('en-US', SHORT_DATE)} - ${end.toLocaleDateString('en-US', SHORT_DATE)}`;
+}
+
+// ISO week of a Monday date, the numbering the models are trained on
+function isoWeek(isoMonday) {
+    const d = new Date(`${isoMonday}T00:00:00Z`);
+    d.setUTCDate(d.getUTCDate() + 3);  // Thursday of the same week
+    const jan1 = Date.UTC(d.getUTCFullYear(), 0, 1);
+    return { year: d.getUTCFullYear(), week: Math.ceil(((d - jan1) / 86400000 + 1) / 7) };
+}
+
 export default function ForecastPanel({ api, disease }) {
     const [forecast, setForecast] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -41,7 +59,8 @@ export default function ForecastPanel({ api, disease }) {
 
     const chartData = useMemo(() => {
         if (!forecast) return null;
-        const labels = forecast.points.map((p) => p.week_start);
+        // "MW45" with the week's dates underneath (Monday to Sunday)
+        const labels = forecast.points.map((p) => [`MW${p.morbidity_week}`, weekRange(p.week_start)]);
         return {
             labels,
             datasets: [
@@ -92,18 +111,27 @@ export default function ForecastPanel({ api, disease }) {
     if (!forecast || !chartData) {
         return null;
     }
+    const first = forecast.points[0];
+    const last = forecast.points[forecast.points.length - 1];
+    const tail = isoWeek(forecast.training_tail_week);
 
     return (
         <div className="p-4 h-full flex flex-col">
             <div className="flex items-center justify-between mb-3 text-xs text-slate-600">
                 <div>
-                    Resolution: <b>{forecast.resolution}</b>
+                    Next 4 morbidity weeks: <b>MW{first.morbidity_week} to MW{last.morbidity_week}, {last.morbidity_year}</b>
                     {forecast.barangay_name && <> · barangay: <b>{forecast.barangay_name}</b></>}
                 </div>
                 <div>
                     Validation MAPE: <b>{forecast.validation_mape?.toFixed(1) ?? 'n/a'}%</b>
                 </div>
             </div>
+            {forecast.weeks_bridged > 0 && (
+                <p className="mb-2 text-xs text-amber-700">
+                    The model was trained on cases up to MW{tail.week} {tail.year}, {forecast.weeks_bridged} weeks
+                    before this forecast. Retrain it with the latest PIDSR data for a forecast that reflects recent weeks.
+                </p>
+            )}
             <div className="flex-1 min-h-[260px]">
                 <Line
                     data={chartData}
@@ -112,7 +140,7 @@ export default function ForecastPanel({ api, disease }) {
                         maintainAspectRatio: false,
                         interaction: { mode: 'index', intersect: false },
                         scales: {
-                            x: { title: { display: true, text: 'Week start' } },
+                            x: { title: { display: true, text: 'Morbidity week' } },
                             y: { title: { display: true, text: 'Predicted cases' }, beginAtZero: true },
                         },
                         plugins: {

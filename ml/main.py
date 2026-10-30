@@ -201,6 +201,8 @@ class ForecastRequest(BaseModel):
 
 class ForecastPoint(BaseModel):
     week_start: date
+    morbidity_year: int
+    morbidity_week: int
     predicted_cases: float
     lower_bound: float
     upper_bound: float
@@ -223,33 +225,37 @@ class ForecastResponse(BaseModel):
     points: List[ForecastPoint]
 
 
-def _this_week_monday() -> "pd.Timestamp":
-    """The ISO-week Monday of the current calendar date (server clock)."""
+def _next_week_monday() -> "pd.Timestamp":
+    """The Monday of the week after the current one (server clock).
+
+    The current week is still being reported, so the forecast starts with the
+    following morbidity week.
+    """
     import pandas as pd
     today = pd.Timestamp.today().normalize()
-    return today - pd.Timedelta(days=today.weekday())
+    return today - pd.Timedelta(days=today.weekday()) + pd.Timedelta(weeks=1)
 
 
 FORECAST_SEED = 2026
 
 
 def _forecast_points(bundle: dict, weeks_ahead: int) -> Tuple[List[ForecastPoint], "pd.Timestamp", "pd.Timestamp", int]:
-    """Forecast `weeks_ahead` weeks from this week's Monday.
+    """Forecast `weeks_ahead` weeks starting with next week's Monday.
 
     Returns (points, training_tail, anchor, weeks_bridged).
     """
     model = bundle["model"]
 
-    # Anchor the forecast at THIS week's Monday, not at the end of training
-    # data. The 2026 PIDSR registry is deliberately YTD-excluded from training
+    # Anchor the forecast at NEXT week's Monday (the following morbidity
+    # week), not at the end of training data. The 2026 PIDSR registry is deliberately YTD-excluded from training
     # (see train_prophet.py --holdout-end 2025), so there may be a multi-month
     # gap between training tail and "today". We extend the future dataframe to
     # bridge that gap and return only the requested weeks_ahead starting from
-    # this-week's Monday. The dashboard renders an exact calendar horizon
-    # without having to know about the training window.
+    # the anchor. The dashboard renders an exact calendar horizon without
+    # having to know about the training window.
     import pandas as pd
     training_tail = pd.Timestamp(model.history["ds"].max()).normalize()
-    anchor = _this_week_monday()
+    anchor = _next_week_monday()
     # Number of W-MON rows from training_tail+1week up to anchor-1week (the
     # bridge), plus the requested horizon starting at anchor.
     if anchor <= training_tail:
@@ -276,6 +282,10 @@ def _forecast_points(bundle: dict, weeks_ahead: int) -> Tuple[List[ForecastPoint
     points = [
         ForecastPoint(
             week_start=row["ds"].date(),
+            # Same numbering the models are trained on (train_prophet maps
+            # morbidity year/week to that ISO week's Monday).
+            morbidity_year=row["ds"].isocalendar()[0],
+            morbidity_week=row["ds"].isocalendar()[1],
             predicted_cases=max(0.0, float(row["yhat"])),
             lower_bound=max(0.0, float(row["yhat_lower"])),
             upper_bound=max(0.0, float(row["yhat_upper"])),
