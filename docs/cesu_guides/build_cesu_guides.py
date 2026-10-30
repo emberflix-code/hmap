@@ -523,8 +523,9 @@ def build_prophet():
          "those weeks have filled in."),
         ("Add what the model cannot see. ", "After heavy rains or flooding, expect leptospirosis and dengue to run "
          "above the forecast. After a strong vector control campaign, expect dengue below it."),
-        ("Note the model's freshness. ", "The forecast is anchored to the current week, but the model only "
-         "knows the data it was trained on (currently up to December 2025). Retrain it whenever a newer PIDSR "
+        ("Note the model's freshness. ", "The forecast covers the next four morbidity weeks after the current "
+         "one, but the model only knows the data it was trained on (currently up to December 2025), and the "
+         "dashboard shows a note when that gap is large. Retrain it whenever a newer PIDSR "
          "workbook is loaded (python ml/train_prophet.py), ideally monthly, so the forecast starts from recent weeks."),
     ])
     table(d, ["What the forecast shows", "Suggested reading"], [
