@@ -100,7 +100,7 @@ def shade(cell, hex_fill):
     tc.append(sh)
 
 
-def table(d, header, rows, widths=None, highlight=None, font=9.5):
+def table(d, header, rows, widths=None, highlight=None, font=9.5, center=True):
     t = d.add_table(rows=1, cols=len(header))
     t.style = "Table Grid"
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -117,7 +117,7 @@ def table(d, header, rows, widths=None, highlight=None, font=9.5):
             cells[i].text = ""
             r = cells[i].paragraphs[0].add_run(str(v))
             r.font.size = Pt(font)
-            if i > 0:
+            if i > 0 and center:
                 cells[i].paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
         if highlight and highlight(ri, row):
             for c in cells:
@@ -138,6 +138,11 @@ def table(d, header, rows, widths=None, highlight=None, font=9.5):
                 row.cells[i].width = Inches(w)
     d.add_paragraph()
     return t
+
+
+def abbreviations(d, pairs):
+    d.add_heading("Abbreviations used", 2)
+    table(d, ["Abbreviation", "Meaning"], [list(p) for p in pairs], widths=[1.3, 5.2], center=False)
 
 
 def figure(d, path, caption, width=6.3):
@@ -215,6 +220,15 @@ def build_thresholds():
     d = new_doc("How H-MAP Computes the Alert and Epidemic Thresholds",
                 "A worked example using Parañaque City PIDSR data · For the City Epidemiology and Surveillance Unit (CESU)")
 
+    abbreviations(d, [
+        ("PIDSR", "Philippine Integrated Disease Surveillance and Response"),
+        ("CESU", "City Epidemiology and Surveillance Unit"),
+        ("DOH", "Department of Health"),
+        ("MW", "Morbidity week (the PIDSR reporting week, MW1 to MW52 or MW53)"),
+        ("SD", "Standard deviation (how spread out the five baseline counts are)"),
+        ("AFP", "Acute flaccid paralysis"),
+        ("5YrAve", "The five-year average sheet in the CESU PIDSR workbook"),
+    ])
     d.add_heading("1. What the thresholds are for", 1)
     para(d, "H-MAP marks a disease week as unusual when its case count is higher than what the same week "
             "normally looks like in Parañaque. \"Normal\" is measured from the city's own records of the five "
@@ -335,7 +349,7 @@ def build_thresholds():
         ["Classifications", "All (including Suspect)", "Confirmed + Probable only"],
         ["Statistic", "Average and median", "Mean, SD, mean + 1 SD, mean + 2 SD"],
         ["Purpose", "Reference value for the memo", "Alert and epidemic signal"],
-    ], widths=[1.3, 2.6, 2.6])
+    ], widths=[1.3, 2.6, 2.6], center=False)
     avg = sum(py.values()) / 5
     para(d, f"Example, dengue up to MW5: the cumulative MW1-5 totals for 2021 to 2025 (all classifications) are "
             f"{', '.join(str(py[str(y)]) for y in years)}. Their average is {avg:.1f}, which is the value in the "
@@ -421,6 +435,15 @@ def build_prophet():
     d = new_doc("How H-MAP Forecasts Cases with Prophet",
                 "How the forecast works, how the CESU should read it, and how accurate it has been on Parañaque data")
 
+    abbreviations(d, [
+        ("MAPE", "Mean Absolute Percentage Error (average miss per week, in percent)"),
+        ("RMSE", "Root Mean Square Error (typical miss per week, in cases)"),
+        ("MAE", "Mean Absolute Error (average miss per week, in cases)"),
+        ("ILI", "Influenza-like illness"),
+        ("HFMD", "Hand, foot and mouth disease"),
+        ("TYP / LEP", "Typhoid / Leptospirosis"),
+        ("CESU", "City Epidemiology and Surveillance Unit"),
+    ])
     d.add_heading("1. In one paragraph", 1)
     para(d, "H-MAP uses a forecasting method called Prophet (Taylor & Letham, 2018) to estimate the number of "
             "Confirmed + Probable cases for the next four weeks. It learns two things from the city's weekly counts "
@@ -463,13 +486,27 @@ def build_prophet():
     table(d, ["Disease (city-wide)", "Prophet error (MAPE)", "Last-year error (MAPE)", "Prophet RMSE",
               "Last-year RMSE", "On the dashboard"], rows, widths=[1.7, 1.0, 1.0, 0.9, 0.9, 1.0],
           highlight=lambda i, r: "F1F5F9" if r[-1] == "Withheld" else None)
+    para(d, "What the columns mean:", bold_lead=None).runs[0].bold = True
+    bullets(d, [
+        ("MAPE (Mean Absolute Percentage Error): ", "the average miss per week, as a percentage of the actual "
+         "count. H-MAP adds 1 to the actual count before dividing, so weeks with 0 cases do not make the "
+         "percentage infinite. Example: 40 actual cases and a forecast of 30 is a miss of 10 / (40 + 1) = 24.4%."),
+        ("RMSE (Root Mean Square Error): ", "the typical miss in number of cases per week. Each week's miss is "
+         "squared, averaged, then square-rooted, so one large miss counts more than several small ones. "
+         "Example: misses of 2 and 4 cases give the square root of (4 + 16) / 2 = 3.16 cases."),
+        ("Prophet error: ", "how far the H-MAP forecast was from the actual weekly counts in 2024 and 2025."),
+        ("Last-year error: ", "how far the simple guess \"same week last year\" (also called the seasonal-naive "
+         "forecast) was from the same actual counts."),
+        ("On the dashboard: ", "\"Shown\" when Prophet's MAPE is lower than the last-year MAPE, otherwise "
+         "\"Withheld\". For both measures, lower is better."),
+        ("ILI: ", "Influenza-like illness."),
+        ("HFMD: ", "Hand, foot and mouth disease."),
+        ("City-wide: ", "all 16 barangays counted together."),
+    ])
     para(d, "Why three diseases are withheld: Measles and HFMD have mostly zero weeks with occasional bursts, and "
             "influenza-like illness depends on which strains circulate in a given year. None of them follows a "
             "regular yearly pattern that Prophet can learn, so for these the CESU should rely on the thresholds and "
             "the single-case rule.")
-    para(d, "Reading the error columns. MAPE is the average percentage miss per week. H-MAP adds 1 to the actual "
-            "count before dividing, so weeks with 0 cases do not make the percentage infinite. RMSE is the typical "
-            "miss in cases per week, with large misses counting more. Lower is better for both.", italic=True)
 
     d.add_heading("4. How the CESU should read the forecast", 1)
     bullets(d, [
@@ -495,7 +532,7 @@ def build_prophet():
         ["Rising, upper bound near or above the alert line", "Prepare and watch the next reports closely."],
         ["Forecast above the epidemic line", "Early warning. Verify with current case reports and hotspots."],
         ["Forecast withheld", "Use thresholds, the single-case rule and hotspots only."],
-    ], widths=[3.0, 3.4])
+    ], widths=[3.0, 3.4], center=False)
 
     d.add_heading("5. How accurate it has been on Parañaque data", 1)
     d.add_heading("5.1 Two-year test (the display check)", 2)
