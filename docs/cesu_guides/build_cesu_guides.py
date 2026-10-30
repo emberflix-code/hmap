@@ -463,20 +463,61 @@ def build_prophet():
         "the trend, so in a high year the rainy-season peak is higher too.",
         "Forecast. Trend times yearly pattern, carried forward four weeks, gives the predicted cases for each week.",
         "Range. Prophet also gives an 80% range (lower and upper bound). In principle, about 4 out of 5 future "
-        "weeks should fall inside it. Section 5 shows how well that held on Parañaque data.",
+        "weeks should fall inside it. Section 6 shows how well that held on Parañaque data.",
     ])
     para(d, "What the model does not know: floods and typhoons, clean-up drives, school calendars, outbreaks in "
             "nearby cities, changes in reporting, or anything that has not happened in a regular yearly pattern "
             "before. These are exactly the things the CESU knows and the model does not.")
 
-    d.add_heading("3. When H-MAP shows a forecast and when it does not", 1)
-    para(d, "Before a forecast is shown, H-MAP tests it. The model is trained on 2010 to 2023 only, asked to "
-            "predict 2024 and 2025, and compared with what actually happened. The same test is given to the "
-            "simplest possible guess: the same week last year. If Prophet does not beat that guess, the forecast is "
-            "withheld and the dashboard says so.")
     city = [r for r in ev if r["barangay_name"] == "city-wide"]
     names = {"DENGUE": "Dengue", "TYP": "Typhoid", "LEP": "Leptospirosis", "ILI": "Influenza-like illness",
              "MEA": "Measles", "HFMD": "Hand, foot and mouth disease"}
+
+    d.add_heading("3. What the AI learned, and how it was tested", 1)
+    d.add_heading("3.1 The data it learned from", 2)
+    para(d, "Each model learns from one thing only: the number of Confirmed + Probable cases of one disease in "
+            "each morbidity week, taken from the CESU PIDSR registry. It does not see names, addresses, ages or "
+            "any other case details.")
+    table(d, ["Item", "What the models use"], [
+        ["Years learned (models on the dashboard)", "2010 to 2025 (16 years)"],
+        ["Years not yet learned", "2026 (left out until it is a full year, or until the model is retrained)"],
+        ["Unit", "Weekly counts per morbidity week, city-wide; dengue also per barangay"],
+        ["Cases counted", "Confirmed and Probable only (same as the PIDSR thresholds)"],
+        ["Unusual years inside the data", "2019 dengue outbreak; 2020-2021 COVID-19 lockdowns (very few reports)"],
+    ], widths=[2.4, 4.1], center=False)
+    rows = []
+    for r in city:
+        nt, nh = int(r["n_weeks_total"]), int(r["n_weeks_holdout"])
+        rows.append([names.get(r["disease"], r["disease"]), nt, int(r["n_weeks_train"]), nh])
+    table(d, ["Disease (city-wide)", "Weeks learned, 2010-2025", "Weeks used to learn in the test (to 2023)",
+              "Weeks hidden and predicted (2024-2025)"], rows, widths=[1.9, 1.5, 1.6, 1.5])
+    para(d, "A disease's weekly series starts with its first reported case, so diseases first reported after "
+            "2010 have fewer weeks. In the test, the hidden 2024-2025 weeks were never shown to the model before "
+            "it made its predictions.")
+
+    d.add_heading("3.2 The two tests", 2)
+    para(d, "A forecast can only be judged fairly on weeks the model has never seen. Both tests hide the most "
+            "recent years from the model, ask it to predict them, and then compare the predictions with what was "
+            "actually reported. Each time, the model is also compared with the simplest possible guess: the same "
+            "week last year.")
+    table(d, ["", "Test 1: two-year test (display check)", "Test 2: four-week test (how the dashboard is used)"], [
+        ["Model learns from", "2010 to 2023", "All weeks before the forecast date (moves forward through 2024-2025)"],
+        ["Hidden from the model", "2024 and 2025", "The 4 weeks being predicted"],
+        ["What it predicts", "All 104 weeks of 2024-2025 at once", "The next 4 weeks; repeated every 4 weeks "
+         "(26 forecasts for dengue)"],
+        ["Purpose", "Decides whether a forecast is shown on the dashboard", "Measures the accuracy CESU actually "
+         "sees: 1 to 4 weeks ahead"],
+        ["Results", "Section 4 and Section 6.1", "Section 6.2"],
+    ], widths=[1.4, 2.5, 2.6], center=False, font=9)
+    para(d, "After Test 1, each model is retrained on all of 2010 to 2025 and that final model is what the "
+            "dashboard uses. Test 2 was run separately for this guide, with the same settings as the dashboard "
+            "models.")
+
+    d.add_heading("4. When H-MAP shows a forecast and when it does not", 1)
+    para(d, "Before a forecast is shown, H-MAP runs Test 1. The model is trained on 2010 to 2023 only, asked to "
+            "predict 2024 and 2025, and compared with what actually happened. The same test is given to the "
+            "simplest possible guess: the same week last year. If Prophet does not beat that guess, the forecast is "
+            "withheld and the dashboard says so.")
     rows = []
     for r in city:
         mp, mb = float(r["mape_prophet"]), float(r["mape_baseline"])
@@ -508,7 +549,7 @@ def build_prophet():
             "regular yearly pattern that Prophet can learn, so for these the CESU should rely on the thresholds and "
             "the single-case rule.")
 
-    d.add_heading("4. How the CESU should read the forecast", 1)
+    d.add_heading("5. How the CESU should read the forecast", 1)
     bullets(d, [
         ("Read the direction first. ", "Is the line going up, flat or down over the four weeks? H-MAP calls a "
          "barangay's forecast \"rising\" when the fourth week is at least 10% and at least one case higher than "
@@ -535,9 +576,9 @@ def build_prophet():
         ["Forecast withheld", "Use thresholds, the single-case rule and hotspots only."],
     ], widths=[3.0, 3.4], center=False)
 
-    d.add_heading("5. How accurate it has been on Parañaque data", 1)
-    d.add_heading("5.1 Two-year test (the display check)", 2)
-    para(d, f"Figure 1 shows the test from Section 3 for dengue: one forecast made at the end of 2023 for every "
+    d.add_heading("6. How accurate it has been on Parañaque data", 1)
+    d.add_heading("6.1 Two-year test (the display check)", 2)
+    para(d, f"Figure 1 shows Test 1 for dengue: one forecast made at the end of 2023 for every "
             f"week of 2024 and 2025. Prophet caught the timing of both rainy seasons and missed less than the "
             f"same-week-last-year guess (RMSE 20.2 against 27.6 cases per week). It did not foresee the size "
             f"of the 2024 season: actual cases reached about {max(ty['actual'][:52]):.0f} a week while the forecast "
@@ -548,7 +589,7 @@ def build_prophet():
     figure(d, FIG / "prophet_holdout_dengue.png",
            "Figure 1. Dengue, city-wide: actual weekly cases in 2024-2025 against a forecast made at the end of 2023.")
 
-    d.add_heading("5.2 Four-week test (how the dashboard is used)", 2)
+    d.add_heading("6.2 Four-week test (how the dashboard is used)", 2)
     para(d, "The dashboard shows only the next four weeks, from a model that has seen all earlier data. To test "
             "exactly that, the model was retrained every four weeks through 2024 and 2025, each time forecasting "
             "the next four weeks only, and compared with what happened.")
@@ -588,7 +629,7 @@ def build_prophet():
             "treat the leptospirosis forecast as background information and act on rainfall, flooding and case "
             "reports instead.")
 
-    d.add_heading("5.3 Barangay-level dengue forecasts", 2)
+    d.add_heading("6.3 Barangay-level dengue forecasts", 2)
     bg = [r for r in ev if r["disease"] == "DENGUE" and r["barangay_name"] != "city-wide"]
     bg.sort(key=lambda r: float(r["mape_prophet"]))
     rows = [[r["barangay_name"], f"{float(r['mape_prophet']):.1f}%", f"{float(r['mape_baseline']):.1f}%",
@@ -601,7 +642,31 @@ def build_prophet():
             "week by more, even though it is closer on ordinary weeks. Barangay forecasts work with a few cases a "
             "week, so they are best read for direction.")
 
-    d.add_heading("6. Summary for the CESU", 1)
+    d.add_heading("7. What has not been tested yet", 1)
+    para(d, "Both tests were scored after the fact, on 2024 and 2025. No forecast has yet been made in real time "
+            "and then checked against the weeks that followed. Two things are still open:")
+    bullets(d, [
+        ("No live check on 2026. ", "The dashboard models stop at December 2025, so a forecast for late 2026 "
+         "rests on the usual yearly pattern and not on how 2026 has gone so far. The dashboard shows a note "
+         "when this gap is large."),
+        ("The dashboard forecast always starts from today. ", "It does not follow the year and week chosen in the "
+         "dashboard filters, so it should be compared with the coming reports of the current year, not with the "
+         "chart of an earlier year."),
+    ])
+    para(d, "Recommended live validation during deployment:")
+    bullets(d, [
+        ("Step 1. ", "Load each new PIDSR workbook and retrain the models (python ml/train_prophet.py), at least "
+         "monthly."),
+        ("Step 2. ", "Save every four-week forecast on the day it is made (date, disease, morbidity weeks, "
+         "predicted cases and 80% range)."),
+        ("Step 3. ", "When those morbidity weeks have been fully reported (allow two weeks for late reports), "
+         "compare them with the saved forecast using the same measures as Test 2: average miss, MAPE, weeks "
+         "inside the 80% range, and whether the direction was correct."),
+        ("Step 4. ", "Review the running results each quarter. If a disease stops beating the same-week-last-year "
+         "guess, withhold its forecast, as the display check already does."),
+    ])
+
+    d.add_heading("8. Summary for the CESU", 1)
     bullets(d, [
         "The forecast is reliable enough to watch the direction of dengue over the next four weeks, and it is "
         "closest one week ahead.",
@@ -611,8 +676,10 @@ def build_prophet():
         "Measles, ILI and HFMD forecasts are withheld on purpose; use the thresholds and the single-case rule.",
         "Retrain the model whenever new workbook data is loaded, and always add local knowledge (weather, "
         "campaigns, reporting delays) that the model cannot see.",
+        "The models learned from 2010 to 2025 and were tested on 2024-2025 weeks they had not seen; a live "
+        "check on 2026 forecasts is the next step (Section 7).",
     ])
-    para(d, "Notes on the figures. The display-check figures in Section 3 come from the stored evaluation "
+    para(d, "Notes on the figures. The display-check figures in Section 4 come from the stored evaluation "
             "(ml/reports/prophet_eval_latest.csv). The four-week test and Figures 1 and 2 were rerun on the "
             "current database for this guide; the dengue two-year error there is "
             f"{ty['mape']:.1f}% (stored value 50.1%). The small difference comes from the reloaded case data.",
