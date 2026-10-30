@@ -5,25 +5,44 @@ import {
     LinearScale,
     PointElement,
     LineElement,
+    BarElement,
+    LineController,
+    BarController,
     Title,
     Tooltip,
     Legend,
     Filler,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 
 ChartJS.register(
     CategoryScale,
     LinearScale,
     PointElement,
     LineElement,
+    BarElement,
+    LineController,
+    BarController,
     Title,
     Tooltip,
     Legend,
     Filler
 );
 
+const VIEW_KEY = 'hmap.trend.view';
+
+function readView() {
+    try { return window.localStorage.getItem(VIEW_KEY) === 'histogram' ? 'histogram' : 'line'; } catch (_) { return 'line'; }
+}
+
 export default function TrendChartPanel({ api, disease, year }) {
+    // 'histogram' draws the weekly cases as bars (the epidemic curve CESU asked
+    // for); the PIDSR threshold lines stay on top in both views.
+    const [view, setView] = useState(readView);
+    const changeView = (v) => {
+        setView(v);
+        try { window.localStorage.setItem(VIEW_KEY, v); } catch (_) { /* private mode */ }
+    };
     const [series, setSeries] = useState([]);
     const [thresholds, setThresholds] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -81,23 +100,42 @@ export default function TrendChartPanel({ api, disease, year }) {
             return '#2563eb';
         };
         const pointColors = counts.map((n, i) => levelColor(n, labels[i]));
+        const casesLabel = singleCase ? `${year} cases (any case = alert)` : `${year} cases`;
+        const cases = view === 'histogram'
+            ? {
+                // epidemic curve: one bar per morbidity week, coloured by PIDSR level
+                type: 'bar',
+                label: casesLabel,
+                data: counts,
+                backgroundColor: pointColors.map((c) => (c === '#2563eb' ? 'rgba(37, 99, 235, 0.75)' : c)),
+                borderColor: 'rgba(255, 255, 255, 0.9)',
+                borderWidth: 1,
+                barPercentage: 1.0,
+                categoryPercentage: 0.95,
+                order: 2,
+            }
+            : {
+                type: 'line',
+                label: casesLabel,
+                data: counts,
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.15)',
+                pointBackgroundColor: pointColors,
+                pointBorderColor: pointColors,
+                borderWidth: 2,
+                fill: true,
+                tension: 0.25,
+                pointRadius: counts.map((n, i) => (pointColors[i] === '#2563eb' ? 2 : 4)),
+                order: 2,
+            };
 
         return {
             labels,
             datasets: [
+                cases,
                 {
-                    label: singleCase ? `${year} cases (any case = alert)` : `${year} cases`,
-                    data: counts,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.15)',
-                    pointBackgroundColor: pointColors,
-                    pointBorderColor: pointColors,
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.25,
-                    pointRadius: counts.map((n, i) => (pointColors[i] === '#2563eb' ? 2 : 4)),
-                },
-                {
+                    type: 'line',
+                    order: 1,
                     label: '5-yr mean',
                     data: labels.map((w) => meanByWeek[w] ?? null),
                     borderColor: '#64748b',
@@ -108,6 +146,8 @@ export default function TrendChartPanel({ api, disease, year }) {
                     pointRadius: 0,
                 },
                 {
+                    type: 'line',
+                    order: 1,
                     label: 'PIDSR alert threshold (mean + 1 SD)',
                     data: labels.map((w) => alertByWeek[w] ?? null),
                     borderColor: '#f59e0b',
@@ -119,6 +159,8 @@ export default function TrendChartPanel({ api, disease, year }) {
                     hidden: singleCase,
                 },
                 {
+                    type: 'line',
+                    order: 1,
                     label: 'PIDSR epidemic threshold (mean + 2 SD)',
                     data: labels.map((w) => thrByWeek[w] ?? null),
                     borderColor: '#dc2626',
@@ -131,7 +173,7 @@ export default function TrendChartPanel({ api, disease, year }) {
                 },
             ],
         };
-    }, [series, thresholds, year]);
+    }, [series, thresholds, year, view]);
 
     const options = useMemo(
         () => ({
@@ -155,13 +197,26 @@ export default function TrendChartPanel({ api, disease, year }) {
     }
 
     return (
-        <div className="relative h-full p-4">
-            {loading && (
-                <div className="absolute top-2 right-2 text-xs px-2 py-1 rounded bg-white/90 border border-slate-200 text-slate-600">
-                    loading…
+        <div className="relative h-full p-4 flex flex-col">
+            <div className="flex items-center justify-end gap-2 mb-2 text-xs">
+                {loading && <span className="text-slate-500">loading…</span>}
+                <div className="inline-flex rounded border border-slate-300 overflow-hidden" role="group" aria-label="Chart type">
+                    {[['line', 'Line'], ['histogram', 'Histogram']].map(([v, label]) => (
+                        <button
+                            key={v}
+                            type="button"
+                            aria-pressed={view === v}
+                            onClick={() => changeView(v)}
+                            className={'px-2.5 py-1 ' + (view === v ? 'bg-blue-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50')}
+                        >
+                            {label}
+                        </button>
+                    ))}
                 </div>
-            )}
-            <Line data={chartData} options={options} />
+            </div>
+            <div className="flex-1 min-h-[300px]">
+                <Chart type="bar" data={chartData} options={options} />
+            </div>
         </div>
     );
 }
