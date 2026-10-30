@@ -41,7 +41,7 @@ function isoWeek(isoMonday) {
     return { year: d.getUTCFullYear(), week: Math.ceil(((d - jan1) / 86400000 + 1) / 7) };
 }
 
-export default function ForecastPanel({ api, disease }) {
+export default function ForecastPanel({ api, disease, year, week }) {
     const [forecast, setForecast] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -114,6 +114,12 @@ export default function ForecastPanel({ api, disease }) {
     const first = forecast.points[0];
     const last = forecast.points[forecast.points.length - 1];
     const tail = isoWeek(forecast.training_tail_week);
+    // The forecast always starts from today, whatever week the filters show.
+    const anchor = new Date(`${forecast.forecast_anchor_week}T00:00:00Z`);
+    anchor.setUTCDate(anchor.getUTCDate() - 7);
+    const current = isoWeek(anchor.toISOString().slice(0, 10));
+    const otherWeekSelected = year !== undefined
+        && (Number(year) !== current.year || Number(week) !== current.week);
 
     return (
         <div className="p-4 h-full flex flex-col">
@@ -126,6 +132,12 @@ export default function ForecastPanel({ api, disease }) {
                     Validation MAPE: <b>{forecast.validation_mape?.toFixed(1) ?? 'n/a'}%</b>
                 </div>
             </div>
+            {otherWeekSelected && (
+                <p className="mb-2 text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded px-2 py-1">
+                    This forecast is counted from the current week, not from MW{week} of {year} selected above.
+                    Compare it with the coming {last.morbidity_year} reports, not with the {year} chart.
+                </p>
+            )}
             {forecast.weeks_bridged > 0 && (
                 <p className="mb-2 text-xs text-amber-700">
                     The model was trained on cases up to MW{tail.week} {tail.year}, {forecast.weeks_bridged} weeks

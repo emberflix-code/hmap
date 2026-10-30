@@ -55,11 +55,11 @@ export default function Dashboard({ api, diseases, barangays, whoami }) {
 
                 <Panel
                     title="AI four-week forecast (Prophet)"
-                    subtitle={forecastEnabled ? 'City-wide' : 'Not enabled for this disease'}
+                    subtitle={forecastEnabled ? 'City-wide · next 4 morbidity weeks from today' : 'Not enabled for this disease'}
                     span={2}
                 >
                     {forecastEnabled ? (
-                        <ForecastPanel api={api} disease={disease} />
+                        <ForecastPanel api={api} disease={disease} year={year} week={week} />
                     ) : (
                         <div className="text-sm text-slate-500 p-4">
                             Prophet forecasting is enabled only for diseases with sufficient
