@@ -106,9 +106,9 @@ export default function ClusterMapPanel({ api }) {
     return (
         <div className="flex-1 flex overflow-hidden">
             {/* Side panel */}
-            <aside className="w-80 border-r border-slate-200 bg-white flex flex-col">
-                <div className="px-4 py-3 border-b border-slate-200">
-                    <h2 className="font-semibold text-slate-800">Dengue Clusters</h2>
+            <aside className="w-80 shrink-0 border-r border-slate-200 bg-white flex flex-col">
+                <div className="px-4 py-4 border-b border-slate-200">
+                    <h2 className="text-lg font-semibold tracking-tight text-slate-900">Dengue Clusters</h2>
                     <div className="text-xs text-slate-500 mt-1">
                         {run.eps_meters}m radius, ≥{run.min_samples} cases, {run.window_weeks}-week window
                     </div>
@@ -124,7 +124,7 @@ export default function ClusterMapPanel({ api }) {
                         <select
                             value={year}
                             onChange={(e) => { setYear(e.target.value); setSelectedId(null); }}
-                            className="mt-1 w-full text-sm border border-slate-300 rounded px-2 py-1"
+                            className="mt-1 w-full h-9 px-2.5 text-sm"
                         >
                             <option value="all">All years</option>
                             {yearOptions.map((y) => <option key={y} value={y}>{y}</option>)}

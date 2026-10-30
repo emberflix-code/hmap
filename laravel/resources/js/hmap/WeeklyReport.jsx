@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { NumberField, PageHeader, Tabs, WeekStepper, weekRange } from './ui.jsx';
 
 /**
  * Mirrors three sheets of the CESU PIDSR workbook:
@@ -17,28 +18,26 @@ export default function WeeklyReport({ api, diseases, isAdmin }) {
 
     return (
         <>
-            <div className="bg-white border-b border-slate-200 px-6 py-3 flex flex-wrap items-end gap-4">
-                <FieldNumber label="Year" value={year} min={2010} max={2100} onChange={setYear} />
-                <FieldNumber label="Morbidity week" value={week} min={1} max={53} onChange={setWeek} />
-                <div className="ml-auto text-xs text-slate-500">
-                    YTD through morbidity week {week} of {year} · mirrors CESU PIDSR workbook
-                </div>
-            </div>
+            <PageHeader
+                title="Weekly report"
+                description={`Year to date through morbidity week ${week} of ${year} (${weekRange(year, week)}) · mirrors the CESU PIDSR workbook`}
+            >
+                <NumberField label="Year" value={year} min={2010} max={2100} onChange={setYear} />
+                <WeekStepper week={week} onChange={setWeek} />
+            </PageHeader>
 
-            <div className="bg-white border-b border-slate-200 px-6">
-                <TabBar
-                    tabs={[
-                        { id: 'summary', label: 'Summary (Cat I + II)' },
-                        { id: 'dengue',  label: 'Dengue detail' },
-                        { id: 'rates',   label: 'Per-barangay rates' },
-                        { id: 'memo',    label: 'Memo draft' },
-                    ]}
-                    active={tab}
-                    onChange={setTab}
-                />
-            </div>
+            <Tabs
+                tabs={[
+                    { id: 'summary', label: 'Summary (Cat I + II)' },
+                    { id: 'dengue',  label: 'Dengue detail' },
+                    { id: 'rates',   label: 'Per-barangay rates' },
+                    { id: 'memo',    label: 'Memo draft' },
+                ]}
+                active={tab}
+                onChange={setTab}
+            />
 
-            <main className="flex-1 p-6">
+            <main className="flex-1 px-4 md:px-6 py-5">
                 {tab === 'summary' && <SummaryTab api={api} year={year} week={week} />}
                 {tab === 'dengue'  && <DengueTab  api={api} year={year} week={week} />}
                 {tab === 'rates'   && <RatesTab   api={api} diseases={diseases} year={year} week={week} />}
@@ -564,8 +563,8 @@ function MemoTemplateEditor({ api, year, week, onSaved }) {
 
 function Panel({ title, subtitle, children }) {
     return (
-        <section className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-4 py-3 border-b border-slate-100">
+        <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-slate-100">
                 <h2 className="text-sm font-semibold text-slate-800">{title}</h2>
                 {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
             </div>

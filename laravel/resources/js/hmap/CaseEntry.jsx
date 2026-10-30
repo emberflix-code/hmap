@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { PageHeader, Tabs, btn } from './ui.jsx';
+import React,{ useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
@@ -30,16 +31,17 @@ export default function CaseEntry({ api, diseases, barangays }) {
     const [tab, setTab] = useState('single');
 
     return (
-        <div className="p-6 max-w-5xl mx-auto">
-            <div className="flex items-center gap-1 mb-4 border-b border-slate-200">
-                <TabButton active={tab === 'single'} onClick={() => setTab('single')}>
-                    Single case
-                </TabButton>
-                <TabButton active={tab === 'csv'} onClick={() => setTab('csv')}>
-                    CSV bulk upload
-                </TabButton>
-            </div>
-
+        <div className="max-w-6xl w-full mx-auto">
+            <PageHeader
+                title="Case entry"
+                description="Encode a PIDSR case record, or upload many at once from a CSV file. Every saved record is checked and logged."
+            />
+            <Tabs
+                tabs={[{ id: 'single', label: 'Single case' }, { id: 'csv', label: 'CSV bulk upload' }]}
+                active={tab}
+                onChange={setTab}
+            />
+            <div className="px-4 md:px-6 py-5">
             {tab === 'single' ? (
                 <SingleCaseForm
                     api={api}
@@ -50,6 +52,7 @@ export default function CaseEntry({ api, diseases, barangays }) {
             ) : (
                 <BulkCsvUploader api={api} />
             )}
+            </div>
         </div>
     );
 }
@@ -171,109 +174,129 @@ function SingleCaseForm({ api, diseases, barangays, today }) {
     );
 
     return (
-        <form onSubmit={submit} className="bg-white rounded-lg border border-slate-200 shadow-sm">
-            <div className="px-5 py-3 border-b border-slate-100">
-                <h2 className="text-sm font-semibold text-slate-800">PIDSR case record</h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                    All fields match PIDSR's standard case report form (DOH, 2014).
-                </p>
-            </div>
-
-            <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Field label="Disease" required>
-                    <select className={fieldClass} value={form.disease_code} onChange={update('disease_code')}>
-                        {diseases.map((d) => (
-                            <option key={d.disease_code} value={d.disease_code}>{d.disease_name}</option>
-                        ))}
-                    </select>
-                </Field>
-                <Field label="Case classification" required>
-                    <select className={fieldClass} value={form.case_classification} onChange={update('case_classification')}>
-                        {CLASSIFICATIONS.map((c) => (
-                            <option key={c} value={c}>{c}</option>
-                        ))}
-                    </select>
-                </Field>
-                <Field label="Barangay" required>
-                    <select className={fieldClass} value={form.barangay_name} onChange={updateBarangay}>
-                        {barangays.map((b) => (
-                            <option key={b.barangay_id} value={b.barangay_name}>{b.barangay_name}</option>
-                        ))}
-                    </select>
-                </Field>
-                <Field label="Outcome">
-                    <select className={fieldClass} value={form.outcome} onChange={update('outcome')}>
-                        {OUTCOMES.map((o) => (
-                            <option key={o} value={o}>{o}</option>
-                        ))}
-                    </select>
-                </Field>
-
-                <div className="md:col-span-2">
-                    <LocateAddress
-                        api={api}
-                        streetPurok={form.street_purok}
-                        onStreetChange={updateStreet}
-                        barangay={form.barangay_name}
-                        barangayCentroid={selectedBarangay}
-                        geocode={{
-                            lat: form.case_lat,
-                            lng: form.case_lng,
-                            geocode_source: form.geocode_source,
-                            formatted: form.geocode_formatted,
-                            geocode_query: form.geocode_query,
-                        }}
-                        onGeocode={setGeocode}
-                    />
+        <form onSubmit={submit} className="bg-white rounded-xl border border-slate-200 shadow-sm">
+            <div className="px-5 py-3.5 border-b border-slate-100 flex flex-wrap items-start justify-between gap-2">
+                <div>
+                    <h2 className="text-sm font-semibold text-slate-900">PIDSR case record</h2>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                        All fields match PIDSR's standard case report form (DOH, 2014).
+                    </p>
                 </div>
-
-                <Field label="Date of onset">
-                    <input type="date" className={fieldClass} value={form.date_onset} onChange={update('date_onset')} />
-                </Field>
-                <Field label="Date admitted">
-                    <input type="date" className={fieldClass} value={form.date_admitted} onChange={update('date_admitted')} />
-                </Field>
-
-                <Field label="Age (years)">
-                    <input type="number" min={0} max={130} className={fieldClass} value={form.age} onChange={update('age')} />
-                </Field>
-                <Field label="Sex">
-                    <select className={fieldClass} value={form.sex} onChange={update('sex')}>
-                        <option value="">—</option>
-                        {SEXES.map((s) => (
-                            <option key={s} value={s}>{s}</option>
-                        ))}
-                    </select>
-                </Field>
-
-                <Field label="Morbidity year" required>
-                    <input type="number" min={2010} max={2100} className={fieldClass} value={form.morbidity_year} onChange={update('morbidity_year')} />
-                </Field>
-                <Field label="Morbidity week" required>
-                    <input type="number" min={1} max={53} className={fieldClass} value={form.morbidity_week} onChange={update('morbidity_week')} />
-                </Field>
+                <span className="text-[11px] text-slate-400"><span className="text-rose-600">*</span> required</span>
             </div>
 
-            <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between bg-slate-50">
-                <div className="text-xs">
+            <div className="divide-y divide-slate-100">
+                <FormSection title="Case" description="Disease, classification and outcome">
+                    <Field label="Disease" required>
+                        <select className={fieldClass} value={form.disease_code} onChange={update('disease_code')}>
+                            {diseases.map((d) => (
+                                <option key={d.disease_code} value={d.disease_code}>{d.disease_name}</option>
+                            ))}
+                        </select>
+                    </Field>
+                    <Field label="Case classification" required>
+                        <select className={fieldClass} value={form.case_classification} onChange={update('case_classification')}>
+                            {CLASSIFICATIONS.map((c) => (
+                                <option key={c} value={c}>{c}</option>
+                            ))}
+                        </select>
+                    </Field>
+                    <Field label="Outcome">
+                        <select className={fieldClass} value={form.outcome} onChange={update('outcome')}>
+                            {OUTCOMES.map((o) => (
+                                <option key={o} value={o}>{o}</option>
+                            ))}
+                        </select>
+                    </Field>
+                </FormSection>
+
+                <FormSection title="Patient" description="No name is stored; age and sex only">
+                    <Field label="Age (years)">
+                        <input type="number" min={0} max={130} className={fieldClass} value={form.age} onChange={update('age')} />
+                    </Field>
+                    <Field label="Sex">
+                        <select className={fieldClass} value={form.sex} onChange={update('sex')}>
+                            <option value="">Select</option>
+                            {SEXES.map((s) => (
+                                <option key={s} value={s}>{s}</option>
+                            ))}
+                        </select>
+                    </Field>
+                    <Field label="Date of onset">
+                        <input type="date" className={fieldClass} value={form.date_onset} onChange={update('date_onset')} />
+                    </Field>
+                    <Field label="Date admitted">
+                        <input type="date" className={fieldClass} value={form.date_admitted} onChange={update('date_admitted')} />
+                    </Field>
+                </FormSection>
+
+                <FormSection title="Location" description="Used for the barangay counts and for hotspot detection">
+                    <Field label="Barangay" required>
+                        <select className={fieldClass} value={form.barangay_name} onChange={updateBarangay}>
+                            {barangays.map((b) => (
+                                <option key={b.barangay_id} value={b.barangay_name}>{b.barangay_name}</option>
+                            ))}
+                        </select>
+                    </Field>
+                    <div className="sm:col-span-2 lg:col-span-3">
+                        <LocateAddress
+                            api={api}
+                            streetPurok={form.street_purok}
+                            onStreetChange={updateStreet}
+                            barangay={form.barangay_name}
+                            barangayCentroid={selectedBarangay}
+                            geocode={{
+                                lat: form.case_lat,
+                                lng: form.case_lng,
+                                geocode_source: form.geocode_source,
+                                formatted: form.geocode_formatted,
+                                geocode_query: form.geocode_query,
+                            }}
+                            onGeocode={setGeocode}
+                        />
+                    </div>
+                </FormSection>
+
+                <FormSection title="Reporting period" description="The PIDSR morbidity week the case is counted in">
+                    <Field label="Morbidity year" required>
+                        <input type="number" min={2010} max={2100} className={fieldClass} value={form.morbidity_year} onChange={update('morbidity_year')} />
+                    </Field>
+                    <Field label="Morbidity week" required>
+                        <input type="number" min={1} max={53} className={fieldClass} value={form.morbidity_week} onChange={update('morbidity_week')} />
+                    </Field>
+                </FormSection>
+            </div>
+
+            <div className="px-5 py-3.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-slate-50 rounded-b-xl">
+                <div className="text-sm min-w-0">
                     {result && (
-                        <span className="text-emerald-700">
-                            Saved as case #{result.case_id} ✓
+                        <span className="inline-flex items-center gap-1.5 text-emerald-700 font-medium">
+                            <svg viewBox="0 0 20 20" className="h-4 w-4" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm3.7-9.3a1 1 0 0 0-1.4-1.4L9 10.6 7.7 9.3a1 1 0 0 0-1.4 1.4l2 2a1 1 0 0 0 1.4 0l4-4z" clipRule="evenodd" /></svg>
+                            Saved as case #{result.case_id}
                         </span>
                     )}
                     {error && (
-                        <pre className="text-rose-700 whitespace-pre-wrap">{error}</pre>
+                        <pre className="text-rose-700 whitespace-pre-wrap text-xs">{error}</pre>
                     )}
                 </div>
-                <button
-                    type="submit"
-                    disabled={submitting}
-                    className="px-4 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:bg-slate-400"
-                >
+                <button type="submit" disabled={submitting} className={btn.primary}>
                     {submitting ? 'Saving…' : 'Save case'}
                 </button>
             </div>
         </form>
+    );
+}
+
+function FormSection({ title, description, children }) {
+    return (
+        <fieldset className="px-5 py-5 grid grid-cols-1 lg:grid-cols-4 gap-x-6 gap-y-4">
+            <legend className="sr-only">{title}</legend>
+            <div className="lg:col-span-1">
+                <div className="text-sm font-semibold text-slate-800">{title}</div>
+                <div className="text-xs text-slate-500 mt-0.5">{description}</div>
+            </div>
+            <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">{children}</div>
+        </fieldset>
     );
 }
 
@@ -304,9 +327,9 @@ function BulkCsvUploader({ api }) {
     }
 
     return (
-        <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-            <div className="px-5 py-3 border-b border-slate-100">
-                <h2 className="text-sm font-semibold text-slate-800">CSV bulk upload</h2>
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
+            <div className="px-5 py-3.5 border-b border-slate-100">
+                <h2 className="text-sm font-semibold text-slate-900">CSV bulk upload</h2>
                 <p className="text-xs text-slate-500 mt-0.5">
                     PIDSR-compatible template. Required columns: <code>disease_code, case_classification,
                     date_onset, barangay_name, age, sex, outcome, morbidity_week, morbidity_year</code>.
@@ -367,12 +390,12 @@ function BulkCsvUploader({ api }) {
     );
 }
 
-const fieldClass = 'w-full border border-slate-300 rounded px-2 py-1.5 text-sm text-slate-800 bg-white';
+const fieldClass = 'w-full h-9 px-2.5 text-sm';
 
 function Field({ label, required, children }) {
     return (
-        <label className="flex flex-col text-xs text-slate-600">
-            <span className="mb-1">
+        <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
+            <span>
                 {label}{required && <span className="text-rose-600 ml-0.5">*</span>}
             </span>
             {children}

@@ -1,3 +1,139 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ==========================================================================
+   H-MAP design layer
+   Forms and tables get one consistent look here, so every page and form
+   matches without repeating classes. :where() keeps these at zero
+   specificity, so any utility class written on an element still wins.
+   ========================================================================== */
+@layer base {
+    html { -webkit-font-smoothing: antialiased; }
+    body { @apply bg-slate-50 text-slate-800; }
+
+    /* ---- Form fields ---- */
+    :where(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]):not([type=color]), select, textarea) {
+        @apply rounded-md border border-slate-300 bg-white text-slate-800 shadow-sm;
+        transition: border-color .15s, box-shadow .15s;
+    }
+    :where(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]), select, textarea):focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgb(59 130 246 / .18);
+    }
+    :where(input, select, textarea):disabled { @apply cursor-not-allowed bg-slate-100 text-slate-500; }
+    :where(input, textarea)::placeholder { @apply text-slate-400; }
+    :where(input[type=checkbox], input[type=radio], input[type=range]) { accent-color: #2563eb; }
+    :where(input[type=checkbox], input[type=radio]) { width: 1rem; height: 1rem; cursor: pointer; }
+    :where(input[type=file])::file-selector-button {
+        @apply mr-3 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700;
+        cursor: pointer;
+    }
+    :where(label) { @apply text-slate-600; }
+    :where(button) { transition: background-color .15s, color .15s, border-color .15s, box-shadow .15s; }
+    :where(button):disabled { cursor: not-allowed; }
+    :where(button, a):focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; border-radius: .375rem; }
+
+    /* ---- Tables ---- */
+    :where(table) { border-collapse: collapse; width: 100%; }
+    :where(thead th) {
+        @apply bg-slate-50 px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 whitespace-nowrap;
+        border-bottom: 1px solid theme('colors.slate.200');
+    }
+    :where(tbody td) { @apply px-3 py-2 align-middle; border-bottom: 1px solid theme('colors.slate.100'); }
+    :where(tbody tr:last-child td) { border-bottom: 0; }
+    :where(tbody tr) { transition: background-color .12s; }
+    :where(tbody tr:hover) { background-color: rgb(248 250 252); }
+    :where(tfoot td) { @apply px-3 py-2 font-semibold; border-top: 1px solid theme('colors.slate.200'); }
+}
+
+/* Thin, quiet scrollbars */
+* { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+
+/* ==========================================================================
+   Dark mode (html.dark). The app's light palette is mapped onto dark
+   surfaces here, so every page follows without per-component dark: classes.
+   ========================================================================== */
+html.dark { color-scheme: dark; }
+.dark * { scrollbar-color: #334155 transparent; }
+.dark body, .dark .app-shell { background-color: #0b1120; color: #e2e8f0; }
+
+/* Surfaces */
+.dark .bg-white { background-color: #111a2e; }
+.dark .bg-white\/95, .dark .bg-white\/90 { background-color: rgb(17 26 46 / .95); }
+.dark .bg-slate-50 { background-color: #16213a; }
+.dark .bg-slate-50\/60 { background-color: rgb(22 33 58 / .6); }
+.dark .bg-slate-100 { background-color: #1c2942; }
+.dark .bg-slate-200 { background-color: #273552; }
+.dark .bg-slate-300 { background-color: #34445f; }
+.dark .bg-slate-800 { background-color: #e2e8f0; color: #0f172a; }
+.dark .hover\:bg-slate-50:hover { background-color: #1a2742; }
+.dark .hover\:bg-slate-100:hover { background-color: #22304d; }
+.dark .hover\:bg-slate-900:hover { background-color: #f1f5f9; color: #0f172a; }
+
+/* Text */
+.dark .text-slate-900 { color: #f8fafc; }
+.dark .text-slate-800 { color: #e2e8f0; }
+.dark .text-slate-700 { color: #cbd5e1; }
+.dark .text-slate-600 { color: #a8b4c7; }
+.dark .text-slate-500 { color: #8b98ad; }
+.dark .text-slate-400 { color: #66748b; }
+.dark .hover\:text-slate-900:hover, .dark .hover\:text-slate-800:hover, .dark .hover\:text-slate-700:hover { color: #f8fafc; }
+
+/* Borders */
+.dark .border-slate-100, .dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #1c2942; }
+.dark .border-slate-200 { border-color: #24324d; }
+.dark .border-slate-300, .dark .hover\:border-slate-300:hover { border-color: #33425e; }
+.dark .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / .35); }
+
+/* Tinted status colours: translucent fills, light text */
+.dark .bg-blue-50, .dark .bg-blue-50\/40 { background-color: rgb(59 130 246 / .14); }
+.dark .bg-blue-100, .dark .hover\:bg-blue-50:hover, .dark .hover\:bg-blue-100:hover { background-color: rgb(59 130 246 / .22); }
+.dark .bg-red-50, .dark .bg-rose-50 { background-color: rgb(239 68 68 / .13); }
+.dark .bg-red-100, .dark .bg-rose-100 { background-color: rgb(239 68 68 / .22); }
+.dark .bg-amber-50 { background-color: rgb(245 158 11 / .13); }
+.dark .bg-amber-100 { background-color: rgb(245 158 11 / .22); }
+.dark .bg-emerald-50 { background-color: rgb(16 185 129 / .13); }
+.dark .bg-emerald-100 { background-color: rgb(16 185 129 / .22); }
+.dark .bg-teal-50 { background-color: rgb(20 184 166 / .13); }
+.dark .text-blue-600, .dark .text-blue-700 { color: #7cb1ff; }
+.dark .text-blue-800, .dark .hover\:text-blue-800:hover { color: #a5c8ff; }
+.dark .text-red-600, .dark .text-red-700, .dark .text-rose-600, .dark .text-rose-700 { color: #fb8f8f; }
+.dark .text-red-800, .dark .text-rose-800 { color: #fecaca; }
+.dark .text-amber-700 { color: #fbbf4d; }
+.dark .text-amber-800 { color: #fcd38a; }
+.dark .text-emerald-600, .dark .text-emerald-700 { color: #4fd1a1; }
+.dark .text-emerald-800 { color: #a7f3d0; }
+.dark .text-teal-700 { color: #5eead4; }
+.dark .border-blue-200, .dark .border-blue-300 { border-color: rgb(96 165 250 / .35); }
+.dark .border-red-200, .dark .border-rose-200 { border-color: rgb(248 113 113 / .35); }
+.dark .border-amber-200 { border-color: rgb(251 191 36 / .35); }
+.dark .border-emerald-200 { border-color: rgb(52 211 153 / .35); }
+.dark .ring-red-600\/20 { --tw-ring-color: rgb(248 113 113 / .3); }
+.dark .ring-emerald-600\/20 { --tw-ring-color: rgb(52 211 153 / .3); }
+
+/* Forms and tables */
+.dark :where(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]), select, textarea) {
+    background-color: #0e1628; color: #e2e8f0; border-color: #33425e;
+}
+.dark :where(input, select, textarea):disabled { background-color: #16213a; color: #66748b; }
+.dark :where(input, textarea)::placeholder { color: #56647a; }
+.dark :where(input[type=file])::file-selector-button { background-color: #16213a; color: #cbd5e1; border-color: #33425e; }
+.dark :where(label) { color: #a8b4c7; }
+.dark :where(thead th) { background-color: #16213a; color: #8b98ad; border-bottom-color: #24324d; }
+.dark :where(tbody td) { border-bottom-color: #1c2942; }
+.dark :where(tbody tr:hover) { background-color: rgb(148 163 184 / .06); }
+.dark :where(tfoot td) { border-top-color: #24324d; }
+.dark pre, .dark code { color: #e2e8f0; }
+
+/* Maps: darken the OpenStreetMap tiles; polygons and markers keep their colours */
+.dark .leaflet-container { background: #0b1120; }
+.dark .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.55); }
+.dark .leaflet-bar a, .dark .leaflet-bar a:hover { background-color: #16213a; color: #e2e8f0; border-color: #24324d; }
+.dark .leaflet-control-attribution { background: rgb(17 26 46 / .85) !important; color: #8b98ad; }
+.dark .leaflet-control-attribution a { color: #7cb1ff; }
+.dark .leaflet-popup-content-wrapper, .dark .leaflet-popup-tip, .dark .leaflet-tooltip {
+    background: #16213a; color: #e2e8f0; border-color: #24324d;
+}
+.dark .leaflet-tooltip-top:before { border-top-color: #16213a; }

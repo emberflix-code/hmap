@@ -9,6 +9,7 @@ import WeeklyReport from './WeeklyReport.jsx';
 import Login from './Login.jsx';
 import MfaPrompt from './MfaPrompt.jsx';
 import AlertsBell from './AlertsBell.jsx';
+import { useThemeChoice } from './theme.js';
 
 // Derive the API base from the page's mount path so we work whether the
 // app is served at "/" (local dev) or under a subpath like "/hmap" (LGU
@@ -124,7 +125,7 @@ export default function App() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
+        <div className="app-shell min-h-screen flex flex-col bg-slate-50 text-slate-800">
             <header className="sticky top-0 z-[1100] bg-white/95 backdrop-blur border-b border-slate-200 px-4 md:px-6 md:h-16 flex flex-wrap md:flex-nowrap items-center justify-between gap-x-3">
                     <div className="h-16 flex items-center gap-3 shrink-0">
                         <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-blue-600 to-teal-500 flex items-center justify-center shadow-sm" aria-hidden="true">
@@ -155,6 +156,7 @@ export default function App() {
                         </NavLink>
                     </nav>
                 <div className="h-16 flex items-center gap-2 md:gap-3 text-sm shrink-0">
+                    <ThemeSwitch />
                     <AlertsBell api={api} />
                     <div className="hidden md:block h-8 w-px bg-slate-200" />
                     <div className="flex items-center gap-2.5">
@@ -230,6 +232,36 @@ function RoleBadge({ role }) {
             ? 'text-teal-700'
             : 'text-slate-500';
     return <span className={'text-[11px] font-medium ' + color}>{role}</span>;
+}
+
+const THEME_ICONS = {
+    light: <><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></>,
+    system: <><rect x="3" y="4" width="18" height="12" rx="2" /><path d="M8 20h8M12 16v4" /></>,
+    dark: <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />,
+};
+
+function ThemeSwitch() {
+    const [choice, setChoice] = useThemeChoice();
+    return (
+        <div className="hidden sm:inline-flex p-0.5 rounded-lg bg-slate-100" role="group" aria-label="Theme">
+            {[['light', 'Light'], ['system', 'Match system'], ['dark', 'Dark']].map(([v, label]) => (
+                <button
+                    key={v}
+                    type="button"
+                    title={label}
+                    aria-label={label}
+                    aria-pressed={choice === v}
+                    onClick={() => setChoice(v)}
+                    className={'h-7 w-7 inline-flex items-center justify-center rounded-md ' +
+                        (choice === v ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800')}
+                >
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        {THEME_ICONS[v]}
+                    </svg>
+                </button>
+            ))}
+        </div>
+    );
 }
 
 function initials(name) {

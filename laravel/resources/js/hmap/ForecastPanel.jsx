@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { chartOptions, Legend } from './chartTheme.jsx';
+import { useIsDark } from './theme.js';
 
 ChartJS.register(
     CategoryScale,
@@ -27,7 +28,7 @@ ChartJS.register(
 const SHORT_DATE = { month: 'short', day: 'numeric' };
 const FORECAST = '#0d9488';
 const BAND = 'rgba(13, 148, 136, 0.14)';
-const options = chartOptions('Morbidity week', 'Predicted cases', (items) => items[0].label.join(' · '));
+const forecastOptions = (dark) => chartOptions('Morbidity week', 'Predicted cases', (items) => items[0].label.join(' · '), dark);
 
 // Same rule as the risk tiers' "rising forecast" (ml/main.py is_rising),
 // mirrored for falling.
@@ -81,6 +82,8 @@ function isoWeek(isoMonday) {
 }
 
 export default function ForecastPanel({ api, disease, year, week }) {
+    const dark = useIsDark();
+    const options = useMemo(() => forecastOptions(dark), [dark]);
     const [forecast, setForecast] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -119,7 +122,7 @@ export default function ForecastPanel({ api, disease, year, week }) {
                     borderColor: FORECAST,
                     backgroundColor: FORECAST,
                     pointBackgroundColor: FORECAST,
-                    pointBorderColor: '#ffffff',
+                    pointBorderColor: dark ? '#111a2e' : '#ffffff',
                     pointBorderWidth: 2,
                     borderWidth: 2.5,
                     fill: false,
@@ -138,7 +141,7 @@ export default function ForecastPanel({ api, disease, year, week }) {
                 },
             ],
         };
-    }, [forecast]);
+    }, [forecast, dark]);
 
     if (loading) {
         return <div className="p-4 text-sm text-slate-500">Generating forecast…</div>;

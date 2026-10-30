@@ -16,6 +16,11 @@ export default function RecommendationsPanel({ api, disease, year, week, isAdmin
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [showRules, setShowRules] = useState(false);
+    // The top three barangays start open; the rest are folded to a summary line.
+    const [open, setOpen] = useState({});
+    const isOpen = (b, idx) => open[b.barangay_id] ?? idx < 3;
+    const toggle = (b, idx) => setOpen({ ...open, [b.barangay_id]: !isOpen(b, idx) });
+    const setAll = (v) => setOpen(Object.fromEntries((data?.barangays || []).map((b) => [b.barangay_id, v])));
 
     const load = useCallback(() => {
         setError(null);
@@ -41,9 +46,15 @@ export default function RecommendationsPanel({ api, disease, year, week, isAdmin
     if (!data) return <div className="p-4 text-sm text-slate-500">Loading recommendations…</div>;
 
     return (
-        <div className="p-4 space-y-4">
+        <div className="p-5 space-y-3">
+            {data.barangays.length > 3 && (
+                <div className="flex justify-end gap-1 -mt-1">
+                    <button type="button" className="text-xs font-medium text-blue-700 hover:bg-blue-50 rounded-md px-2 py-1" onClick={() => setAll(true)}>Expand all</button>
+                    <button type="button" className="text-xs font-medium text-blue-700 hover:bg-blue-50 rounded-md px-2 py-1" onClick={() => setAll(false)}>Collapse all</button>
+                </div>
+            )}
             {data.draft_rules > 0 && (
-                <div className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded px-3 py-2">
+                <div className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                     {data.draft_rules} of the rules used here are drafts not yet validated by CESU.
                     Treat these items as suggestions.
                 </div>
@@ -58,19 +69,34 @@ export default function RecommendationsPanel({ api, disease, year, week, isAdmin
                     No barangay is at Moderate or High risk for this disease in week {week} of {year}.
                 </div>
             )}
-            {data.barangays.map((b) => (
-                <div key={b.barangay_id} className="border border-slate-200 rounded">
-                    <div className="px-3 py-2 bg-slate-50 flex items-center gap-3 text-sm">
+            {data.barangays.map((b, idx) => {
+                const expanded = isOpen(b, idx);
+                const acted = b.items.filter((i) => i.action_status !== 'Pending').length;
+                return (
+                <div key={b.barangay_id} className="border border-slate-200 rounded-lg overflow-hidden">
+                    <button
+                        type="button"
+                        onClick={() => toggle(b, idx)}
+                        aria-expanded={expanded}
+                        className="w-full px-4 py-2.5 bg-slate-50 hover:bg-slate-100 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-left"
+                    >
+                        <svg viewBox="0 0 20 20" className={'h-4 w-4 text-slate-400 transition-transform ' + (expanded ? 'rotate-90' : '')} fill="currentColor" aria-hidden="true">
+                            <path fillRule="evenodd" d="M7.2 14.8a1 1 0 0 1 0-1.4L10.6 10 7.2 6.6a1 1 0 1 1 1.4-1.4l4.1 4.1a1 1 0 0 1 0 1.4l-4.1 4.1a1 1 0 0 1-1.4 0z" clipRule="evenodd" />
+                        </svg>
                         <span className="font-semibold text-slate-800">
                             {b.rank ? `${b.rank}. ` : ''}{b.barangay_name}
                         </span>
-                        <span className={'px-2 py-0.5 rounded text-xs font-medium ' + TIER_STYLE[b.tier]}>{b.tier}</span>
+                        <span className={'px-2 py-0.5 rounded-full text-xs font-medium ' + TIER_STYLE[b.tier]}>{b.tier}</span>
                         <span className="text-xs text-slate-500">
                             {b.rank
                                 ? `${b.active_cases} active case${b.active_cases === 1 ? '' : 's'} in 4 weeks · ${b.reasons.join(', ')}`
                                 : 'no longer flagged; recorded actions kept'}
                         </span>
-                    </div>
+                        <span className="ml-auto text-xs text-slate-500 tabular-nums">
+                            {acted} of {b.items.length} actions recorded
+                        </span>
+                    </button>
+                    {expanded && (
                     <table className="w-full text-xs">
                         <tbody>
                             {b.items.map((i) => (
@@ -105,8 +131,10 @@ export default function RecommendationsPanel({ api, disease, year, week, isAdmin
                             ))}
                         </tbody>
                     </table>
+                    )}
                 </div>
-            ))}
+                );
+            })}
 
             <div className="pt-2 border-t border-slate-100">
                 <button type="button" className="text-xs text-blue-700 hover:underline" onClick={() => setShowRules(!showRules)}>
@@ -121,7 +149,7 @@ export default function RecommendationsPanel({ api, disease, year, week, isAdmin
 function ActionButton({ onClick, children }) {
     return (
         <button type="button" onClick={onClick}
-                className="ml-1 px-2 py-0.5 rounded border border-slate-300 text-slate-700 hover:bg-slate-100">
+                className="ml-1 h-7 px-2.5 rounded-md border border-slate-300 bg-white text-slate-700 font-medium hover:bg-slate-50">
             {children}
         </button>
     );

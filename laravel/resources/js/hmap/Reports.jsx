@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { PageHeader, btn } from './ui.jsx';
 
 const ROLE_LEVELS = { Encoder: 1, Analyst: 2, Administrator: 3 };
 
@@ -14,7 +15,15 @@ export default function Reports({ api, whoami, diseases }) {
     const role = whoami.role;
 
     return (
-        <div className="p-6 max-w-4xl mx-auto space-y-4">
+        <div className="max-w-6xl w-full mx-auto">
+            <PageHeader
+                title="Reports and administration"
+                description="Download surveillance data for your role. Administrators also manage staff access, notifications and backups here."
+            />
+            <div className="px-4 md:px-6 py-5 space-y-8">
+            <section>
+            <SectionTitle>Data exports</SectionTitle>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <ReportCard
                 title="My entry log"
                 description="Every case you personally encoded. Useful for verifying a week's work."
@@ -36,22 +45,22 @@ export default function Reports({ api, whoami, diseases }) {
                 }
                 filenameHint={`disease-summary-${summaryDisease || 'all'}-${summaryYear}.csv`}
                 controls={
-                    <div className="flex gap-3 items-end">
+                    <div className="flex gap-3 items-end min-w-0">
                         <label className="flex flex-col text-xs text-slate-600">
                             <span className="mb-1">Year</span>
                             <input
                                 type="number"
                                 min={2010}
                                 max={2100}
-                                className="border border-slate-300 rounded px-2 py-1.5 text-sm w-24"
+                                className="h-9 px-2.5 text-sm w-24"
                                 value={summaryYear}
                                 onChange={(e) => setSummaryYear(parseInt(e.target.value || '0', 10))}
                             />
                         </label>
-                        <label className="flex flex-col text-xs text-slate-600">
+                        <label className="flex flex-col text-xs text-slate-600 flex-1 min-w-0">
                             <span className="mb-1">Disease (optional)</span>
                             <select
-                                className="border border-slate-300 rounded px-2 py-1.5 text-sm bg-white"
+                                className="h-9 px-2.5 text-sm w-full min-w-0"
                                 value={summaryDisease}
                                 onChange={(e) => setSummaryDisease(e.target.value)}
                             >
@@ -76,19 +85,31 @@ export default function Reports({ api, whoami, diseases }) {
                 filenameHint={`hmap-registry-${today.toISOString().slice(0, 10)}.csv`}
                 note="Large export (~35,000 rows); the file streams in chunks of 500."
             />
+            </div>
+            </section>
 
-            {roleMeets(role, 'Administrator') && <StaffPanel api={api} me={whoami.employee_id} />}
-            {roleMeets(role, 'Administrator') && <ChannelSettingsPanel api={api} />}
-            {roleMeets(role, 'Administrator') && <NotificationRecipients api={api} />}
-            {roleMeets(role, 'Administrator') && <BackupStatus api={api} />}
+            {roleMeets(role, 'Administrator') && (
+                <section className="space-y-4">
+                    <SectionTitle>Administration</SectionTitle>
+                    <StaffPanel api={api} me={whoami.employee_id} />
+                    <ChannelSettingsPanel api={api} />
+                    <NotificationRecipients api={api} />
+                    <BackupStatus api={api} />
+                </section>
+            )}
 
-            <div className="text-xs text-slate-500 mt-4 px-1">
+            <div className="text-xs text-slate-500 px-1">
                 Every export is recorded in the system audit log with your employee ID, the export
                 type, row count, IP address, and timestamp — consistent with Republic Act No.
                 10173, the Data Privacy Act of 2012.
             </div>
+            </div>
         </div>
     );
+}
+
+function SectionTitle({ children }) {
+    return <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">{children}</h3>;
 }
 
 // The CESU staff authorization list (Module 9). An HRMO account alone grants
@@ -131,9 +152,9 @@ function StaffPanel({ api, me }) {
             .catch((err) => setMessage(errorText(err)));
     };
 
-    const input = 'border border-slate-300 rounded px-2 py-1 text-xs';
+    const input = 'h-8 px-2 text-xs';
     return (
-        <section className="bg-white rounded-lg border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
+        <section className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
             <div className="flex items-start justify-between gap-4">
                 <div>
                     <h2 className="text-sm font-semibold text-slate-800">Authorized CESU staff</h2>
@@ -147,7 +168,7 @@ function StaffPanel({ api, me }) {
                     Administrator+
                 </span>
             </div>
-            {message && <div className="text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded px-3 py-2">{message}</div>}
+            {message && <div className="text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">{message}</div>}
             {rows && (
                 <table className="text-xs w-full">
                     <thead className="text-slate-500 text-left">
@@ -173,11 +194,11 @@ function StaffPanel({ api, me }) {
                                     <td className="text-right whitespace-nowrap">
                                         {r.mfa_enrolled && (
                                             <button type="button" onClick={() => resetMfa(r)}
-                                                    className="px-2 py-0.5 rounded border border-slate-300 hover:bg-slate-100 mr-1">Reset authenticator</button>
+                                                    className={btn.small + " mr-1"}>Reset authenticator</button>
                                         )}
                                         {!self && (
                                             <button type="button" onClick={() => setActive(r, !r.is_active)}
-                                                    className="px-2 py-0.5 rounded border border-slate-300 hover:bg-slate-100">
+                                                    className={btn.small}>
                                                 {r.is_active ? 'Remove access' : 'Restore access'}
                                             </button>
                                         )}
@@ -196,7 +217,7 @@ function StaffPanel({ api, me }) {
                 <select className={input} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
                     {['Encoder', 'Analyst', 'Administrator'].map((o) => <option key={o}>{o}</option>)}
                 </select>
-                <button type="submit" className="px-3 py-1 rounded bg-blue-600 text-white text-xs hover:bg-blue-700">Add staff member</button>
+                <button type="submit" className={btn.primary + " !h-8 text-xs"}>Add staff member</button>
             </form>
             <p className="text-[11px] text-slate-500">
                 The employee ID is the HRMO Portal user ID. After being added, a staff member signs in with their
@@ -236,7 +257,7 @@ function ChannelSettingsPanel({ api }) {
     }, [api]);
 
     return (
-        <section className="bg-white rounded-lg border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
+        <section className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
             <div className="flex items-start justify-between gap-4">
                 <div>
                     <h2 className="text-sm font-semibold text-slate-800">Email and SMS settings</h2>
@@ -289,7 +310,7 @@ function ChannelForm({ api, channel, title, initial, testLabel }) {
             .then((r) => setNote(`Test ${r.data.status}${r.data.error ? ': ' + r.data.error : ''}`))
             .catch((err) => setNote(errorText(err)));
 
-    const input = 'w-full border border-slate-300 rounded px-2 py-1 text-xs';
+    const input = 'w-full h-8 px-2 text-xs';
     return (
         <form onSubmit={save} className="border border-slate-200 rounded p-3 space-y-2">
             <div className="flex items-center justify-between">
@@ -316,11 +337,11 @@ function ChannelForm({ api, channel, title, initial, testLabel }) {
                 </label>
             ))}
             <div className="flex gap-2 items-center pt-1">
-                <button type="submit" className="px-3 py-1 rounded bg-blue-600 text-white text-xs hover:bg-blue-700">Save</button>
-                <input className="border border-slate-300 rounded px-2 py-1 text-xs flex-1" placeholder={testLabel}
+                <button type="submit" className={btn.primary + " !h-8 text-xs"}>Save</button>
+                <input className="h-8 px-2 text-xs flex-1" placeholder={testLabel}
                        value={to} onChange={(e) => setTo(e.target.value)} />
                 <button type="button" onClick={test} disabled={!to}
-                        className="px-3 py-1 rounded border border-slate-300 text-xs hover:bg-slate-100 disabled:opacity-50">Send test</button>
+                        className={btn.small + " !h-8"}>Send test</button>
             </div>
             {note && <div className="text-[11px] text-slate-700">{note}</div>}
             {saved.updated_at && <div className="text-[10px] text-slate-400">Last saved {saved.updated_at}</div>}
@@ -360,9 +381,9 @@ function NotificationRecipients({ api }) {
                 .map(([ch, v]) => `${ch} ${v.status}${v.error ? ' (' + v.error + ')' : ''}`).join(', ')))
             .catch((err) => setMessage(errorText(err)));
 
-    const input = 'border border-slate-300 rounded px-2 py-1 text-xs';
+    const input = 'h-8 px-2 text-xs';
     return (
-        <section className="bg-white rounded-lg border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
+        <section className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
             <div className="flex items-start justify-between gap-4">
                 <div>
                     <h2 className="text-sm font-semibold text-slate-800">Outbreak alert recipients</h2>
@@ -376,7 +397,7 @@ function NotificationRecipients({ api }) {
                     Administrator+
                 </span>
             </div>
-            {message && <div className="text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded px-3 py-2">{message}</div>}
+            {message && <div className="text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">{message}</div>}
             {rows && (
                 <table className="text-xs w-full">
                     <thead className="text-slate-500 text-left">
@@ -393,7 +414,7 @@ function NotificationRecipients({ api }) {
                                 ))}
                                 <td className="text-right">
                                     <button type="button" onClick={() => test(r)}
-                                            className="px-2 py-0.5 rounded border border-slate-300 hover:bg-slate-100">Send test</button>
+                                            className={btn.small}>Send test</button>
                                 </td>
                             </tr>
                         ))}
@@ -413,7 +434,7 @@ function NotificationRecipients({ api }) {
                        onChange={(e) => setForm({ ...form, via_email: e.target.checked })} /> email</label>
                 <label className="text-xs"><input type="checkbox" checked={form.via_sms}
                        onChange={(e) => setForm({ ...form, via_sms: e.target.checked })} /> SMS</label>
-                <button type="submit" className="px-3 py-1 rounded bg-blue-600 text-white text-xs hover:bg-blue-700">Add recipient</button>
+                <button type="submit" className={btn.primary + " !h-8 text-xs"}>Add recipient</button>
             </form>
         </section>
     );
@@ -436,7 +457,7 @@ function BackupStatus({ api }) {
     const verifyFailed = data && data.last_verify_status === 'failed';
 
     return (
-        <section className="bg-white rounded-lg border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
+        <section className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
             <div className="flex items-start justify-between gap-4">
                 <div>
                     <h2 className="text-sm font-semibold text-slate-800">Database backups</h2>
@@ -498,7 +519,7 @@ function ReportCard({ title, description, role, requires, href, filenameHint, co
     return (
         <section
             className={
-                'bg-white rounded-lg border shadow-sm p-5 flex flex-col gap-3 ' +
+                'bg-white rounded-xl border shadow-sm p-5 flex flex-col gap-3 h-full ' +
                 (allowed ? 'border-slate-200' : 'border-slate-200 opacity-60')
             }
         >
@@ -519,16 +540,13 @@ function ReportCard({ title, description, role, requires, href, filenameHint, co
                 </span>
             </div>
             {controls && allowed && <div>{controls}</div>}
-            <div className="flex items-center gap-3 mt-1">
+            <div className="flex flex-wrap items-center gap-3 mt-auto pt-1">
                 <a
                     href={allowed ? href : undefined}
                     download={allowed ? filenameHint : undefined}
                     onClick={(e) => !allowed && e.preventDefault()}
                     className={
-                        'px-4 py-2 rounded text-sm font-medium ' +
-                        (allowed
-                            ? 'bg-blue-600 text-white hover:bg-blue-700'
-                            : 'bg-slate-200 text-slate-500 cursor-not-allowed')
+                        allowed ? btn.primary : btn.secondary + ' cursor-not-allowed opacity-60'
                     }
                 >
                     Download CSV

@@ -151,13 +151,13 @@ export default function MfaPrompt({ api, enrolled, onVerified, onCancel }) {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="app-shell min-h-screen bg-slate-50 flex items-center justify-center p-4">
             <div className="w-full max-w-sm">
                 <div className="text-center mb-6">
                     <h1 className="text-3xl font-bold text-slate-800">H-MAP</h1>
                     <p className="text-sm text-slate-500 mt-1">Two-step sign-in</p>
                 </div>
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">{body}</div>
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">{body}</div>
             </div>
         </div>
     );
