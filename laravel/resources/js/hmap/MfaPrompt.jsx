@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import citySeal from '../../images/paranaque-seal.png';
 import QRCode from 'qrcode';
 
 const inputClass =
@@ -154,7 +155,8 @@ export default function MfaPrompt({ api, enrolled, onVerified, onCancel }) {
         <div className="app-shell min-h-screen bg-slate-50 flex items-center justify-center p-4">
             <div className="w-full max-w-sm">
                 <div className="text-center mb-6">
-                    <h1 className="text-3xl font-bold text-slate-800">H-MAP</h1>
+                    <img src={citySeal} alt="City of Parañaque seal" className="h-16 w-16 mx-auto mb-3" />
+                    <h1 className="text-2xl font-semibold tracking-tight text-slate-900">H-MAP</h1>
                     <p className="text-sm text-slate-500 mt-1">Two-step sign-in</p>
                 </div>
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">{body}</div>

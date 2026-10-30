@@ -2,7 +2,7 @@ import React from 'react';
 
 /** Shared look for the dashboard charts: quiet grid, dark tooltip, no built-in legend. */
 export function chartOptions(xTitle, yTitle, tooltipTitle, dark = false) {
-    const tick = { color: dark ? '#8b98ad' : '#64748b', font: { size: 11, family: 'Inter, system-ui, sans-serif' } };
+    const tick = { color: dark ? '#8a9a93' : '#64748b', font: { size: 11, family: 'Inter, system-ui, sans-serif' } };
     return {
         responsive: true,
         maintainAspectRatio: false,
@@ -13,14 +13,14 @@ export function chartOptions(xTitle, yTitle, tooltipTitle, dark = false) {
             x: {
                 offset: true,
                 grid: { display: false },
-                border: { color: dark ? '#33425e' : '#cbd5e1' },
+                border: { color: dark ? 'rgba(16, 185, 129, 0.28)' : '#cbd5e1' },
                 ticks: { ...tick, autoSkip: true, maxRotation: 0, autoSkipPadding: 12 },
                 title: { display: true, text: xTitle, ...tick, font: { ...tick.font, weight: '500' } },
             },
             y: {
                 beginAtZero: true,
                 grace: '8%',
-                grid: { color: dark ? '#1c2942' : '#eef2f6' },
+                grid: { color: dark ? 'rgba(16, 185, 129, 0.12)' : '#eef2f6' },
                 border: { display: false },
                 ticks: { ...tick, precision: 0, padding: 6 },
                 title: { display: true, text: yTitle, ...tick, font: { ...tick.font, weight: '500' } },
@@ -29,8 +29,8 @@ export function chartOptions(xTitle, yTitle, tooltipTitle, dark = false) {
         plugins: {
             legend: { display: false },
             tooltip: {
-                backgroundColor: dark ? '#020617' : '#0f172a',
-                borderColor: dark ? '#33425e' : '#0f172a',
+                backgroundColor: dark ? '#06120e' : '#0f172a',
+                borderColor: dark ? 'rgba(16, 185, 129, 0.28)' : '#0f172a',
                 borderWidth: dark ? 1 : 0,
                 titleColor: '#f8fafc',
                 bodyColor: '#e2e8f0',

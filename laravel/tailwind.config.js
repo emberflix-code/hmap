@@ -1,4 +1,5 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
+import colors from 'tailwindcss/colors';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -14,6 +15,9 @@ export default {
     ],
     theme: {
         extend: {
+            // Brand colour: the emerald of the Parañaque HRIS Portal homepage.
+            // Every "blue" accent (buttons, active tabs, links, focus) uses it.
+            colors: { blue: colors.emerald },
             borderRadius: { DEFAULT: '0.375rem' },
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],

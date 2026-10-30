@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { MapContainer, TileLayer, CircleMarker, GeoJSON, Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, GeoJSON, Tooltip } from 'react-leaflet';
+import L from 'leaflet';
 
 const PARANAQUE_CENTER = [14.4793, 121.0198];
 const PARANAQUE_ZOOM = 13;
@@ -163,18 +164,13 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
                     />
                 )}
 
-                {/* Case-count circles on top, sized by sqrt(cases) */}
+                {/* Case-count badges on top: the week's count, coloured by the
+                    barangay's risk tier, sized by sqrt(cases) */}
                 {points.map((p) => p.cases > 0 && (
-                    <CircleMarker
+                    <Marker
                         key={p.id}
-                        center={[p.lat, p.lng]}
-                        radius={radiusFor(p.cases)}
-                        pathOptions={{
-                            color: '#1e293b',
-                            fillColor: '#1e293b',
-                            fillOpacity: 0.55,
-                            weight: 1,
-                        }}
+                        position={[p.lat, p.lng]}
+                        icon={badgeIcon(p.cases, RISK_COLORS[p.risk?.tier] || '#475569')}
                     >
                         <Tooltip direction="top" offset={[0, -4]} opacity={0.95}>
                             <div className="text-xs">
@@ -190,7 +186,7 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
                                 )}
                             </div>
                         </Tooltip>
-                    </CircleMarker>
+                    </Marker>
                 ))}
             </MapContainer>
             <Legend hasPolygons={!!geoJson} />
@@ -200,6 +196,17 @@ export default function HeatMapPanel({ api, disease, year, week, barangays }) {
 
 function radiusFor(cases) {
     return 6 + Math.sqrt(cases) * 3;
+}
+
+function badgeIcon(cases, color) {
+    const d = Math.round(radiusFor(cases) * 2) + 4;
+    return L.divIcon({
+        className: '',
+        iconSize: [d, d],
+        iconAnchor: [d / 2, d / 2],
+        tooltipAnchor: [0, -d / 2],
+        html: `<div class="case-badge" style="width:${d}px;height:${d}px;background:${color}">${cases}</div>`,
+    });
 }
 
 function spreadFallback(i, n) {
@@ -219,7 +226,7 @@ function Legend({ hasPolygons }) {
                 <>
                     <div className="font-semibold text-slate-700 mt-2 mb-1">Layers</div>
                     <div className="text-slate-500">polygon: barangay risk</div>
-                    <div className="text-slate-500">circle: weekly cases (√ scale)</div>
+                    <div className="text-slate-500">badge: cases this week</div>
                 </>
             ) : (
                 <>

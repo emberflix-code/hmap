@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import citySeal from '../../images/paranaque-seal.png';
 
 /**
  * H-MAP login form. Posts to /api/auth/login which proxies to HRMO's
@@ -35,14 +36,18 @@ export default function Login({ api, onLoggedIn }) {
 
     return (
         <div className="app-shell min-h-screen bg-slate-50 grid lg:grid-cols-2">
-            <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-blue-700 via-blue-600 to-teal-500 text-white">
-                <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-white/15 flex items-center justify-center" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6" /></svg>
+            <div className="hidden lg:flex flex-col justify-between p-12 text-white relative overflow-hidden"
+                 style={{ background: 'linear-gradient(135deg, #064e3b 0%, #047857 55%, #0f766e 100%)' }}>
+                <div className="absolute inset-0 opacity-40 pointer-events-none" aria-hidden="true"
+                     style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px)', backgroundSize: '44px 44px' }} />
+                <div className="relative flex items-center gap-3">
+                    <img src={citySeal} alt="City of Parañaque seal" className="h-14 w-14 drop-shadow" />
+                    <div className="leading-tight">
+                        <div className="text-lg font-semibold tracking-tight">H-MAP</div>
+                        <div className="text-xs text-white/70">City Government of Parañaque · City Health Office</div>
                     </div>
-                    <span className="text-lg font-semibold tracking-tight">H-MAP</span>
                 </div>
-                <div className="max-w-md">
+                <div className="relative max-w-md">
                     <h2 className="text-3xl font-semibold leading-tight">Disease outbreak management for Parañaque City</h2>
                     <p className="mt-4 text-white/80 leading-relaxed">
                         PIDSR thresholds, hotspot detection, trend forecasts and response recommendations for the
@@ -57,11 +62,12 @@ export default function Login({ api, onLoggedIn }) {
                         ))}
                     </ul>
                 </div>
-                <p className="text-xs text-white/60">City Health Office of Parañaque · Access limited to authorized CESU personnel</p>
+                <p className="relative text-xs text-white/60">City Health Office of Parañaque · Access limited to authorized CESU personnel</p>
             </div>
             <div className="flex items-center justify-center p-6">
             <div className="w-full max-w-sm">
                 <div className="mb-8">
+                    <img src={citySeal} alt="" className="h-16 w-16 mb-4 lg:hidden" />
                     <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Sign in to H-MAP</h1>
                     <p className="text-sm text-slate-500 mt-1">
                         Parañaque City Epidemiology &amp; Surveillance Unit

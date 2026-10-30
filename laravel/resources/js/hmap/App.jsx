@@ -10,6 +10,7 @@ import Login from './Login.jsx';
 import MfaPrompt from './MfaPrompt.jsx';
 import AlertsBell from './AlertsBell.jsx';
 import { useThemeChoice } from './theme.js';
+import citySeal from '../../images/paranaque-seal.png';
 
 // Derive the API base from the page's mount path so we work whether the
 // app is served at "/" (local dev) or under a subpath like "/hmap" (LGU
@@ -128,11 +129,7 @@ export default function App() {
         <div className="app-shell min-h-screen flex flex-col bg-slate-50 text-slate-800">
             <header className="sticky top-0 z-[1100] bg-white/95 backdrop-blur border-b border-slate-200 px-4 md:px-6 md:h-16 flex flex-wrap md:flex-nowrap items-center justify-between gap-x-3">
                     <div className="h-16 flex items-center gap-3 shrink-0">
-                        <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-blue-600 to-teal-500 flex items-center justify-center shadow-sm" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" className="h-5 w-5 text-white" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M3 12h4l2-5 4 10 2-5h6" />
-                            </svg>
-                        </div>
+                        <img src={citySeal} alt="City of Parañaque seal" className="h-10 w-10 shrink-0 drop-shadow-sm" />
                         <div className="leading-tight">
                             <h1 className="text-[15px] font-semibold tracking-tight text-slate-900">H-MAP</h1>
                             <p className="hidden xl:block text-[11px] text-slate-500">Parañaque City Epidemiology and Surveillance Unit</p>

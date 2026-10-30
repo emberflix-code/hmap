@@ -122,7 +122,7 @@ export default function ForecastPanel({ api, disease, year, week }) {
                     borderColor: FORECAST,
                     backgroundColor: FORECAST,
                     pointBackgroundColor: FORECAST,
-                    pointBorderColor: dark ? '#111a2e' : '#ffffff',
+                    pointBorderColor: dark ? '#0f2620' : '#ffffff',
                     pointBorderWidth: 2,
                     borderWidth: 2.5,
                     fill: false,

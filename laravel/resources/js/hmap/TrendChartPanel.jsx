@@ -113,14 +113,17 @@ export default function TrendChartPanel({ api, disease, year, view = 'line' }) {
     }, [api, disease, year]);
 
     const chartData = useMemo(() => {
-        // X axis is morbidity weeks 1..53
-        const labels = Array.from({ length: 53 }, (_, i) => i + 1);
+        // X axis: the morbidity weeks this year actually has (52 or 53).
+        // Weeks after the current one are left empty: a count there can only
+        // come from a record dated in the future (see futureCases).
+        const labels = Array.from({ length: weeksInYear(year) }, (_, i) => i + 1);
         const seriesByWeek = Object.fromEntries(series.map((r) => [Number(r.week), Number(r.cases)]));
+        const isFuture = (w) => year > TODAY.year || (year === TODAY.year && w > TODAY.week);
         const meanByWeek = Object.fromEntries(thresholds.map((t) => [Number(t.morbidity_week), Number(t.mean_cases)]));
         const alertByWeek = Object.fromEntries(thresholds.map((t) => [Number(t.morbidity_week), Number(t.alert_threshold)]));
         const thrByWeek = Object.fromEntries(thresholds.map((t) => [Number(t.morbidity_week), Number(t.threshold_value)]));
         const singleCase = thresholds.some((t) => Number(t.single_case_trigger) === 1);
-        const counts = labels.map((w) => seriesByWeek[w] ?? 0);
+        const counts = labels.map((w) => (isFuture(w) ? null : seriesByWeek[w] ?? 0));
 
         // PIDSR levels (DOH, 2014, pp. 57-58): red above the epidemic threshold
         // or any case of a single-case disease, amber above the alert threshold.
@@ -140,7 +143,7 @@ export default function TrendChartPanel({ api, disease, year, view = 'line' }) {
                 label: casesLabel,
                 data: counts,
                 backgroundColor: pointColors.map((c) => (c === C.normal ? 'rgba(37, 99, 235, 0.75)' : c)),
-                borderColor: dark ? '#111a2e' : 'rgba(255, 255, 255, 0.9)',
+                borderColor: dark ? '#0f2620' : 'rgba(255, 255, 255, 0.9)',
                 borderWidth: 1,
                 barPercentage: 1.0,
                 categoryPercentage: 0.95,
@@ -210,7 +213,7 @@ export default function TrendChartPanel({ api, disease, year, view = 'line' }) {
     const options = useMemo(() => {
         const o = chartOptions('Morbidity week', 'Cases', (items) => `Morbidity week ${items[0].label}`, dark);
         o.scales.x.offset = true;
-        o.scales.x.grid = { display: true, color: dark ? '#1c2942' : '#eef2f6' };
+        o.scales.x.grid = { display: true, color: dark ? 'rgba(16, 185, 129, 0.12)' : '#eef2f6' };
         o.scales.x.ticks = { ...o.scales.x.ticks, autoSkip: true, maxRotation: 45, minRotation: 45 };
         o.plugins.legend = {
             display: true,
@@ -218,7 +221,7 @@ export default function TrendChartPanel({ api, disease, year, view = 'line' }) {
             labels: {
                 boxWidth: 12,
                 font: { size: 11 },
-                color: dark ? '#a8b4c7' : '#475569',
+                color: dark ? '#a3b1ab' : '#475569',
                 // The bar series has one colour per week; its legend box shows the
                 // "below alert" blue instead of the first week's colour.
                 generateLabels: (chart) => ChartJS.defaults.plugins.legend.labels.generateLabels(chart).map((l) =>
@@ -227,6 +230,11 @@ export default function TrendChartPanel({ api, disease, year, view = 'line' }) {
         };
         return o;
     }, [dark]);
+
+    // Cases recorded in weeks that have not happened yet (a mistyped date)
+    const futureCases = useMemo(() => series
+        .filter((r) => Number(year) > TODAY.year || (Number(year) === TODAY.year && Number(r.week) > TODAY.week))
+        .reduce((n, r) => n + Number(r.cases), 0), [series, year]);
 
     if (error) {
         return <div className="p-4 text-sm text-red-700 bg-red-50">{error}</div>;
@@ -238,9 +246,30 @@ export default function TrendChartPanel({ api, disease, year, view = 'line' }) {
             <div className="flex-1 min-h-[330px]">
                 <Chart type="bar" data={chartData} options={options} />
             </div>
+            {futureCases > 0 && (
+                <p className="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5">
+                    {futureCases} case{futureCases === 1 ? ' is' : 's are'} dated after the current week (MW{TODAY.week} of {TODAY.year})
+                    and {futureCases === 1 ? 'is' : 'are'} not shown. Please check the onset date of {futureCases === 1 ? 'this record' : 'these records'}.
+                </p>
+            )}
         </div>
     );
 }
 
-const LINE_ICON = <path d="M1.5 12 6 7l3 3 5.5-6" strokeLinecap="round" strokeLinejoin="round" />;
+// ISO morbidity week of a date (the numbering PIDSR weeks are stored in)
+function isoWeekOf(date) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const jan1 = Date.UTC(d.getUTCFullYear(), 0, 1);
+    return { year: d.getUTCFullYear(), week: Math.ceil(((d - jan1) / 86400000 + 1) / 7) };
+}
+
+// 53 when the year has an ISO week 53 (28 December always falls in the last week)
+function weeksInYear(year) {
+    return isoWeekOf(new Date(Number(year), 11, 28)).week;
+}
+
+const TODAY = isoWeekOf(new Date());
+
+const LINE_ICON =<path d="M1.5 12 6 7l3 3 5.5-6" strokeLinecap="round" strokeLinejoin="round" />;
 const BAR_ICON = <path d="M2 14V8h3v6M6.5 14V4h3v10M11 14V6h3v8" strokeLinejoin="round" />;
