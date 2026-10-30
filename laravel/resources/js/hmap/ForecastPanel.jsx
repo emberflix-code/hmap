@@ -7,10 +7,11 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend,
+    Legend as ChartLegend,
     Filler,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { chartOptions, Legend } from './chartTheme.jsx';
 
 ChartJS.register(
     CategoryScale,
@@ -19,11 +20,49 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend,
+    ChartLegend,
     Filler
 );
 
 const SHORT_DATE = { month: 'short', day: 'numeric' };
+const FORECAST = '#0d9488';
+const BAND = 'rgba(13, 148, 136, 0.14)';
+const options = chartOptions('Morbidity week', 'Predicted cases', (items) => items[0].label.join(' · '));
+
+// Same rule as the risk tiers' "rising forecast" (ml/main.py is_rising),
+// mirrored for falling.
+function direction(first, last) {
+    if (last >= first * 1.1 && last - first >= 1) {
+        return { key: 'rising', label: 'Rising', cls: 'bg-red-50 text-red-700', rot: '' };
+    }
+    if (first >= last * 1.1 && first - last >= 1) {
+        return { key: 'falling', label: 'Falling', cls: 'bg-emerald-50 text-emerald-700', rot: 'rotate-180' };
+    }
+    return { key: 'steady', label: 'Steady', cls: 'bg-slate-100 text-slate-700', rot: '' };
+}
+
+function Stat({ label, children }) {
+    return (
+        <div className="rounded-lg border border-slate-200 bg-slate-50/60 px-4 py-3">
+            <div className="text-[11px] font-medium text-slate-500 mb-1">{label}</div>
+            {children}
+        </div>
+    );
+}
+
+function Note({ tone, children }) {
+    const cls = tone === 'warn'
+        ? 'bg-amber-50 border-amber-200 text-amber-800'
+        : 'bg-blue-50 border-blue-200 text-blue-800';
+    return (
+        <div className={'flex gap-2 items-start text-xs border rounded-lg px-3 py-2 ' + cls}>
+            <svg viewBox="0 0 24 24" className="h-4 w-4 mt-px shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" /><path d="M12 8h.01M11 12h1v4h1" />
+            </svg>
+            <span>{children}</span>
+        </div>
+    );
+}
 
 // '2026-11-02' -> 'Nov 2 - Nov 8'
 function weekRange(isoMonday) {
@@ -67,31 +106,35 @@ export default function ForecastPanel({ api, disease, year, week }) {
                 {
                     label: 'Upper 80% bound',
                     data: forecast.points.map((p) => p.upper_bound),
-                    borderColor: 'rgba(37, 99, 235, 0.25)',
-                    backgroundColor: 'rgba(37, 99, 235, 0.10)',
-                    borderWidth: 1,
-                    fill: '+1',
+                    borderColor: 'transparent',
+                    backgroundColor: BAND,
+                    fill: '+2',
                     pointRadius: 0,
-                    tension: 0.2,
+                    pointHoverRadius: 0,
+                    tension: 0.3,
                 },
                 {
                     label: 'Predicted cases',
                     data: forecast.points.map((p) => p.predicted_cases),
-                    borderColor: '#2563eb',
-                    backgroundColor: '#2563eb',
+                    borderColor: FORECAST,
+                    backgroundColor: FORECAST,
+                    pointBackgroundColor: FORECAST,
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
                     borderWidth: 2.5,
                     fill: false,
-                    pointRadius: 4,
-                    tension: 0.2,
+                    pointRadius: 5,
+                    pointHoverRadius: 6,
+                    tension: 0.3,
                 },
                 {
                     label: 'Lower 80% bound',
                     data: forecast.points.map((p) => p.lower_bound),
-                    borderColor: 'rgba(37, 99, 235, 0.25)',
-                    borderWidth: 1,
+                    borderColor: 'transparent',
                     fill: false,
                     pointRadius: 0,
-                    tension: 0.2,
+                    pointHoverRadius: 0,
+                    tension: 0.3,
                 },
             ],
         };
@@ -121,48 +164,65 @@ export default function ForecastPanel({ api, disease, year, week }) {
     const otherWeekSelected = year !== undefined
         && (Number(year) !== current.year || Number(week) !== current.week);
 
+    const trend = direction(first.predicted_cases, last.predicted_cases);
+    const r1 = (n) => Math.round(n).toLocaleString('en-US');
+
     return (
-        <div className="p-4 h-full flex flex-col">
-            <div className="flex items-center justify-between mb-3 text-xs text-slate-600">
-                <div>
-                    Next 4 morbidity weeks: <b>MW{first.morbidity_week} to MW{last.morbidity_week}, {last.morbidity_year}</b>
-                    {forecast.barangay_name && <> · barangay: <b>{forecast.barangay_name}</b></>}
+        <div className="p-5 h-full flex flex-col gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 flex-1">
+                <div className="flex flex-col gap-3">
+                    <Stat label={`Next week (MW${first.morbidity_week})`}>
+                        <span className="text-3xl font-semibold tracking-tight tabular-nums text-slate-900">{r1(first.predicted_cases)}</span>
+                        <span className="ml-1.5 text-sm text-slate-500">cases</span>
+                        <div className="text-xs text-slate-500 mt-0.5 tabular-nums">likely {r1(first.lower_bound)} to {r1(first.upper_bound)}</div>
+                    </Stat>
+                    <Stat label={`Four-week direction (to MW${last.morbidity_week})`}>
+                        <span className={'inline-flex items-center gap-1 px-2 py-1 rounded-md text-sm font-semibold ' + trend.cls}>
+                            <svg viewBox="0 0 12 12" className={'h-3.5 w-3.5 ' + trend.rot} fill="currentColor" aria-hidden="true">
+                                {trend.key === 'steady' ? <rect x="1" y="5" width="10" height="2" rx="1" /> : <path d="M6 2 10 8H2z" />}
+                            </svg>
+                            {trend.label}
+                        </span>
+                        <div className="text-xs text-slate-500 mt-1 tabular-nums">{r1(first.predicted_cases)} to {r1(last.predicted_cases)} cases per week</div>
+                    </Stat>
+                    <Stat label="Validation error (MAPE)">
+                        <span className="text-lg font-semibold tabular-nums text-slate-900">{forecast.validation_mape?.toFixed(1) ?? 'n/a'}%</span>
+                        <div className="text-xs text-slate-500 mt-0.5">On 2024-2025 weeks withheld from the model; lower than the same-week-last-year comparison</div>
+                    </Stat>
                 </div>
-                <div>
-                    Validation MAPE: <b>{forecast.validation_mape?.toFixed(1) ?? 'n/a'}%</b>
+                <div className="lg:col-span-3 flex flex-col">
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <Legend items={[
+                            { label: 'Predicted cases', line: FORECAST },
+                            { label: '80% likely range', band: BAND },
+                        ]} />
+                        <span className="text-xs text-slate-500">
+                            MW{first.morbidity_week} to MW{last.morbidity_week}, {last.morbidity_year}
+                            {forecast.barangay_name && <> · {forecast.barangay_name}</>}
+                        </span>
+                    </div>
+                    <div className="flex-1 min-h-[240px]">
+                        <Line data={chartData} options={options} />
+                    </div>
                 </div>
             </div>
-            {otherWeekSelected && (
-                <p className="mb-2 text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded px-2 py-1">
-                    This forecast is counted from the current week, not from MW{week} of {year} selected above.
-                    Compare it with the coming {last.morbidity_year} reports, not with the {year} chart.
-                </p>
+            {(otherWeekSelected || forecast.weeks_bridged > 0) && (
+                <div className="flex flex-col gap-2">
+                    {otherWeekSelected && (
+                        <Note tone="info">
+                            This forecast is counted from the current week, not from MW{week} of {year} selected above.
+                            Compare it with the coming {last.morbidity_year} reports, not with the {year} chart.
+                        </Note>
+                    )}
+                    {forecast.weeks_bridged > 0 && (
+                        <Note tone="warn">
+                            The model was trained on cases up to MW{tail.week} {tail.year}, {forecast.weeks_bridged} weeks
+                            before this forecast. Retrain it with the latest PIDSR data for a forecast that reflects recent weeks.
+                        </Note>
+                    )}
+                </div>
             )}
-            {forecast.weeks_bridged > 0 && (
-                <p className="mb-2 text-xs text-amber-700">
-                    The model was trained on cases up to MW{tail.week} {tail.year}, {forecast.weeks_bridged} weeks
-                    before this forecast. Retrain it with the latest PIDSR data for a forecast that reflects recent weeks.
-                </p>
-            )}
-            <div className="flex-1 min-h-[260px]">
-                <Line
-                    data={chartData}
-                    options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        interaction: { mode: 'index', intersect: false },
-                        scales: {
-                            x: { title: { display: true, text: 'Morbidity week' } },
-                            y: { title: { display: true, text: 'Predicted cases' }, beginAtZero: true },
-                        },
-                        plugins: {
-                            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
-                            tooltip: { intersect: false },
-                        },
-                    }}
-                />
-            </div>
-            <p className="mt-2 text-xs text-slate-500 italic">
+            <p className="text-[11px] text-slate-400">
                 AI-generated forecast. Decision-support indicator only; epidemiological judgment required for public health action.
             </p>
         </div>

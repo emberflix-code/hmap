@@ -124,11 +124,20 @@ export default function App() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shadow-sm">
-                <div className="flex items-center gap-6">
-                    <h1 className="text-xl font-semibold text-slate-800">H-MAP</h1>
-                    <nav className="flex items-center gap-1">
+        <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
+            <header className="sticky top-0 z-[1100] bg-white/95 backdrop-blur border-b border-slate-200 px-4 md:px-6 md:h-16 flex flex-wrap md:flex-nowrap items-center justify-between gap-x-3">
+                    <div className="h-16 flex items-center gap-3 shrink-0">
+                        <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-blue-600 to-teal-500 flex items-center justify-center shadow-sm" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" className="h-5 w-5 text-white" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 12h4l2-5 4 10 2-5h6" />
+                            </svg>
+                        </div>
+                        <div className="leading-tight">
+                            <h1 className="text-[15px] font-semibold tracking-tight text-slate-900">H-MAP</h1>
+                            <p className="hidden xl:block text-[11px] text-slate-500">Parañaque City Epidemiology and Surveillance Unit</p>
+                        </div>
+                    </div>
+                    <nav className="order-last md:order-none w-full md:w-auto md:flex-1 md:ml-4 lg:ml-6 h-11 md:h-full flex items-stretch gap-1 overflow-x-auto whitespace-nowrap [scrollbar-width:none] border-t border-slate-100 md:border-0 -mx-4 px-4 md:mx-0 md:px-0">
                         <NavLink active={view === 'dashboard'} onClick={() => setView('dashboard')}>
                             Dashboard
                         </NavLink>
@@ -145,15 +154,22 @@ export default function App() {
                             Reports
                         </NavLink>
                     </nav>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
+                <div className="h-16 flex items-center gap-2 md:gap-3 text-sm shrink-0">
                     <AlertsBell api={api} />
-                    <span className="text-slate-600">{whoami.employee_name}</span>
-                    <RoleBadge role={whoami.role} />
+                    <div className="hidden md:block h-8 w-px bg-slate-200" />
+                    <div className="flex items-center gap-2.5">
+                        <div className="h-8 w-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-semibold" title={whoami.employee_name}>
+                            {initials(whoami.employee_name)}
+                        </div>
+                        <div className="hidden lg:block leading-tight">
+                            <div className="text-[13px] font-medium text-slate-800">{whoami.employee_name}</div>
+                            <RoleBadge role={whoami.role} />
+                        </div>
+                    </div>
                     <button
                         type="button"
                         onClick={handleLogout}
-                        className="ml-2 px-3 py-1.5 text-xs rounded text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+                        className="ml-1 px-3 py-1.5 text-xs font-medium rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                     >
                         Sign out
                     </button>
@@ -193,11 +209,12 @@ function NavLink({ active, onClick, children }) {
         <button
             type="button"
             onClick={onClick}
+            aria-current={active ? 'page' : undefined}
             className={
-                'px-3 py-1.5 text-sm rounded ' +
+                'px-3 text-sm border-b-2 -mb-px transition-colors ' +
                 (active
-                    ? 'bg-blue-50 text-blue-700 font-medium'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800')
+                    ? 'border-blue-600 text-blue-700 font-semibold'
+                    : 'border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300')
             }
         >
             {children}
@@ -208,9 +225,13 @@ function NavLink({ active, onClick, children }) {
 function RoleBadge({ role }) {
     const color =
         role === 'Administrator'
-            ? 'bg-rose-100 text-rose-700'
+            ? 'text-blue-700'
             : role === 'Analyst'
-            ? 'bg-amber-100 text-amber-700'
-            : 'bg-slate-100 text-slate-700';
-    return <span className={'px-2 py-1 rounded text-xs font-medium ' + color}>{role}</span>;
+            ? 'text-teal-700'
+            : 'text-slate-500';
+    return <span className={'text-[11px] font-medium ' + color}>{role}</span>;
+}
+
+function initials(name) {
+    return (name || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
 }
