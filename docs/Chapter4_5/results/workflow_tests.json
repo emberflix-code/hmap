@@ -1,0 +1,98 @@
+{
+    "generated_at": "2026-10-30T06:29:02+08:00",
+    "tests": [
+        {
+            "id": "TC-CAS-01",
+            "area": "Case data management",
+            "desired": "A complete, valid case is saved with its address and logged in the audit log",
+            "steps": [
+                "Log in as Data Encoder",
+                "Submit a complete dengue case with a pinned address",
+                "Read the saved case, address and audit rows"
+            ],
+            "observed": "saved as case 34, entered_by 1002, age group 10-14, audit row present, address manual_pin",
+            "passed": true
+        },
+        {
+            "id": "TC-CAS-02",
+            "area": "Case data management",
+            "desired": "100% of invalid records are rejected and none is saved",
+            "steps": [
+                "Submit 16 records, each with one invalid field: missing disease; unknown disease code; invalid classification; missing barangay; barangay outside the city; morbidity week 0; morbidity week 54; year before 2010; negative age; age above 130; sex code not in the list; impossible date; onset date in the future; admission before onset; age group contradicts age; latitude out of range",
+                "Check each response and the number of saved cases"
+            ],
+            "observed": "16 of 16 rejected; cases saved: 0",
+            "passed": true
+        },
+        {
+            "id": "TC-CAS-03",
+            "area": "Case data management",
+            "desired": "A CSV upload saves the valid rows, reports each invalid row by number, and logs every saved row",
+            "steps": [
+                "Upload a CSV of 5 rows: 3 valid, 1 unknown barangay, 1 week 99",
+                "Read the response and the audit log"
+            ],
+            "observed": "inserted 3, failed 2 (rows 4, 6), 3 audit rows",
+            "passed": true
+        },
+        {
+            "id": "TC-CAS-04",
+            "area": "Case data management",
+            "desired": "A CSV without the required columns is refused as a whole",
+            "steps": [
+                "Upload a CSV with only two columns"
+            ],
+            "observed": "HTTP 422: CSV is missing required columns: case_classification, date_onset, age, sex, outcome, morbidity_week, morbidity_year",
+            "passed": true
+        },
+        {
+            "id": "TC-SEC-01",
+            "area": "Security",
+            "desired": "Every protected API route refuses a request without a login session",
+            "steps": [
+                "Switch to the production login mode (HRMO token)",
+                "Call every protected API route without a token"
+            ],
+            "observed": "52 of 52 routes answered 401",
+            "passed": true
+        },
+        {
+            "id": "TC-SEC-02",
+            "area": "Security",
+            "desired": "Every role-restricted route refuses users below its required role",
+            "steps": [
+                "Read the required role of every API route",
+                "Call each restricted route as every lower role"
+            ],
+            "observed": "45 of 45 lower-role requests refused with 403",
+            "passed": true
+        },
+        {
+            "id": "TC-SEC-03",
+            "area": "Security",
+            "desired": "Only CESU staff on the authorization list get in; removing someone cuts access at once; refusals are logged",
+            "steps": [
+                "Call the API with a valid HRMO token of an employee who is not CESU staff",
+                "Repeat as an authorized Health Analyst",
+                "Deactivate the Analyst and repeat",
+                "Count ACCESS_DENIED audit rows"
+            ],
+            "observed": "non-CESU employee 403, CESU Analyst 200, deactivated Analyst 403, 2 refusals logged",
+            "passed": true
+        },
+        {
+            "id": "TC-E2E-01",
+            "area": "Integration (Level 3)",
+            "desired": "Encoded cases flow through hotspot detection, risk tiering, recommendation and notification without manual steps between modules",
+            "steps": [
+                "As Data Encoder, encode 4 probable dengue cases in Tambo within 60 m of each other, week 35 of 2025",
+                "Run hotspot detection with the CESU rule (200 m, 3 cases, 4 weeks)",
+                "As Health Analyst, open the risk tiers and recommendations for the week",
+                "Run the scheduled alert check",
+                "Check the alerts and their delivery"
+            ],
+            "observed": "cluster of 4 cases (radius 62 m); Tambo tier High (above epidemic threshold, active hotspot); 7 recommendations, rank 1; alerts: epidemic_threshold + hotspot; 2 emails sent, max 0 s after detection; whole flow 4.3 s",
+            "passed": true
+        }
+    ]
+}

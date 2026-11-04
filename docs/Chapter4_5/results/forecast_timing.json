@@ -1,0 +1,68 @@
+{
+  "runs": 5,
+  "limit_s": 3.0,
+  "results": [
+    {
+      "disease": "DENGUE",
+      "status": 200,
+      "served": true,
+      "max_s": 0.073,
+      "median_s": 0.052,
+      "identical": true,
+      "withheld_reason": null,
+      "passed": true
+    },
+    {
+      "disease": "TYP",
+      "status": 200,
+      "served": true,
+      "max_s": 0.057,
+      "median_s": 0.051,
+      "identical": true,
+      "withheld_reason": null,
+      "passed": true
+    },
+    {
+      "disease": "LEP",
+      "status": 200,
+      "served": true,
+      "max_s": 0.061,
+      "median_s": 0.05,
+      "identical": true,
+      "withheld_reason": null,
+      "passed": true
+    },
+    {
+      "disease": "MEA",
+      "status": 404,
+      "served": false,
+      "max_s": 0.016,
+      "median_s": 0.002,
+      "identical": true,
+      "withheld_reason": "{\"detail\": \"Forecast not displayed for 'MEA': the model did not outperform the same-week-last-year comparison on its hold-out data.\"}",
+      "passed": true
+    },
+    {
+      "disease": "ILI",
+      "status": 404,
+      "served": false,
+      "max_s": 0.014,
+      "median_s": 0.002,
+      "identical": true,
+      "withheld_reason": "{\"detail\": \"Forecast not displayed for 'ILI': the model did not outperform the same-week-last-year comparison on its hold-out data.\"}",
+      "passed": true
+    },
+    {
+      "disease": "HFMD",
+      "status": 404,
+      "served": false,
+      "max_s": 0.023,
+      "median_s": 0.002,
+      "identical": true,
+      "withheld_reason": "{\"detail\": \"Forecast not displayed for 'HFMD': the model did not outperform the same-week-last-year comparison on its hold-out data.\"}",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "models_listed": 25
+}

@@ -1,0 +1,1405 @@
+disease_code,workbook_name,week,cesu_avg5,system_avg5,avg5_pct_diff,cesu_current,system_current,cesu_prior,system_prior
+AFP,Acute Flaccid Paralysis,1,0.0,0,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,1,0.0,0,0.0,0,0,0,0
+AEFI,Adverse Event Following  Immunization,1,0.0,0,0.0,0,0,0,0
+MEA,Measles,1,0.0,0,0.0,0,0,0,0
+MENG,Meningococcal Disease,1,0.0,0,0.0,0,0,0,0
+NT,Neonatal Tetanus,1,0.0,0,0.0,0,0,0,0
+RAB,Rabies,1,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,1,0.0,0,0.0,0,0,0,0
+RUB,Rubella,1,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,1,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,1,0.0,0,0.0,1,1,0,0
+AES,Acute Encephalitis Syndrome,1,0.0,0,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,1,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,1,0.2,0.2,0.0,0,0,0,0
+BMENG,Bacterial Meningitis,1,0.0,0,0.0,0,0,0,0
+CHK,Chikungunya Virus,1,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,1,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,1,22.4,22.4,0.0,46,46,25,25
+DIP,Diptheria,1,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",1,1.0,1,0.0,0,0,1,1
+ILI,Influenza Like Illness,1,0.0,0,0.0,0,0,0,0
+LEP,Leptospirosis,1,0.8,0.8,0.0,0,0,0,0
+MAL,Malaria,1,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,1,0.2,0.2,0.0,0,0,0,0
+PER,Pertussis,1,0.0,0,0.0,0,0,0,0
+ROTA,Rotavirus,1,0.2,0.2,0.0,0,0,1,1
+TYP,Typhoid Fever,1,0.0,0,0.0,0,0,0,0
+AFP,Acute Flaccid Paralysis,2,0.0,0,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,2,0.0,0,0.0,0,0,0,0
+AEFI,Adverse Event Following  Immunization,2,0.0,0,0.0,0,0,0,0
+MEA,Measles,2,0.0,0,0.0,0,0,0,0
+MENG,Meningococcal Disease,2,0.0,0,0.0,0,0,0,0
+NT,Neonatal Tetanus,2,0.0,0,0.0,0,0,0,0
+RAB,Rabies,2,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,2,0.0,0,0.0,0,0,0,0
+RUB,Rubella,2,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,2,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,2,0.2,0.2,0.0,1,1,0,0
+AES,Acute Encephalitis Syndrome,2,0.0,0,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,2,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,2,0.2,0.2,0.0,0,0,0,0
+BMENG,Bacterial Meningitis,2,0.0,0,0.0,0,0,0,0
+CHK,Chikungunya Virus,2,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,2,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,2,46.8,46.8,0.0,78,78,77,77
+DIP,Diptheria,2,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",2,2.0,2,0.0,0,0,3,3
+ILI,Influenza Like Illness,2,1.4,1.4,0.0,0,0,3,3
+LEP,Leptospirosis,2,1.6,1.6,0.0,0,0,1,1
+MAL,Malaria,2,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,2,0.4,0.4,0.0,0,0,0,0
+PER,Pertussis,2,0.0,0,0.0,0,0,0,0
+ROTA,Rotavirus,2,0.2,0.2,0.0,0,0,1,1
+TYP,Typhoid Fever,2,0.4,0.4,0.0,1,1,2,2
+AFP,Acute Flaccid Paralysis,3,0.0,0,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,3,0.0,0,0.0,0,0,0,0
+AEFI,Adverse Event Following  Immunization,3,0.0,0,0.0,0,0,0,0
+MEA,Measles,3,0.2,0.2,0.0,0,0,0,0
+MENG,Meningococcal Disease,3,0.0,0,0.0,0,0,0,0
+NT,Neonatal Tetanus,3,0.0,0,0.0,0,0,0,0
+RAB,Rabies,3,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,3,0.0,0,0.0,0,0,0,0
+RUB,Rubella,3,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,3,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,3,0.4,0.4,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,3,0.0,0,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,3,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,3,0.4,0.4,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,3,0.2,0.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,3,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,3,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,3,74.6,74.6,0.0,107,107,140,140
+DIP,Diptheria,3,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",3,2.4,2.4,0.0,0,0,3,3
+ILI,Influenza Like Illness,3,3.8,3.8,0.0,0,0,8,8
+LEP,Leptospirosis,3,2.0,2,0.0,0,0,1,1
+MAL,Malaria,3,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,3,0.4,0.4,0.0,0,0,0,0
+PER,Pertussis,3,0.0,0,0.0,0,0,0,0
+ROTA,Rotavirus,3,0.2,0.2,0.0,0,0,1,1
+TYP,Typhoid Fever,3,1.4,1.4,0.0,2,2,6,6
+AFP,Acute Flaccid Paralysis,4,0.0,0,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,4,0.2,0.2,0.0,0,0,0,0
+AEFI,Adverse Event Following  Immunization,4,0.0,0,0.0,0,0,0,0
+MEA,Measles,4,0.2,0.2,0.0,0,0,0,0
+MENG,Meningococcal Disease,4,0.0,0,0.0,0,0,0,0
+NT,Neonatal Tetanus,4,0.0,0,0.0,0,0,0,0
+RAB,Rabies,4,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,4,0.0,0,0.0,0,0,0,0
+RUB,Rubella,4,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,4,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,4,0.6,0.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,4,0.0,0,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,4,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,4,0.4,0.4,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,4,0.2,0.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,4,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,4,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,4,99.4,99.4,0.0,146,146,191,191
+DIP,Diptheria,4,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",4,3.2,3.2,0.0,0,0,7,7
+ILI,Influenza Like Illness,4,5.8,5.8,0.0,1,1,13,13
+LEP,Leptospirosis,4,2.6,2.6,0.0,0,0,2,2
+MAL,Malaria,4,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,4,0.4,0.4,0.0,0,0,0,0
+PER,Pertussis,4,0.0,0,0.0,0,0,0,0
+ROTA,Rotavirus,4,0.2,0.2,0.0,0,0,1,1
+TYP,Typhoid Fever,4,2.4,2.4,0.0,4,4,8,8
+AFP,Acute Flaccid Paralysis,5,0.2,0.2,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,5,0.4,0.4,0.0,0,0,0,0
+AEFI,Adverse Event Following  Immunization,5,0.0,0,0.0,0,0,0,0
+MEA,Measles,5,0.2,0.2,0.0,0,0,0,0
+MENG,Meningococcal Disease,5,0.0,0,0.0,0,0,0,0
+NT,Neonatal Tetanus,5,0.0,0,0.0,0,0,0,0
+RAB,Rabies,5,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,5,0.0,0,0.0,0,0,0,0
+RUB,Rubella,5,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,5,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,5,0.6,0.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,5,0.0,0,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,5,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,5,0.4,0.4,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,5,0.2,0.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,5,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,5,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,5,123.2,123.2,0.0,151,151,246,246
+DIP,Diptheria,5,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",5,3.4,3.4,0.0,0,0,8,8
+ILI,Influenza Like Illness,5,8.8,8.8,0.0,1,1,20,20
+LEP,Leptospirosis,5,2.6,2.6,0.0,0,0,2,2
+MAL,Malaria,5,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,5,0.4,0.4,0.0,0,0,0,0
+PER,Pertussis,5,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,5,0.2,0.2,0.0,0,0,1,1
+TYP,Typhoid Fever,5,3.2,3.2,0.0,4,4,12,12
+AFP,Acute Flaccid Paralysis,6,0.2,0.2,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,6,0.8,0.8,0.0,0,0,0,0
+AEFI,Adverse Event Following  Immunization,6,0.0,0,0.0,0,0,0,0
+MEA,Measles,6,0.2,0.2,0.0,0,0,0,0
+MENG,Meningococcal Disease,6,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,6,0.0,0,0.0,0,0,0,0
+RAB,Rabies,6,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,6,0.0,0,0.0,0,0,0,0
+RUB,Rubella,6,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,6,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,6,1.0,1,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,6,0.0,0,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,6,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,6,0.4,0.4,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,6,0.6,0.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,6,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,6,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,6,146.0,146,0.0,151,151,294,294
+DIP,Diptheria,6,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",6,4.8,4.8,0.0,0,0,13,13
+ILI,Influenza Like Illness,6,11.4,11.4,0.0,1,1,25,25
+LEP,Leptospirosis,6,2.6,2.6,0.0,0,0,2,2
+MAL,Malaria,6,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,6,0.6,0.6,0.0,0,0,1,1
+PER,Pertussis,6,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,6,0.2,0.2,0.0,0,0,1,1
+TYP,Typhoid Fever,6,4.0,4,0.0,4,4,15,15
+AFP,Acute Flaccid Paralysis,7,0.2,0.2,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,7,0.8,0.8,0.0,0,0,0,0
+AEFI,Adverse Event Following  Immunization,7,0.0,0,0.0,0,0,0,0
+MEA,Measles,7,0.2,0.2,0.0,0,0,0,0
+MENG,Meningococcal Disease,7,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,7,0.0,0,0.0,0,0,0,0
+RAB,Rabies,7,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,7,0.0,0,0.0,0,0,0,0
+RUB,Rubella,7,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,7,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,7,1.2,1.2,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,7,0.0,0,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,7,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,7,0.6,0.6,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,7,0.6,0.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,7,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,7,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,7,164.2,164.2,0.0,151,151,328,328
+DIP,Diptheria,7,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",7,5.2,5.2,0.0,0,0,15,15
+ILI,Influenza Like Illness,7,12.4,12.4,0.0,1,1,29,29
+LEP,Leptospirosis,7,2.8,2.8,0.0,0,0,2,2
+MAL,Malaria,7,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,7,0.6,0.6,0.0,0,0,1,1
+PER,Pertussis,7,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,7,0.2,0.2,0.0,0,0,1,1
+TYP,Typhoid Fever,7,4.2,4.2,0.0,4,4,16,16
+AFP,Acute Flaccid Paralysis,8,0.4,0.4,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,8,0.8,0.8,0.0,0,0,0,0
+AEFI,Adverse Event Following  Immunization,8,0.0,0,0.0,0,0,0,0
+MEA,Measles,8,0.2,0.2,0.0,0,0,0,0
+MENG,Meningococcal Disease,8,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,8,0.0,0,0.0,0,0,0,0
+RAB,Rabies,8,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,8,0.0,0,0.0,0,0,0,0
+RUB,Rubella,8,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,8,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,8,1.4,1.4,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,8,0.0,0,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,8,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,8,0.6,0.6,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,8,0.8,0.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,8,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,8,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,8,182.8,182.8,0.0,151,151,368,368
+DIP,Diptheria,8,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",8,5.8,5.8,0.0,0,0,17,17
+ILI,Influenza Like Illness,8,14.0,14,0.0,1,1,35,35
+LEP,Leptospirosis,8,3.0,3,0.0,0,0,2,2
+MAL,Malaria,8,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,8,1.0,1,0.0,0,0,1,1
+PER,Pertussis,8,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,8,0.2,0.2,0.0,0,0,1,1
+TYP,Typhoid Fever,8,4.8,4.8,0.0,4,4,19,19
+AFP,Acute Flaccid Paralysis,9,0.4,0.4,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,9,1.2,1.2,0.0,0,0,1,1
+AEFI,Adverse Event Following  Immunization,9,0.0,0,0.0,0,0,0,0
+MEA,Measles,9,0.2,0.4,100.0,0,0,0,0
+MENG,Meningococcal Disease,9,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,9,0.0,0,0.0,0,0,0,0
+RAB,Rabies,9,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,9,0.0,0,0.0,0,0,0,0
+RUB,Rubella,9,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,9,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,9,1.6,1.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,9,0.2,0.2,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,9,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,9,0.6,0.6,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,9,0.8,0.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,9,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,9,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,9,202.2,202.2,0.0,151,151,405,405
+DIP,Diptheria,9,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",9,6.2,6.2,0.0,0,0,19,19
+ILI,Influenza Like Illness,9,15.6,15.6,0.0,1,1,37,37
+LEP,Leptospirosis,9,3.0,3,0.0,0,0,2,2
+MAL,Malaria,9,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,9,1.0,1,0.0,0,0,1,1
+PER,Pertussis,9,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,9,0.4,0.4,0.0,0,0,1,1
+TYP,Typhoid Fever,9,4.8,4.8,0.0,4,4,19,19
+AFP,Acute Flaccid Paralysis,10,0.4,0.4,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,10,1.4,1.4,0.0,0,0,1,1
+AEFI,Adverse Event Following  Immunization,10,0.0,0,0.0,0,0,0,0
+MEA,Measles,10,0.2,0.6,200.0,0,0,0,0
+MENG,Meningococcal Disease,10,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,10,0.0,0,0.0,0,0,0,0
+RAB,Rabies,10,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,10,0.0,0,0.0,0,0,0,0
+RUB,Rubella,10,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,10,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,10,1.6,1.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,10,0.2,0.2,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,10,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,10,0.8,0.8,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,10,0.8,0.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,10,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,10,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,10,223.0,223,0.0,151,151,448,448
+DIP,Diptheria,10,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",10,7.0,7,0.0,0,0,23,23
+ILI,Influenza Like Illness,10,16.4,16.4,0.0,1,1,41,41
+LEP,Leptospirosis,10,3.2,3.2,0.0,0,0,2,2
+MAL,Malaria,10,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,10,1.0,1,0.0,0,0,1,1
+PER,Pertussis,10,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,10,0.4,0.4,0.0,0,0,1,1
+TYP,Typhoid Fever,10,5.2,5.2,0.0,4,4,21,21
+AFP,Acute Flaccid Paralysis,11,0.6,0.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,11,1.8,1.8,0.0,0,0,2,2
+AEFI,Adverse Event Following  Immunization,11,0.0,0,0.0,0,0,0,0
+MEA,Measles,11,0.2,0.6,200.0,0,0,0,0
+MENG,Meningococcal Disease,11,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,11,0.0,0,0.0,0,0,0,0
+RAB,Rabies,11,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,11,0.0,0,0.0,0,0,0,0
+RUB,Rubella,11,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,11,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,11,1.8,1.8,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,11,0.2,0.2,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,11,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,11,0.8,0.8,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,11,1.0,1,0.0,0,0,0,0
+CHK,Chikungunya Virus,11,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,11,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,11,237.0,237,0.0,151,151,469,469
+DIP,Diptheria,11,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",11,7.0,7,0.0,0,0,23,23
+ILI,Influenza Like Illness,11,18.6,18.6,0.0,1,1,47,47
+LEP,Leptospirosis,11,3.2,3.2,0.0,0,0,2,2
+MAL,Malaria,11,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,11,1.2,1.2,0.0,0,0,2,2
+PER,Pertussis,11,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,11,0.4,0.4,0.0,0,0,1,1
+TYP,Typhoid Fever,11,5.8,5.8,0.0,4,4,23,23
+AFP,Acute Flaccid Paralysis,12,0.6,0.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,12,1.8,1.8,0.0,0,0,2,2
+AEFI,Adverse Event Following  Immunization,12,0.0,0,0.0,0,0,0,0
+MEA,Measles,12,0.2,0.6,200.0,0,0,0,0
+MENG,Meningococcal Disease,12,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,12,0.0,0,0.0,0,0,0,0
+RAB,Rabies,12,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,12,0.0,0,0.0,0,0,0,0
+RUB,Rubella,12,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,12,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,12,1.8,1.8,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,12,0.2,0.2,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,12,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,12,0.8,0.8,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,12,1.0,1,0.0,0,0,0,0
+CHK,Chikungunya Virus,12,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,12,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,12,248.6,248.6,0.0,151,151,496,496
+DIP,Diptheria,12,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",12,8.4,8.4,0.0,0,0,27,27
+ILI,Influenza Like Illness,12,19.8,19.8,0.0,1,1,51,51
+LEP,Leptospirosis,12,3.2,3.2,0.0,0,0,2,2
+MAL,Malaria,12,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,12,1.2,1.2,0.0,0,0,2,2
+PER,Pertussis,12,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,12,0.4,0.4,0.0,0,0,1,1
+TYP,Typhoid Fever,12,6.0,6,0.0,4,4,24,24
+AFP,Acute Flaccid Paralysis,13,0.8,0.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,13,2.2,2.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,13,0.0,0,0.0,0,0,0,0
+MEA,Measles,13,0.2,0.6,200.0,0,0,0,0
+MENG,Meningococcal Disease,13,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,13,0.0,0,0.0,0,0,0,0
+RAB,Rabies,13,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,13,0.0,0,0.0,0,0,0,0
+RUB,Rubella,13,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,13,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,13,2.0,2,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,13,0.2,0.2,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,13,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,13,0.8,0.8,0.0,0,0,1,1
+BMENG,Bacterial Meningitis,13,1.0,1,0.0,0,0,0,0
+CHK,Chikungunya Virus,13,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,13,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,13,256.2,256.2,0.0,151,151,509,509
+DIP,Diptheria,13,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",13,8.4,8.4,0.0,0,0,27,27
+ILI,Influenza Like Illness,13,20.8,20.8,0.0,1,1,51,51
+LEP,Leptospirosis,13,3.2,3.2,0.0,0,0,2,2
+MAL,Malaria,13,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,13,1.2,1.2,0.0,0,0,2,2
+PER,Pertussis,13,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,13,0.4,0.4,0.0,0,0,1,1
+TYP,Typhoid Fever,13,6.6,6.6,0.0,4,4,25,25
+AFP,Acute Flaccid Paralysis,14,0.8,0.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,14,2.2,2.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,14,0.0,0,0.0,0,0,0,0
+MEA,Measles,14,0.2,0.8,300.0,0,0,0,0
+MENG,Meningococcal Disease,14,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,14,0.0,0,0.0,0,0,0,0
+RAB,Rabies,14,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,14,0.0,0,0.0,0,0,0,0
+RUB,Rubella,14,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,14,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,14,2.0,2,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,14,0.2,0.2,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,14,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,14,1.0,1,0.0,0,0,2,2
+BMENG,Bacterial Meningitis,14,1.2,1.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,14,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,14,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,14,264.4,264.4,0.0,151,151,525,525
+DIP,Diptheria,14,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",14,8.4,8.4,0.0,0,0,27,27
+ILI,Influenza Like Illness,14,23.0,23,0.0,1,1,56,56
+LEP,Leptospirosis,14,3.4,3.4,0.0,0,0,2,2
+MAL,Malaria,14,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,14,1.2,1.2,0.0,0,0,2,2
+PER,Pertussis,14,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,14,0.6,0.6,0.0,0,0,1,1
+TYP,Typhoid Fever,14,7.6,7.6,0.0,4,4,29,29
+AFP,Acute Flaccid Paralysis,15,0.8,0.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,15,2.4,2.4,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,15,0.0,0,0.0,0,0,0,0
+MEA,Measles,15,0.4,1,150.0,0,0,1,1
+MENG,Meningococcal Disease,15,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,15,0.0,0,0.0,0,0,0,0
+RAB,Rabies,15,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,15,0.0,0,0.0,0,0,0,0
+RUB,Rubella,15,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,15,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,15,2.6,2.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,15,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,15,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,15,1.4,1.4,0.0,0,0,2,2
+BMENG,Bacterial Meningitis,15,1.2,1.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,15,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,15,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,15,270.6,270.6,0.0,151,151,538,538
+DIP,Diptheria,15,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",15,9.2,9.2,0.0,0,0,31,31
+ILI,Influenza Like Illness,15,23.4,23.4,0.0,1,1,58,58
+LEP,Leptospirosis,15,3.6,3.6,0.0,0,0,2,2
+MAL,Malaria,15,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,15,1.2,1.2,0.0,0,0,2,2
+PER,Pertussis,15,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,15,0.6,0.6,0.0,0,0,1,1
+TYP,Typhoid Fever,15,8.2,8.2,0.0,4,4,31,31
+AFP,Acute Flaccid Paralysis,16,0.8,0.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,16,2.4,2.4,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,16,0.0,0,0.0,0,0,0,0
+MEA,Measles,16,0.4,1,150.0,0,0,1,1
+MENG,Meningococcal Disease,16,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,16,0.0,0,0.0,0,0,0,0
+RAB,Rabies,16,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,16,0.0,0,0.0,0,0,0,0
+RUB,Rubella,16,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,16,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,16,2.8,2.8,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,16,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,16,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,16,1.4,1.4,0.0,0,0,2,2
+BMENG,Bacterial Meningitis,16,1.2,1.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,16,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,16,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,16,275.8,275.8,0.0,151,151,544,544
+DIP,Diptheria,16,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",16,9.4,9.4,0.0,0,0,32,32
+ILI,Influenza Like Illness,16,24.0,24,0.0,1,1,61,61
+LEP,Leptospirosis,16,4.0,4,0.0,0,0,2,2
+MAL,Malaria,16,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,16,1.2,1.2,0.0,0,0,2,2
+PER,Pertussis,16,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,16,0.6,0.6,0.0,0,0,1,1
+TYP,Typhoid Fever,16,9.2,9.2,0.0,4,4,32,32
+AFP,Acute Flaccid Paralysis,17,0.8,0.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,17,2.6,2.6,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,17,0.0,0,0.0,0,0,0,0
+MEA,Measles,17,1.0,1.6,60.0,0,0,4,4
+MENG,Meningococcal Disease,17,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,17,0.0,0,0.0,0,0,0,0
+RAB,Rabies,17,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,17,0.0,0,0.0,0,0,0,0
+RUB,Rubella,17,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,17,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,17,3.2,3.2,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,17,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,17,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,17,1.6,1.6,0.0,0,0,3,3
+BMENG,Bacterial Meningitis,17,1.2,1.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,17,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,17,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,17,281.6,281.6,0.0,151,151,547,547
+DIP,Diptheria,17,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",17,9.6,9.6,0.0,0,0,33,33
+ILI,Influenza Like Illness,17,25.0,25,0.0,1,1,63,63
+LEP,Leptospirosis,17,4.0,4,0.0,0,0,2,2
+MAL,Malaria,17,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,17,1.2,1.2,0.0,0,0,2,2
+PER,Pertussis,17,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,17,0.6,0.6,0.0,0,0,1,1
+TYP,Typhoid Fever,17,9.6,9.6,0.0,4,4,32,32
+AFP,Acute Flaccid Paralysis,18,0.8,0.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,18,2.8,2.8,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,18,0.0,0,0.0,0,0,0,0
+MEA,Measles,18,1.0,1.6,60.0,0,0,4,4
+MENG,Meningococcal Disease,18,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,18,0.0,0,0.0,0,0,0,0
+RAB,Rabies,18,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,18,0.0,0,0.0,0,0,0,0
+RUB,Rubella,18,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,18,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,18,3.6,3.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,18,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,18,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,18,1.6,1.6,0.0,0,0,3,3
+BMENG,Bacterial Meningitis,18,1.6,1.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,18,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,18,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,18,286.6,286.6,0.0,151,151,554,554
+DIP,Diptheria,18,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",18,9.6,9.6,0.0,0,0,33,33
+ILI,Influenza Like Illness,18,25.8,25.8,0.0,1,1,66,66
+LEP,Leptospirosis,18,4.0,4,0.0,0,0,2,2
+MAL,Malaria,18,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,18,1.2,1.2,0.0,0,0,2,2
+PER,Pertussis,18,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,18,0.6,0.6,0.0,0,0,1,1
+TYP,Typhoid Fever,18,9.8,9.8,0.0,4,4,32,32
+AFP,Acute Flaccid Paralysis,19,0.8,0.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,19,3.0,3,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,19,0.0,0,0.0,0,0,0,0
+MEA,Measles,19,1.0,1.6,60.0,0,0,4,4
+MENG,Meningococcal Disease,19,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,19,0.0,0,0.0,0,0,0,0
+RAB,Rabies,19,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,19,0.0,0,0.0,0,0,0,0
+RUB,Rubella,19,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,19,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,19,4.2,4.2,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,19,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,19,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,19,1.8,1.8,0.0,0,0,3,3
+BMENG,Bacterial Meningitis,19,1.6,1.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,19,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,19,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,19,290.8,290.8,0.0,151,151,557,557
+DIP,Diptheria,19,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",19,9.6,9.6,0.0,0,0,33,33
+ILI,Influenza Like Illness,19,26.4,26.4,0.0,1,1,66,66
+LEP,Leptospirosis,19,4.0,4,0.0,0,0,2,2
+MAL,Malaria,19,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,19,1.4,1.4,0.0,0,0,3,3
+PER,Pertussis,19,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,19,0.6,0.6,0.0,0,0,1,1
+TYP,Typhoid Fever,19,10.2,10.2,0.0,4,4,32,32
+AFP,Acute Flaccid Paralysis,20,0.8,0.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,20,3.0,3,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,20,0.0,0,0.0,0,0,0,0
+MEA,Measles,20,1.0,1.6,60.0,0,0,4,4
+MENG,Meningococcal Disease,20,0.2,0.2,0.0,0,0,0,0
+NT,Neonatal Tetanus,20,0.0,0,0.0,0,0,0,0
+RAB,Rabies,20,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,20,0.2,0.2,0.0,0,0,0,0
+RUB,Rubella,20,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,20,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,20,4.4,4.4,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,20,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,20,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,20,2.0,2,0.0,0,0,3,3
+BMENG,Bacterial Meningitis,20,1.6,1.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,20,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,20,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,20,295.8,295.8,0.0,151,151,563,563
+DIP,Diptheria,20,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",20,9.8,9.8,0.0,0,0,33,33
+ILI,Influenza Like Illness,20,27.0,27,0.0,1,1,67,67
+LEP,Leptospirosis,20,4.2,4.2,0.0,0,0,2,2
+MAL,Malaria,20,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,20,1.4,1.4,0.0,0,0,3,3
+PER,Pertussis,20,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,20,0.6,0.6,0.0,0,0,1,1
+TYP,Typhoid Fever,20,10.8,10.8,0.0,4,4,33,33
+AFP,Acute Flaccid Paralysis,21,0.8,0.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,21,3.0,3,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,21,0.0,0,0.0,0,0,0,0
+MEA,Measles,21,1.0,1.6,60.0,0,0,4,4
+MENG,Meningococcal Disease,21,0.4,0.4,0.0,0,0,0,0
+NT,Neonatal Tetanus,21,0.0,0,0.0,0,0,0,0
+RAB,Rabies,21,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,21,0.4,0.4,0.0,0,0,0,0
+RUB,Rubella,21,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,21,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,21,4.6,4.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,21,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,21,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,21,2.0,2,0.0,0,0,3,3
+BMENG,Bacterial Meningitis,21,1.6,1.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,21,0.2,0.2,0.0,0,0,0,0
+CHO,Cholera,21,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,21,302.8,302.8,0.0,151,151,570,570
+DIP,Diptheria,21,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",21,9.8,9.8,0.0,0,0,33,33
+ILI,Influenza Like Illness,21,27.8,27.8,0.0,1,1,67,67
+LEP,Leptospirosis,21,4.4,4.4,0.0,0,0,3,3
+MAL,Malaria,21,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,21,1.6,1.6,0.0,0,0,3,3
+PER,Pertussis,21,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,21,0.6,0.6,0.0,0,0,1,1
+TYP,Typhoid Fever,21,11.0,11,0.0,4,4,34,34
+AFP,Acute Flaccid Paralysis,22,1.0,1,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,22,3.0,3,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,22,0.0,0,0.0,0,0,0,0
+MEA,Measles,22,1.0,1.6,60.0,0,0,4,4
+MENG,Meningococcal Disease,22,0.6,0.6,0.0,0,0,0,0
+NT,Neonatal Tetanus,22,0.0,0,0.0,0,0,0,0
+RAB,Rabies,22,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,22,0.4,0.4,0.0,0,0,0,0
+RUB,Rubella,22,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,22,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,22,4.8,4.8,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,22,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,22,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,22,2.0,2,0.0,0,0,3,3
+BMENG,Bacterial Meningitis,22,1.8,1.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,22,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,22,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,22,312.2,312.2,0.0,151,151,577,577
+DIP,Diptheria,22,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",22,9.8,9.8,0.0,0,0,33,33
+ILI,Influenza Like Illness,22,28.2,28.2,0.0,1,1,68,68
+LEP,Leptospirosis,22,5.0,5,0.0,0,0,4,4
+MAL,Malaria,22,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,22,1.6,1.6,0.0,0,0,3,3
+PER,Pertussis,22,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,22,0.6,0.6,0.0,0,0,1,1
+TYP,Typhoid Fever,22,13.0,13,0.0,4,4,36,36
+AFP,Acute Flaccid Paralysis,23,1.2,1.2,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,23,3.0,3,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,23,0.0,0,0.0,0,0,0,0
+MEA,Measles,23,1.2,1.8,50.0,0,0,5,5
+MENG,Meningococcal Disease,23,0.6,0.6,0.0,0,0,0,0
+NT,Neonatal Tetanus,23,0.0,0,0.0,0,0,0,0
+RAB,Rabies,23,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,23,0.4,0.4,0.0,0,0,0,0
+RUB,Rubella,23,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,23,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,23,5.2,5.2,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,23,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,23,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,23,2.0,2,0.0,0,0,3,3
+BMENG,Bacterial Meningitis,23,1.8,1.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,23,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,23,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,23,320.6,320.6,0.0,151,151,582,582
+DIP,Diptheria,23,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",23,10.2,10.2,0.0,0,0,35,35
+ILI,Influenza Like Illness,23,28.6,28.6,0.0,1,1,68,68
+LEP,Leptospirosis,23,5.8,5.8,0.0,0,0,7,7
+MAL,Malaria,23,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,23,1.6,1.6,0.0,0,0,3,3
+PER,Pertussis,23,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,23,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,23,13.4,13.4,0.0,4,4,37,37
+AFP,Acute Flaccid Paralysis,24,1.2,1.2,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,24,3.2,3.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,24,0.0,0,0.0,0,0,0,0
+MEA,Measles,24,1.2,1.8,50.0,0,0,5,5
+MENG,Meningococcal Disease,24,0.6,0.6,0.0,0,0,0,0
+NT,Neonatal Tetanus,24,0.0,0,0.0,0,0,0,0
+RAB,Rabies,24,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,24,0.4,0.4,0.0,0,0,0,0
+RUB,Rubella,24,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,24,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,24,5.4,5.4,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,24,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,24,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,24,2.0,2,0.0,0,0,3,3
+BMENG,Bacterial Meningitis,24,1.8,1.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,24,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,24,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,24,328.6,328.6,0.0,151,151,587,587
+DIP,Diptheria,24,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",24,10.6,10.6,0.0,0,0,36,36
+ILI,Influenza Like Illness,24,29.2,29.2,0.0,1,1,69,69
+LEP,Leptospirosis,24,6.0,6,0.0,0,0,7,7
+MAL,Malaria,24,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,24,1.6,1.6,0.0,0,0,3,3
+PER,Pertussis,24,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,24,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,24,13.4,13.4,0.0,4,4,37,37
+AFP,Acute Flaccid Paralysis,25,1.4,1.4,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,25,3.4,3.4,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,25,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,25,1.2,2.2,83.333,0,0,5,5
+MENG,Meningococcal Disease,25,0.6,0.6,0.0,0,0,0,0
+NT,Neonatal Tetanus,25,0.0,0,0.0,0,0,0,0
+RAB,Rabies,25,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,25,0.4,0.4,0.0,0,0,0,0
+RUB,Rubella,25,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,25,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,25,6.0,6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,25,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,25,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,25,2.2,2.2,0.0,0,0,3,3
+BMENG,Bacterial Meningitis,25,2.2,2.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,25,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,25,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,25,339.8,339.8,0.0,151,151,596,596
+DIP,Diptheria,25,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",25,11.0,11,0.0,0,0,38,38
+ILI,Influenza Like Illness,25,29.6,29.6,0.0,1,1,70,70
+LEP,Leptospirosis,25,7.0,7,0.0,0,0,10,10
+MAL,Malaria,25,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,25,1.6,1.6,0.0,0,0,3,3
+PER,Pertussis,25,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,25,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,25,13.4,13.4,0.0,4,4,37,37
+AFP,Acute Flaccid Paralysis,26,1.4,1.4,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,26,3.8,3.8,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,26,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,26,1.4,2.4,71.429,0,0,6,6
+MENG,Meningococcal Disease,26,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,26,0.0,0,0.0,0,0,0,0
+RAB,Rabies,26,0.0,0,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,26,0.4,0.4,0.0,0,0,0,0
+RUB,Rubella,26,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,26,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,26,6.0,6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,26,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,26,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,26,2.2,2.2,0.0,0,0,3,3
+BMENG,Bacterial Meningitis,26,2.4,2.4,0.0,0,0,0,0
+CHK,Chikungunya Virus,26,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,26,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,26,352.4,352.4,0.0,151,151,601,601
+DIP,Diptheria,26,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",26,11.2,11.2,0.0,0,0,39,39
+ILI,Influenza Like Illness,26,30.4,30.4,0.0,1,1,70,70
+LEP,Leptospirosis,26,8.0,8,0.0,0,0,12,12
+MAL,Malaria,26,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,26,1.6,1.6,0.0,0,0,3,3
+PER,Pertussis,26,0.2,0.2,0.0,0,0,0,0
+ROTA,Rotavirus,26,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,26,14.2,14.2,0.0,4,4,39,39
+AFP,Acute Flaccid Paralysis,27,1.4,1.4,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,27,4.2,4.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,27,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,27,1.4,2.8,100.0,0,0,6,6
+MENG,Meningococcal Disease,27,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,27,0.0,0,0.0,0,0,0,0
+RAB,Rabies,27,0.2,0.2,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,27,0.4,0.4,0.0,0,0,0,0
+RUB,Rubella,27,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,27,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,27,6.4,6.4,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,27,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,27,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,27,2.6,2.6,0.0,0,0,4,4
+BMENG,Bacterial Meningitis,27,2.4,2.4,0.0,0,0,0,0
+CHK,Chikungunya Virus,27,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,27,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,27,363.2,363.2,0.0,151,151,610,610
+DIP,Diptheria,27,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",27,11.2,11.2,0.0,0,0,39,39
+ILI,Influenza Like Illness,27,31.0,31,0.0,1,1,70,70
+LEP,Leptospirosis,27,8.4,8.4,0.0,0,0,14,14
+MAL,Malaria,27,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,27,1.6,1.6,0.0,0,0,3,3
+PER,Pertussis,27,0.4,0.4,0.0,0,0,0,0
+ROTA,Rotavirus,27,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,27,15.0,15,0.0,4,4,41,41
+AFP,Acute Flaccid Paralysis,28,1.4,1.4,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,28,4.2,4.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,28,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,28,1.6,3,87.5,0,0,7,7
+MENG,Meningococcal Disease,28,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,28,0.0,0,0.0,0,0,0,0
+RAB,Rabies,28,0.2,0.2,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,28,0.4,0.4,0.0,0,0,0,0
+RUB,Rubella,28,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,28,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,28,6.6,6.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,28,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,28,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,28,2.8,2.8,0.0,0,0,4,4
+BMENG,Bacterial Meningitis,28,2.6,2.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,28,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,28,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,28,381.2,381.2,0.0,151,151,623,623
+DIP,Diptheria,28,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",28,11.4,11.4,0.0,0,0,39,39
+ILI,Influenza Like Illness,28,31.4,31.4,0.0,1,1,70,70
+LEP,Leptospirosis,28,10.0,10,0.0,0,0,17,17
+MAL,Malaria,28,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,28,1.8,1.8,0.0,0,0,3,3
+PER,Pertussis,28,0.4,0.4,0.0,0,0,0,0
+ROTA,Rotavirus,28,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,28,15.2,15.2,0.0,4,4,41,41
+AFP,Acute Flaccid Paralysis,29,1.4,1.4,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,29,4.6,4.6,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,29,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,29,1.6,3,87.5,0,0,7,7
+MENG,Meningococcal Disease,29,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,29,0.0,0,0.0,0,0,0,0
+RAB,Rabies,29,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,29,0.6,0.6,0.0,0,0,0,0
+RUB,Rubella,29,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,29,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,29,6.8,6.8,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,29,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,29,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,29,2.8,2.8,0.0,0,0,4,4
+BMENG,Bacterial Meningitis,29,2.6,2.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,29,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,29,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,29,397.2,397.2,0.0,151,151,646,646
+DIP,Diptheria,29,0.0,0,0.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",29,11.4,11.4,0.0,0,0,39,39
+ILI,Influenza Like Illness,29,32.0,32,0.0,1,1,71,71
+LEP,Leptospirosis,29,11.2,11.2,0.0,0,0,19,19
+MAL,Malaria,29,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,29,2.0,2,0.0,0,0,3,3
+PER,Pertussis,29,0.4,0.4,0.0,0,0,0,0
+ROTA,Rotavirus,29,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,29,16.0,16,0.0,4,4,44,44
+AFP,Acute Flaccid Paralysis,30,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,30,4.8,4.8,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,30,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,30,1.6,3.4,112.5,0,0,7,7
+MENG,Meningococcal Disease,30,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,30,0.0,0,0.0,0,0,0,0
+RAB,Rabies,30,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,30,0.8,0.8,0.0,0,0,0,0
+RUB,Rubella,30,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,30,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,30,6.8,6.8,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,30,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,30,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,30,3.0,3,0.0,0,0,4,4
+BMENG,Bacterial Meningitis,30,3.0,3,0.0,0,0,0,0
+CHK,Chikungunya Virus,30,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,30,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,30,411.6,411.6,0.0,151,151,660,660
+DIP,Diptheria,30,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",30,11.4,11.4,0.0,0,0,39,39
+ILI,Influenza Like Illness,30,34.0,34,0.0,1,1,75,75
+LEP,Leptospirosis,30,13.8,13.8,0.0,0,0,27,27
+MAL,Malaria,30,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,30,2.0,2,0.0,0,0,3,3
+PER,Pertussis,30,0.6,0.6,0.0,0,0,0,0
+ROTA,Rotavirus,30,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,30,16.6,16.6,0.0,4,4,45,45
+AFP,Acute Flaccid Paralysis,31,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,31,4.8,4.8,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,31,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,31,1.8,3.6,100.0,0,0,8,8
+MENG,Meningococcal Disease,31,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,31,0.0,0,0.0,0,0,0,0
+RAB,Rabies,31,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,31,1.0,1,0.0,0,0,0,0
+RUB,Rubella,31,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,31,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,31,6.8,6.8,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,31,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,31,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,31,3.2,3.2,0.0,0,0,5,5
+BMENG,Bacterial Meningitis,31,3.2,3.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,31,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,31,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,31,432.8,432.8,0.0,151,151,684,684
+DIP,Diptheria,31,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",31,11.8,11.8,0.0,0,0,41,41
+ILI,Influenza Like Illness,31,35.6,35.6,0.0,1,1,75,75
+LEP,Leptospirosis,31,18.4,18.4,0.0,0,0,32,32
+MAL,Malaria,31,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,31,2.0,2,0.0,0,0,3,3
+PER,Pertussis,31,0.6,0.6,0.0,0,0,0,0
+ROTA,Rotavirus,31,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,31,17.6,17.6,0.0,4,4,46,46
+AFP,Acute Flaccid Paralysis,32,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,32,5.0,5,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,32,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,32,1.8,3.6,100.0,0,0,8,8
+MENG,Meningococcal Disease,32,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,32,0.0,0,0.0,0,0,0,0
+RAB,Rabies,32,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,32,1.0,1,0.0,0,0,0,0
+RUB,Rubella,32,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,32,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,32,7.4,7.4,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,32,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,32,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,32,3.6,3.6,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,32,3.2,3.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,32,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,32,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,32,467.4,467.4,0.0,151,151,723,723
+DIP,Diptheria,32,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",32,11.8,11.8,0.0,0,0,41,41
+ILI,Influenza Like Illness,32,37.4,37.4,0.0,1,1,75,75
+LEP,Leptospirosis,32,34.4,34.4,0.0,0,0,78,78
+MAL,Malaria,32,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,32,2.2,2.2,0.0,0,0,4,4
+PER,Pertussis,32,0.6,0.6,0.0,0,0,0,0
+ROTA,Rotavirus,32,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,32,18.4,18.4,0.0,4,4,47,47
+AFP,Acute Flaccid Paralysis,33,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,33,5.0,5,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,33,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,33,1.8,3.6,100.0,0,0,8,8
+MENG,Meningococcal Disease,33,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,33,0.0,0,0.0,0,0,0,0
+RAB,Rabies,33,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,33,1.0,1,0.0,0,0,0,0
+RUB,Rubella,33,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,33,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,33,8.0,8,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,33,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,33,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,33,3.8,3.8,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,33,3.2,3.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,33,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,33,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,33,498.8,498.8,0.0,151,151,751,751
+DIP,Diptheria,33,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",33,12.0,12,0.0,0,0,42,42
+ILI,Influenza Like Illness,33,39.2,39.2,0.0,1,1,78,78
+LEP,Leptospirosis,33,42.0,42,0.0,0,0,91,91
+MAL,Malaria,33,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,33,2.4,2.4,0.0,0,0,4,4
+PER,Pertussis,33,0.6,0.6,0.0,0,0,0,0
+ROTA,Rotavirus,33,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,33,18.8,18.8,0.0,4,4,47,47
+AFP,Acute Flaccid Paralysis,34,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,34,5.2,5.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,34,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,34,1.8,3.6,100.0,0,0,8,8
+MENG,Meningococcal Disease,34,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,34,0.2,0.2,0.0,0,0,0,0
+RAB,Rabies,34,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,34,1.0,1,0.0,0,0,0,0
+RUB,Rubella,34,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,34,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,34,8.4,8.4,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,34,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,34,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,34,4.0,4,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,34,3.2,3.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,34,0.4,0.4,0.0,0,0,0,0
+CHO,Cholera,34,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,34,533.8,533.8,0.0,151,151,789,789
+DIP,Diptheria,34,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",34,12.2,12.2,0.0,0,0,43,43
+ILI,Influenza Like Illness,34,41.4,41.4,0.0,1,1,83,83
+LEP,Leptospirosis,34,44.6,44.6,0.0,0,0,93,93
+MAL,Malaria,34,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,34,2.6,2.6,0.0,0,0,4,4
+PER,Pertussis,34,0.6,0.6,0.0,0,0,0,0
+ROTA,Rotavirus,34,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,34,19.4,19.4,0.0,4,4,48,48
+AFP,Acute Flaccid Paralysis,35,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,35,5.2,5.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,35,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,35,1.8,3.8,111.111,0,0,8,8
+MENG,Meningococcal Disease,35,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,35,0.2,0.2,0.0,0,0,0,0
+RAB,Rabies,35,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,35,1.0,1,0.0,0,0,0,0
+RUB,Rubella,35,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,35,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,35,9.2,9.2,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,35,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,35,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,35,4.2,4.2,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,35,3.4,3.4,0.0,0,0,0,0
+CHK,Chikungunya Virus,35,0.6,0.6,0.0,0,0,0,0
+CHO,Cholera,35,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,35,565.0,565,0.0,151,151,814,814
+DIP,Diptheria,35,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",35,12.2,12.2,0.0,0,0,43,43
+ILI,Influenza Like Illness,35,42.0,42,0.0,1,1,85,85
+LEP,Leptospirosis,35,45.4,45.4,0.0,0,0,94,94
+MAL,Malaria,35,0.0,0,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,35,2.6,2.6,0.0,0,0,4,4
+PER,Pertussis,35,0.6,0.6,0.0,0,0,0,0
+ROTA,Rotavirus,35,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,35,19.8,19.8,0.0,4,4,49,49
+AFP,Acute Flaccid Paralysis,36,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,36,5.4,5.4,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,36,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,36,1.8,3.8,111.111,0,0,8,8
+MENG,Meningococcal Disease,36,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,36,0.2,0.2,0.0,0,0,0,0
+RAB,Rabies,36,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,36,1.0,1,0.0,0,0,0,0
+RUB,Rubella,36,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,36,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,36,10.0,10,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,36,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,36,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,36,4.4,4.4,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,36,3.4,3.4,0.0,0,0,0,0
+CHK,Chikungunya Virus,36,0.6,0.6,0.0,0,0,0,0
+CHO,Cholera,36,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,36,602.6,602.6,0.0,151,151,855,855
+DIP,Diptheria,36,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",36,13.0,13,0.0,0,0,43,43
+ILI,Influenza Like Illness,36,43.0,43,0.0,1,1,88,88
+LEP,Leptospirosis,36,47.0,47,0.0,0,0,99,99
+MAL,Malaria,36,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,36,2.6,2.6,0.0,0,0,4,4
+PER,Pertussis,36,0.6,0.6,0.0,0,0,0,0
+ROTA,Rotavirus,36,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,36,20.6,20.6,0.0,4,4,51,51
+AFP,Acute Flaccid Paralysis,37,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,37,5.4,5.4,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,37,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,37,2.0,4,100.0,0,0,9,9
+MENG,Meningococcal Disease,37,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,37,0.2,0.2,0.0,0,0,0,0
+RAB,Rabies,37,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,37,1.0,1,0.0,0,0,0,0
+RUB,Rubella,37,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,37,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,37,10.6,10.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,37,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,37,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,37,4.4,4.4,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,37,3.4,3.4,0.0,0,0,0,0
+CHK,Chikungunya Virus,37,0.6,0.6,0.0,0,0,0,0
+CHO,Cholera,37,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,37,635.6,635.6,0.0,151,151,881,881
+DIP,Diptheria,37,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",37,13.6,13.6,0.0,0,0,43,43
+ILI,Influenza Like Illness,37,45.2,45.2,0.0,1,1,89,89
+LEP,Leptospirosis,37,50.4,50.4,0.0,0,0,106,106
+MAL,Malaria,37,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,37,2.6,2.6,0.0,0,0,4,4
+PER,Pertussis,37,0.6,0.6,0.0,0,0,0,0
+ROTA,Rotavirus,37,0.8,0.8,0.0,0,0,1,1
+TYP,Typhoid Fever,37,21.2,21.2,0.0,4,4,53,53
+AFP,Acute Flaccid Paralysis,38,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,38,6.0,6,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,38,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,38,2.0,4.2,110.0,0,0,9,9
+MENG,Meningococcal Disease,38,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,38,0.2,0.2,0.0,0,0,0,0
+RAB,Rabies,38,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,38,1.0,1,0.0,0,0,0,0
+RUB,Rubella,38,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,38,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,38,11.6,11.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,38,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,38,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,38,4.4,4.4,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,38,3.4,3.4,0.0,0,0,0,0
+CHK,Chikungunya Virus,38,0.6,0.6,0.0,0,0,0,0
+CHO,Cholera,38,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,38,677.4,677.4,0.0,151,151,915,915
+DIP,Diptheria,38,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",38,14.4,14.4,0.0,0,0,45,45
+ILI,Influenza Like Illness,38,48.0,48,0.0,1,1,91,91
+LEP,Leptospirosis,38,56.0,56,0.0,0,0,112,112
+MAL,Malaria,38,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,38,3.0,3,0.0,0,0,4,4
+PER,Pertussis,38,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,38,1.0,1,0.0,0,0,1,1
+TYP,Typhoid Fever,38,21.6,21.6,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,39,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,39,6.2,6.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,39,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,39,2.0,4.2,110.0,0,0,9,9
+MENG,Meningococcal Disease,39,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,39,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,39,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,39,1.0,1,0.0,0,0,0,0
+RUB,Rubella,39,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,39,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,39,12.2,12.2,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,39,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,39,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,39,4.4,4.4,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,39,3.6,3.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,39,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,39,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,39,721.2,721.2,0.0,151,151,957,957
+DIP,Diptheria,39,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",39,16.4,16.4,0.0,0,0,51,51
+ILI,Influenza Like Illness,39,50.6,50.6,0.0,1,1,93,93
+LEP,Leptospirosis,39,58.2,58.2,0.0,0,0,115,115
+MAL,Malaria,39,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,39,3.2,3.2,0.0,0,0,4,4
+PER,Pertussis,39,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,39,1.0,1,0.0,0,0,1,1
+TYP,Typhoid Fever,39,22.2,22.2,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,40,1.6,1.6,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,40,6.2,6.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,40,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,40,2.0,4.2,110.0,0,0,9,9
+MENG,Meningococcal Disease,40,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,40,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,40,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,40,1.0,1,0.0,0,0,0,0
+RUB,Rubella,40,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,40,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,40,12.4,12.4,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,40,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,40,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,40,4.4,4.4,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,40,3.6,3.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,40,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,40,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,40,763.6,763.6,0.0,151,151,1003,1003
+DIP,Diptheria,40,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",40,16.6,16.6,0.0,0,0,51,51
+ILI,Influenza Like Illness,40,54.0,54,0.0,1,1,100,100
+LEP,Leptospirosis,40,60.2,60.2,0.0,0,0,121,121
+MAL,Malaria,40,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,40,3.4,3.4,0.0,0,0,4,4
+PER,Pertussis,40,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,40,1.0,1,0.0,0,0,1,1
+TYP,Typhoid Fever,40,22.6,22.6,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,41,1.8,1.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,41,6.2,6.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,41,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,41,2.0,4.2,110.0,0,0,9,9
+MENG,Meningococcal Disease,41,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,41,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,41,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,41,1.2,1.2,0.0,0,0,0,0
+RUB,Rubella,41,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,41,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,41,13.0,13,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,41,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,41,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,41,4.4,4.4,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,41,3.6,3.6,0.0,0,0,0,0
+CHK,Chikungunya Virus,41,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,41,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,41,813.2,813.2,0.0,151,151,1048,1048
+DIP,Diptheria,41,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",41,21.4,21.4,0.0,0,0,52,52
+ILI,Influenza Like Illness,41,58.4,58.4,0.0,1,1,111,111
+LEP,Leptospirosis,41,62.0,62,0.0,0,0,124,124
+MAL,Malaria,41,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,41,3.4,3.4,0.0,0,0,4,4
+PER,Pertussis,41,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,41,1.0,1,0.0,0,0,1,1
+TYP,Typhoid Fever,41,23.4,23.4,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,42,1.8,1.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,42,6.2,6.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,42,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,42,2.0,4.2,110.0,0,0,9,9
+MENG,Meningococcal Disease,42,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,42,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,42,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,42,1.2,1.2,0.0,0,0,0,0
+RUB,Rubella,42,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,42,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,42,14.2,14.2,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,42,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,42,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,42,4.6,4.6,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,42,3.8,3.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,42,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,42,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,42,869.6,869.6,0.0,151,151,1098,1098
+DIP,Diptheria,42,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",42,26.6,26.6,0.0,0,0,53,53
+ILI,Influenza Like Illness,42,61.2,61.2,0.0,1,1,118,118
+LEP,Leptospirosis,42,63.2,63.2,0.0,0,0,125,125
+MAL,Malaria,42,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,42,3.4,3.4,0.0,0,0,4,4
+PER,Pertussis,42,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,42,1.2,1.2,0.0,0,0,1,1
+TYP,Typhoid Fever,42,23.8,23.8,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,43,1.8,1.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,43,6.4,6.4,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,43,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,43,2.0,4.2,110.0,0,0,9,9
+MENG,Meningococcal Disease,43,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,43,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,43,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,43,2.0,2,0.0,0,0,0,0
+RUB,Rubella,43,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,43,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,43,15.6,15.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,43,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,43,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,43,4.8,4.8,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,43,3.8,3.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,43,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,43,0.0,0,0.0,0,0,0,0
+DENGUE,Dengue,43,914.0,914,0.0,151,151,1145,1145
+DIP,Diptheria,43,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",43,32.2,32.2,0.0,0,0,53,53
+ILI,Influenza Like Illness,43,66.2,66.2,0.0,1,1,126,126
+LEP,Leptospirosis,43,64.6,64.6,0.0,0,0,125,125
+MAL,Malaria,43,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,43,3.4,3.4,0.0,0,0,4,4
+PER,Pertussis,43,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,43,1.2,1.2,0.0,0,0,1,1
+TYP,Typhoid Fever,43,24.8,24.8,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,44,1.8,1.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,44,6.4,6.4,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,44,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,44,2.0,4.2,110.0,0,0,9,9
+MENG,Meningococcal Disease,44,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,44,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,44,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,44,2.0,2,0.0,0,0,0,0
+RUB,Rubella,44,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,44,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,44,15.8,15.8,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,44,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,44,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,44,4.8,4.8,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,44,3.8,3.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,44,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,44,0.2,0.2,0.0,0,0,0,0
+DENGUE,Dengue,44,955.6,955.6,0.0,151,151,1179,1179
+DIP,Diptheria,44,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",44,35.6,35.6,0.0,0,0,53,53
+ILI,Influenza Like Illness,44,68.8,68.8,0.0,1,1,127,127
+LEP,Leptospirosis,44,65.6,65.6,0.0,0,0,125,125
+MAL,Malaria,44,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,44,3.6,3.6,0.0,0,0,4,4
+PER,Pertussis,44,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,44,1.2,1.2,0.0,0,0,1,1
+TYP,Typhoid Fever,44,25.0,25,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,45,1.8,1.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,45,6.8,6.8,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,45,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,45,2.0,4.2,110.0,0,0,9,9
+MENG,Meningococcal Disease,45,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,45,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,45,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,45,2.2,2.2,0.0,0,0,0,0
+RUB,Rubella,45,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,45,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,45,17.4,17.4,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,45,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,45,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,45,5.0,5,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,45,3.8,3.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,45,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,45,0.2,0.2,0.0,0,0,0,0
+DENGUE,Dengue,45,1003.6,1003.6,0.0,151,151,1213,1213
+DIP,Diptheria,45,0.0,0.2,inf,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",45,38.4,38.4,0.0,0,0,53,53
+ILI,Influenza Like Illness,45,70.8,70.8,0.0,1,1,127,127
+LEP,Leptospirosis,45,68.8,68.8,0.0,0,0,126,126
+MAL,Malaria,45,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,45,3.6,3.6,0.0,0,0,4,4
+PER,Pertussis,45,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,45,1.4,1.4,0.0,0,0,1,1
+TYP,Typhoid Fever,45,25.6,25.6,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,46,1.8,1.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,46,6.8,6.8,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,46,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,46,2.0,4.6,130.0,0,0,9,9
+MENG,Meningococcal Disease,46,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,46,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,46,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,46,2.2,2.2,0.0,0,0,0,0
+RUB,Rubella,46,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,46,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,46,18.4,18.4,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,46,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,46,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,46,5.0,5,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,46,3.8,3.8,0.0,0,0,0,0
+CHK,Chikungunya Virus,46,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,46,0.2,0.2,0.0,0,0,0,0
+DENGUE,Dengue,46,1053.4,1053.4,0.0,151,151,1257,1257
+DIP,Diptheria,46,0.2,0.4,100.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",46,47.2,47.2,0.0,0,0,54,54
+ILI,Influenza Like Illness,46,72.8,72.8,0.0,1,1,127,127
+LEP,Leptospirosis,46,70.4,70.4,0.0,0,0,126,126
+MAL,Malaria,46,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,46,3.8,3.8,0.0,0,0,4,4
+PER,Pertussis,46,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,46,1.4,1.4,0.0,0,0,1,1
+TYP,Typhoid Fever,46,26.2,26.2,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,47,1.8,1.8,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,47,6.8,6.8,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,47,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,47,2.0,4.6,130.0,0,0,9,9
+MENG,Meningococcal Disease,47,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,47,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,47,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,47,2.4,2.4,0.0,0,0,0,0
+RUB,Rubella,47,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,47,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,47,19.0,19,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,47,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,47,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,47,5.0,5,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,47,4.2,4.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,47,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,47,0.2,0.2,0.0,0,0,0,0
+DENGUE,Dengue,47,1098.4,1098.4,0.0,151,151,1296,1296
+DIP,Diptheria,47,0.2,0.4,100.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",47,60.0,60,0.0,0,0,55,55
+ILI,Influenza Like Illness,47,75.0,75,0.0,1,1,127,127
+LEP,Leptospirosis,47,70.8,70.8,0.0,0,0,126,126
+MAL,Malaria,47,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,47,3.8,3.8,0.0,0,0,4,4
+PER,Pertussis,47,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,47,1.4,1.4,0.0,0,0,1,1
+TYP,Typhoid Fever,47,26.6,26.6,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,48,2.0,2,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,48,7.0,7,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,48,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,48,2.0,4.6,130.0,0,0,9,9
+MENG,Meningococcal Disease,48,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,48,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,48,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,48,2.6,2.6,0.0,0,0,0,0
+RUB,Rubella,48,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,48,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,48,19.0,19,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,48,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,48,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,48,5.0,5,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,48,4.2,4.2,0.0,0,0,0,0
+CHK,Chikungunya Virus,48,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,48,0.2,0.2,0.0,0,0,0,0
+DENGUE,Dengue,48,1133.6,1133.6,0.0,151,151,1323,1323
+DIP,Diptheria,48,0.2,0.4,100.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",48,63.4,63.4,0.0,0,0,61,61
+ILI,Influenza Like Illness,48,77.8,77.8,0.0,1,1,127,127
+LEP,Leptospirosis,48,71.0,71,0.0,0,0,126,126
+MAL,Malaria,48,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,48,4.0,4,0.0,0,0,4,4
+PER,Pertussis,48,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,48,1.4,1.4,0.0,0,0,1,1
+TYP,Typhoid Fever,48,26.8,26.8,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,49,2.0,2,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,49,7.2,7.2,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,49,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,49,2.0,4.6,130.0,0,0,9,9
+MENG,Meningococcal Disease,49,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,49,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,49,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,49,2.6,2.6,0.0,0,0,0,0
+RUB,Rubella,49,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,49,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,49,19.6,19.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,49,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,49,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,49,5.0,5,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,49,4.4,4.4,0.0,0,0,0,0
+CHK,Chikungunya Virus,49,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,49,0.2,0.2,0.0,0,0,0,0
+DENGUE,Dengue,49,1166.6,1166.6,0.0,151,151,1352,1352
+DIP,Diptheria,49,0.2,0.4,100.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",49,65.4,65.4,0.0,0,0,62,62
+ILI,Influenza Like Illness,49,79.6,79.6,0.0,1,1,127,127
+LEP,Leptospirosis,49,71.6,71.6,0.0,0,0,126,126
+MAL,Malaria,49,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,49,4.4,4.4,0.0,0,0,4,4
+PER,Pertussis,49,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,49,1.4,1.4,0.0,0,0,1,1
+TYP,Typhoid Fever,49,27.4,27.4,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,50,2.0,2,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,50,7.4,7.4,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,50,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,50,2.0,4.8,140.0,0,0,9,9
+MENG,Meningococcal Disease,50,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,50,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,50,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,50,2.6,2.6,0.0,0,0,0,0
+RUB,Rubella,50,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,50,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,50,20.0,20,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,50,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,50,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,50,5.2,5.2,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,50,4.4,4.4,0.0,0,0,0,0
+CHK,Chikungunya Virus,50,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,50,0.2,0.2,0.0,0,0,0,0
+DENGUE,Dengue,50,1204.6,1204.6,0.0,151,151,1396,1396
+DIP,Diptheria,50,0.2,0.4,100.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",50,67.0,67,0.0,0,0,62,62
+ILI,Influenza Like Illness,50,82.0,82,0.0,1,1,127,127
+LEP,Leptospirosis,50,72.4,72.4,0.0,0,0,126,126
+MAL,Malaria,50,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,50,4.4,4.4,0.0,0,0,4,4
+PER,Pertussis,50,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,50,1.4,1.4,0.0,0,0,1,1
+TYP,Typhoid Fever,50,28.2,28.2,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,51,2.0,2,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,51,7.4,7.4,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,51,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,51,2.0,4.8,140.0,0,0,9,9
+MENG,Meningococcal Disease,51,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,51,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,51,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,51,2.6,2.6,0.0,0,0,0,0
+RUB,Rubella,51,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,51,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,51,20.6,20.6,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,51,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,51,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,51,5.2,5.2,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,51,4.4,4.4,0.0,0,0,0,0
+CHK,Chikungunya Virus,51,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,51,0.2,0.2,0.0,0,0,0,0
+DENGUE,Dengue,51,1235.8,1235.8,0.0,151,151,1437,1437
+DIP,Diptheria,51,0.2,0.4,100.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",51,68.0,68,0.0,0,0,62,62
+ILI,Influenza Like Illness,51,83.0,83,0.0,1,1,127,127
+LEP,Leptospirosis,51,72.6,72.6,0.0,0,0,126,126
+MAL,Malaria,51,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,51,4.6,4.6,0.0,0,0,4,4
+PER,Pertussis,51,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,51,1.4,1.4,0.0,0,0,1,1
+TYP,Typhoid Fever,51,28.8,28.8,0.0,4,4,55,55
+AFP,Acute Flaccid Paralysis,52,2.0,2,0.0,0,0,0,0
+AMES,Acute Myelogic Encephalitis Syndrome,52,7.6,7.6,0.0,0,0,3,3
+AEFI,Adverse Event Following  Immunization,52,0.2,0.2,0.0,0,0,0,0
+MEA,Measles,52,2.2,5,127.273,0,0,10,10
+MENG,Meningococcal Disease,52,0.8,0.8,0.0,0,0,0,0
+NT,Neonatal Tetanus,52,0.4,0.4,0.0,0,0,1,1
+RAB,Rabies,52,0.4,0.4,0.0,0,0,0,0
+SARS,Severe Acute Respiratory Syndrome,52,2.8,2.8,0.0,0,0,0,0
+RUB,Rubella,52,0.0,0,0.0,0,0,0,0
+ZIKA,Zika,52,0.0,0,0.0,0,0,0,0
+ABD,Acute Bloody Diarrhea,52,22.2,22.2,0.0,2,2,0,0
+AES,Acute Encephalitis Syndrome,52,0.4,0.4,0.0,0,0,0,0
+AHFS,Acute Hemorrhagic Fever Syndrome,52,0.0,0,0.0,0,0,0,0
+AVH,Acute Viral Hepatitis,52,5.2,5.2,0.0,0,0,6,6
+BMENG,Bacterial Meningitis,52,4.4,4.4,0.0,0,0,0,0
+CHK,Chikungunya Virus,52,0.8,0.8,0.0,0,0,0,0
+CHO,Cholera,52,0.2,0.2,0.0,0,0,0,0
+DENGUE,Dengue,52,1251.2,1251.2,0.0,151,151,1441,1441
+DIP,Diptheria,52,0.2,0.4,100.0,0,0,0,0
+HFMD,"Hand, Foot & Mouth Disease",52,70.2,70.2,0.0,0,0,62,62
+ILI,Influenza Like Illness,52,84.4,84.4,0.0,1,1,127,127
+LEP,Leptospirosis,52,72.8,72.8,0.0,0,0,126,126
+MAL,Malaria,52,0.2,0.2,0.0,0,0,0,0
+NNT,Non Neonatal Tetanus,52,4.6,4.6,0.0,0,0,4,4
+PER,Pertussis,52,0.8,0.8,0.0,0,0,0,0
+ROTA,Rotavirus,52,1.4,1.4,0.0,0,0,1,1
+TYP,Typhoid Fever,52,29.0,29,0.0,4,4,55,55

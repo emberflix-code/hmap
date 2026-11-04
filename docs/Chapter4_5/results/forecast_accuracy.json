@@ -1,0 +1,87 @@
+{
+  "train_years": [
+    2010,
+    2023
+  ],
+  "test_years": [
+    2024,
+    2025
+  ],
+  "diseases": {
+    "DENGUE": {
+      "two_year": {
+        "mape": 50.98615740454628,
+        "rmse": 20.613850549407083,
+        "coverage80": 0.7115384615384616,
+        "actual_peak_2024": 91.0,
+        "forecast_peak_2024": 32.64695242124854
+      },
+      "four_week": {
+        "n_forecasts": 26,
+        "n_weeks": 104,
+        "mae": 14.230997001787859,
+        "naive_mae": 19.432692307692307,
+        "mape": 57.578526170967116,
+        "naive_mape": 69.65328977454413,
+        "coverage80": 0.6634615384615384,
+        "direction_correct": 22,
+        "direction_n": 26,
+        "mape_1wk": 48.141509403014204,
+        "mape_4wk": 64.04701070601561,
+        "weekly_mean": 26.33653846153846,
+        "weekly_min": 1.0,
+        "weekly_max": 91.0
+      }
+    },
+    "TYP": {
+      "two_year": {
+        "mape": 35.44591177958972,
+        "rmse": 1.5125031906001458,
+        "coverage80": 0.7555555555555555,
+        "actual_peak_2024": 5.0,
+        "forecast_peak_2024": 0.1456478924157211
+      },
+      "four_week": {
+        "n_forecasts": 23,
+        "n_weeks": 90,
+        "mae": 0.8835054533916902,
+        "naive_mae": 1.0,
+        "mape": 37.31641647427177,
+        "naive_mape": 43.85185185185185,
+        "coverage80": 0.7666666666666667,
+        "direction_correct": 13,
+        "direction_n": 22,
+        "mape_1wk": 35.85479926000506,
+        "mape_4wk": 36.313196895336574,
+        "weekly_mean": 1.0,
+        "weekly_min": 0.0,
+        "weekly_max": 5.0
+      }
+    },
+    "LEP": {
+      "two_year": {
+        "mape": 19.971105804133426,
+        "rmse": 2.7536009843436573,
+        "coverage80": 0.6956521739130435,
+        "actual_peak_2024": 10.0,
+        "forecast_peak_2024": 0.08747638332840936
+      },
+      "four_week": {
+        "n_forecasts": 23,
+        "n_weeks": 92,
+        "mae": 1.152448802952398,
+        "naive_mae": 0.9456521739130435,
+        "mape": 56.361252877042645,
+        "naive_mape": 35.04564276303407,
+        "coverage80": 0.6847826086956522,
+        "direction_correct": 11,
+        "direction_n": 23,
+        "mape_1wk": 45.42545080995425,
+        "mape_4wk": 30.82440229299333,
+        "weekly_mean": 0.9456521739130435,
+        "weekly_min": 0.0,
+        "weekly_max": 19.0
+      }
+    }
+  }
+}

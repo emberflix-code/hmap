@@ -1,0 +1,77 @@
+{
+  "parameters": {
+    "eps_m": 200.0,
+    "min_cases": 3,
+    "window_weeks": 4,
+    "seed": 20261030
+  },
+  "total_cases": 153,
+  "clusters_detected": 7,
+  "planted": [
+    {
+      "group": "P1",
+      "planted_cases": 3,
+      "detected_snapshots": 1,
+      "full_cluster_detected": true,
+      "barangays": [
+        "San Dionisio"
+      ],
+      "max_radius_m": 48.8
+    },
+    {
+      "group": "P2",
+      "planted_cases": 4,
+      "detected_snapshots": 1,
+      "full_cluster_detected": true,
+      "barangays": [
+        "San Antonio"
+      ],
+      "max_radius_m": 45.8
+    },
+    {
+      "group": "P3",
+      "planted_cases": 5,
+      "detected_snapshots": 1,
+      "full_cluster_detected": true,
+      "barangays": [
+        "Marcelo Green Village"
+      ],
+      "max_radius_m": 90.2
+    },
+    {
+      "group": "P4",
+      "planted_cases": 6,
+      "detected_snapshots": 2,
+      "full_cluster_detected": true,
+      "barangays": [
+        "Baclaran"
+      ],
+      "max_radius_m": 89.8
+    },
+    {
+      "group": "P5",
+      "planted_cases": 4,
+      "detected_snapshots": 1,
+      "full_cluster_detected": true,
+      "barangays": [
+        "Don Bosco",
+        "Merville"
+      ],
+      "max_radius_m": 40.1
+    },
+    {
+      "group": "P6",
+      "planted_cases": 3,
+      "detected_snapshots": 1,
+      "full_cluster_detected": true,
+      "barangays": [
+        "Sun Valley"
+      ],
+      "max_radius_m": 44.3
+    }
+  ],
+  "spurious_clusters": [],
+  "negatives_clear": true,
+  "repeat_runs_identical": true,
+  "passed": true
+}

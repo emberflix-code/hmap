@@ -77,3 +77,8 @@ temp/
 docs/*.xlsx
 docs/*.pptx
 docs/_template_extracted.txt
+
+# Other theses and TUP templates used only as format references (not ours to publish)
+docs/final_manuscript/Format Reference/
+# Word lock files
+~$*

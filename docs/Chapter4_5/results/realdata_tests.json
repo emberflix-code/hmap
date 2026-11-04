@@ -1,0 +1,147 @@
+{
+    "generated_at": "2026-10-30T04:36:15+08:00",
+    "cases_loaded": 35681,
+    "tests": [
+        {
+            "id": "TC-THR-01",
+            "area": "Threshold monitoring",
+            "desired": "Mean, SD, alert (mean + 1 SD) and epidemic (mean + 2 SD) thresholds equal an independent recomputation for every disease and week",
+            "steps": [
+                "Load the 2026 registry and compute thresholds for alert year 2026 (baseline 2021-2025)",
+                "Request GET \/api\/thresholds for every alert-enabled disease",
+                "Recompute each value independently from raw Confirmed + Probable weekly counts",
+                "Compare to 4 decimal places"
+            ],
+            "observed": "1484 of 1484 disease-weeks match",
+            "passed": true
+        },
+        {
+            "id": "TC-THR-02",
+            "area": "Threshold monitoring",
+            "desired": "Measles is flagged as a single-case alert disease and dengue is not (DOH, 2014, p. 58)",
+            "steps": [
+                "Request GET \/api\/thresholds for MEA and DENGUE",
+                "Read single_case_trigger"
+            ],
+            "observed": "MEA single_case_trigger = 1, DENGUE = 0",
+            "passed": true
+        },
+        {
+            "id": "TC-RPT-01",
+            "area": "Reports and export",
+            "desired": "Disease summary totals equal the database count, including cases with no barangay",
+            "steps": [
+                "As a Health Analyst, export the disease summary for 2022",
+                "Sum total_cases over all rows and over the Unknown barangay rows",
+                "Count active 2022 cases in the database, in total and with no barangay"
+            ],
+            "observed": "export 1589 = database 1589; Unknown barangay 4 = database 4",
+            "passed": true
+        },
+        {
+            "id": "TC-RPT-02",
+            "area": "Reports and export",
+            "desired": "Each barangay row of the disease summary is flagged EPIDEMIC exactly when the dashboard risk tiers find that barangay above its own epidemic threshold",
+            "steps": [
+                "Export the 2025 dengue disease summary",
+                "For each week 1-52, compute the risk tiers for the same week",
+                "Compare the EPIDEMIC barangays with the barangays above their epidemic threshold"
+            ],
+            "observed": "52 of 52 weeks identical (128 EPIDEMIC barangay-weeks)",
+            "passed": true
+        },
+        {
+            "id": "TC-RPT-03",
+            "area": "Reports and export",
+            "desired": "The full registry export contains every active case",
+            "steps": [
+                "As Administrator, export the full case registry",
+                "Count data rows",
+                "Count active cases in the database"
+            ],
+            "observed": "export 35681 rows = database 35681",
+            "passed": true
+        },
+        {
+            "id": "TC-RPT-04",
+            "area": "Reports and export",
+            "desired": "Each export is available only to its role or higher (Encoder < Analyst < Administrator)",
+            "steps": [
+                "Request each export as Encoder, Health Analyst and Administrator",
+                "Compare the HTTP status with the role rule"
+            ],
+            "observed": "6 of 6 role checks as expected",
+            "passed": true
+        },
+        {
+            "id": "TC-RPT-05",
+            "area": "Security",
+            "desired": "Every completed export is recorded in the audit log with the employee and row count",
+            "steps": [
+                "Run the exports above",
+                "Read EXPORT rows from audit_log"
+            ],
+            "observed": "6 EXPORT audit rows, 6 with a row count",
+            "passed": true
+        },
+        {
+            "id": "TC-PRF-01",
+            "area": "Performance",
+            "desired": "Dashboard data within 3 seconds and map data within 5 seconds (server-side share)",
+            "steps": [
+                "Load the full registry (35,681 cases)",
+                "Time each API request the dashboard and map make on opening, 5 runs, median",
+                "Sum the requests of each screen"
+            ],
+            "observed": "dashboard requests 13 ms in total, map requests 6 ms (server side, development computer)",
+            "passed": true
+        }
+    ],
+    "timings": {
+        "App start: diseases": {
+            "status": 200,
+            "median_ms": 1.1,
+            "max_ms": 1.7
+        },
+        "App start: barangays": {
+            "status": 200,
+            "median_ms": 1.1,
+            "max_ms": 1.3
+        },
+        "KPI strip": {
+            "status": 200,
+            "median_ms": 5.8,
+            "max_ms": 6.9
+        },
+        "Trend chart: weekly series": {
+            "status": 200,
+            "median_ms": 3.4,
+            "max_ms": 3.9
+        },
+        "Trend chart: thresholds": {
+            "status": 200,
+            "median_ms": 1.6,
+            "max_ms": 2.3
+        },
+        "Map: cases per barangay": {
+            "status": 200,
+            "median_ms": 2,
+            "max_ms": 2.1
+        },
+        "Map: risk tiers": {
+            "status": 200,
+            "median_ms": 3.9,
+            "max_ms": 4.3
+        },
+        "Recommendations": {
+            "status": 200,
+            "median_ms": 6.8,
+            "max_ms": 9.7
+        },
+        "Weekly Report (all diseases)": {
+            "status": 200,
+            "median_ms": 18.6,
+            "max_ms": 18.8
+        }
+    }
+}
