@@ -29,8 +29,9 @@ SCALE = [("5", "Highly Acceptable", "4.21 – 5.00"),
 CRITERIA = [
     ("A. Functional Suitability", None, [
         "The system provides all the functions CESU needs for weekly disease "
-        "surveillance: case encoding, mapping, trend monitoring, forecasting, "
-        "cluster detection, and reporting.",                       # completeness
+        "surveillance: case encoding, mapping, threshold monitoring, cluster "
+        "detection, forecasting, risk ranking with recommended response, alerts, "
+        "and reporting.",                                           # completeness
         "The system produces correct results, such as case counts, epidemic "
         "thresholds, and weekly report figures.",                   # correctness
         "The system makes surveillance tasks easier to accomplish than the "
@@ -97,7 +98,7 @@ AGREE = ["5 – Strongly Agree", "4 – Agree", "3 – Neutral", "2 – Disagree
 
 doc = Document()
 sec = doc.sections[0]
-sec.page_width, sec.page_height = Inches(8.27), Inches(11.69)
+sec.page_width, sec.page_height = Inches(8.5), Inches(11)   # Letter (short bond), as the manuscript
 sec.top_margin, sec.bottom_margin = Inches(1.45), Inches(0.8)
 sec.left_margin = sec.right_margin = Inches(1)
 sec.header_distance = Inches(0.35)
@@ -132,9 +133,16 @@ def fixed_table(rows, widths, borders=True):
         t.style = "Table Grid"
     for col, w in zip(t.columns, widths):
         col.width = Inches(w)
-    for row in t.rows:
+    for i, row in enumerate(t.rows):
         for cell, w in zip(row.cells, widths):
             cell.width = Inches(w)
+            # keep the whole table on one page (no statement split across pages)
+            if i < len(t.rows) - 1:
+                for p in cell.paragraphs:
+                    p.paragraph_format.keep_with_next = True
+        tr_pr = row._tr.get_or_add_trPr()
+        no_split = OxmlElement("w:cantSplit")
+        tr_pr.append(no_split)
     return t
 
 
@@ -264,6 +272,7 @@ page_break()
 title_block("SOFTWARE EVALUATION INSTRUMENT")
 para("Part I. Respondent Profile", bold=True, after=6)
 blank_line("Name (optional):")
+blank_line("Date of evaluation:")
 blank_line("Office / Unit:")
 blank_line("Position / Designation:")
 para("Respondent group (check one):", after=2)
@@ -310,14 +319,16 @@ for name, note, items in CRITERIA:
     para(after=6)
 
 # --- Part IV: CESU validation ----------------------------------------------
-para("Part III. Validation of System Outputs", bold=True, before=6, after=2)
-para("To be answered by CESU and City Health Office personnel only.",
-     italic=True, after=4)
-para("Instructions: Based on your professional knowledge of disease surveillance in "
-     "Parañaque City, indicate your level of agreement with each statement. Note "
-     "that the forecasts of the system indicate probable trends and are not "
-     "predictions of exact outbreak occurrence.", align=J, after=4)
-para("   ".join(AGREE), align=C, after=6, size=9.5)
+for p in (
+        para("Part III. Validation of System Outputs", bold=True, before=6, after=2),
+        para("To be answered by CESU and City Health Office personnel only.",
+             italic=True, after=4),
+        para("Instructions: Based on your professional knowledge of disease surveillance in "
+             "Parañaque City, indicate your level of agreement with each statement. Note "
+             "that the forecasts of the system indicate probable trends and are not "
+             "predictions of exact outbreak occurrence.", align=J, after=4),
+        para("   ".join(AGREE), align=C, after=6, size=9.5)):
+    p.paragraph_format.keep_with_next = True   # heading stays with its table
 t = fixed_table(len(VALIDATION) + 1, widths)
 hdr = t.rows[0].cells
 hdr[0].merge(hdr[1])
